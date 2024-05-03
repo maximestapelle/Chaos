@@ -1,5 +1,12 @@
 #include "Chaos.h"
 
+/*
+ * The dbInsertData function is called if the user request has not been made in the past.
+ * It will upload the data file of the request in the database, as a historic.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 void dbInsertData() {
 
 	FILE * fp = fopen(dataFile, "rb");

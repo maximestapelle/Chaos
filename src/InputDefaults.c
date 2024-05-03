@@ -1,11 +1,15 @@
 #include "Chaos.h"
 
+/*
+ * The inputDefaults function will store the remaining default values for the user's choice of dynamics and action.
+ * It is called from ChaosMain. 
+ */
+
 int inputDefaults() {
 
  	sqlite3_stmt *res;
  	int step;
 	char sqlfetchVarsAndParams[260] = "SELECT b.type, c.LaTeXname, b.defaultValue, b.defaultMinValue, b.defaultMaxValue FROM map a INNER JOIN mapUsesParameters b ON a.rowid = b.map_id INNER JOIN parameter c ON c.rowid = b.parameter_id WHERE a.rowid = ? ORDER BY b.type desc, b.priority;";
-	/* Reminder : up to now Bifurcation and Lyapunov 2D are not implemented, we consider only one parameter */
 
     int rc = sqlite3_prepare_v2(database, sqlfetchVarsAndParams, -1, &res, 0);
    	if (rc != SQLITE_OK) {

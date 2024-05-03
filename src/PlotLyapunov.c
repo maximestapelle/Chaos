@@ -1,5 +1,10 @@
 #include "Chaos.h"
 
+/*
+ * The plotLyapunov function will hardcode a python file to be executed, which will produce a png file.
+ *
+ * The function is called from ChaosMain. 
+ */
 
 /*** !!! Only works for discrete maps, for flows there are a shit ton of exponents, syntax and plot ***/
 void plotLyapunov() {

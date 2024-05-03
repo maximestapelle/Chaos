@@ -1,6 +1,14 @@
 #include "Chaos.h"
 
-void inputIterations(unsigned int NMin, long unsigned int NMax) {
+/*
+ * The inputIterations function will ask the user to input the number of iterations.
+ * It will display the allowed range from the database and verify that the input is in this range.
+ * If the user presses Return, the default values will be stored.
+ *
+ * The function is called from ChaosMain. 
+ */
+
+void inputIterations(const unsigned int NMin, const long unsigned int NMax) {
 
  	char line[30];
 

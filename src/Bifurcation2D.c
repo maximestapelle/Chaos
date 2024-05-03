@@ -1,6 +1,15 @@
 #include "Utilities.h"
 
-/* Bifurcation2D is only for dimension = 2 maps, for now. We could adapt it for 3D and choose the two variables to plot. */
+/*
+ * The bifurcation2D function computes a trajectory and waits for a transient period. After that :
+ * - for maps, it records all different points of the trajectory (considered as attractors);
+ * - for flows, it records n points of the n-cycles encountered.
+ * For now, it uses Runge-Kutta 4th order for flows. Also, it records only the two first components
+ * of the trajectory. For simplicity, it does that only for 2D maps.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 void bifurcation2D() {
 	
 	FILE * fp;
@@ -11,16 +20,15 @@ void bifurcation2D() {
 	float powerof10; /* for rounding of the trajectory */
 	int significantDigits = 4;
 	float trajectory[dimension]; /* The current point of the trajectory */
-	float attractors[maxPoints][dimension]; /* We need to store, for each value of s, the points to see if the current one is already recorded. */
+	float **attractors = init_2DMatrix(maxPoints, dimension); /* We need to store, for each value of s, the points to see if the current one is already recorded. */
+	
 	unsigned int i;
 	bool divergence;
 
 	fp = fopen(dataFile, "w");
 		
-	
 	/* Set the parameter to its minimum value. We subtract parameterIncrement because in the loop, we will add as from s = 0. */
 	userMapValues.parameters[0] = userMapValues.parameterRange[0] - parameterIncrement;
-
 	
 	switch (userMap) {
 		case 6:
@@ -29,7 +37,6 @@ void bifurcation2D() {
 				for (size_t d = 0; d < dimension; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
-				init_matrix(attractors, maxPoints, dimension);
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -70,12 +77,11 @@ void bifurcation2D() {
 				for (size_t d = 0; d < dimension; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
-				init_matrix(attractors, maxPoints, dimension);
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
 				for (size_t n = 1; n <= minIterations; n++) {
-					hénon(trajectory);
+					henon(trajectory);
 				}
 				for (size_t n = minIterations + 1; n <= N; n++) {
 					/* We check the last point of the trajectory */
@@ -96,7 +102,7 @@ void bifurcation2D() {
 						divergence = true;
 						break;
 					}
-					hénon(trajectory);
+					henon(trajectory);
 				}
 				if (!divergence) {
 					for (size_t j = 0; j < i; j++) {
@@ -106,6 +112,9 @@ void bifurcation2D() {
 			}
 			break;
 	}
+
+	// Free the attractors matrix
+	free_2DMatrix(attractors, maxPoints);
 
 	printf("Data file created: '%s'.\n", dataFile);
 	fclose(fp);

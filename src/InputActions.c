@@ -1,13 +1,18 @@
 #include "Chaos.h"
 
-int inputActions(int * NMin, long int * NMax, int * SMin, long int * SMax) {
+/*
+ * The inputActions function will propose the possible actions for the user, and fetch the user's choice.
+ * It will also display some default values stored in the database, once the user's choice is known.
+ * It is called from ChaosMain. 
+ */
+
+int inputActions(int *NMin, long int *NMax, int *SMin, long int *SMax) {
 
  	sqlite3_stmt *res;
  	int step;
  	char line[30];
 	char sqlfetchActions[250] = "SELECT A.rowid, A.name, A.description, CASE WHEN A.rowid IN (SELECT b.action_id FROM map a INNER JOIN actionConcernsMap b ON a.rowid = b.map_id where a.rowid = ?) THEN 'Y' ELSE 'N' END FROM action A ORDER BY A.rowid;";
-	char sqlverifyAction[250] = "SELECT b.N, b.Nmin, b.Nmax, b.S, b.Smin, b.SMax, c.name FROM map a INNER JOIN actionConcernsMap b ON a.rowid = b.map_id INNER JOIN action c ON b.action_id = c.rowid WHERE a.rowid = ? AND c.rowid = ?;"; /* This will also fetch the default values of N and S */
-	/* IMPORTANT NOTE : Up to now the default parameters are for an action only, they do not depend on the map. This could be changed in the future, and then it would most likely be better to fetch these parameters in inputDefaults. */
+	char sqlverifyAction[250] = "SELECT b.N, b.Nmin, b.Nmax, b.S, b.Smin, b.SMax, c.name FROM map a INNER JOIN actionConcernsMap b ON a.rowid = b.map_id INNER JOIN action c ON b.action_id = c.rowid WHERE a.rowid = ? AND c.rowid = ?;";
 
 	printf(ANSI_COLOR_GREEN "\nYou can now choose the action you want the program to perform:" ANSI_COLOR_RESET "\n\n");
 	
@@ -23,7 +28,6 @@ int inputActions(int * NMin, long int * NMax, int * SMin, long int * SMax) {
     }
 	step = sqlite3_step(res);
 	while (step == SQLITE_ROW) {
-		// The return of sqlite text is a const unsigned char pointer, which creates a warning. Thus I convert to char pointer to avoid it.
 		if (strncmp((char *) sqlite3_column_text(res, 3), "N", 1) == 0) {
 			printf(ANSI_COLOR_RED "**Not available for this map** ");
 		}

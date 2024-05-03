@@ -1,5 +1,12 @@
 #include "Chaos.h"
 
+/*
+ * The dbCreateDataFile function is called if the user request has already been made in the past.
+ * It will recreate the data file from the database.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 void dbCreateDataFile() {
 
 	FILE * fp = fopen(dataFile, "wb");

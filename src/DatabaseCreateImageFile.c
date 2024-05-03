@@ -1,5 +1,12 @@
 #include "Chaos.h"
 
+/*
+ * The dbCreateImageFile function is called if the user request has already been made in the past.
+ * It will recreate the image file from the database.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 void dbCreateImageFile() {
 
 	FILE * fp = fopen(imageFile, "wb");

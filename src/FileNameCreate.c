@@ -1,5 +1,10 @@
 #include "Chaos.h"
 
+/*
+ * The createFileName function creates the full filenames for data and image.
+ * It is called from ChaosMain. 
+ */
+
 void createFileName() {
 	
 	/* Based on summaryFileName, we create the data and image full names : */

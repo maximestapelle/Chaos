@@ -1,5 +1,12 @@
 #include "Chaos.h"
 
+/*
+ * The inputMaps function will propose the different dynamical systems and fetch the user's choice.
+ * It will store some values for the chosen dynamical system from the database.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 int inputMaps() {
 
  	sqlite3_stmt *res;

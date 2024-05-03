@@ -1,6 +1,15 @@
 #include "Utilities.h"
 
-/* Bifurcation will only check and return the first variable. Could be changed in the future. */
+/*
+ * The bifurcation function computes a trajectory and waits for a transient period. After that :
+ * - for maps, it records all different points of the trajectory (considered as attractors);
+ * - for flows, it records n points of the n-cycles encountered.
+ * For now, it uses Runge-Kutta 4th order for flows. Also, it records only the first component
+ * of the trajectory.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 void bifurcation() {
 	
 	FILE * fp;
@@ -27,7 +36,7 @@ void bifurcation() {
 				for (size_t d = 0; d < dimension; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
-				init_row(attractors, maxPoints);
+				memset(attractors, 0, sizeof attractors); // Initialize to 0 to be sure
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -64,7 +73,7 @@ void bifurcation() {
 				for (size_t d = 0; d < dimension; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
-				init_row(attractors, maxPoints);
+				memset(attractors, 0, sizeof attractors); // Initialize to 0 to be sure
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -101,7 +110,7 @@ void bifurcation() {
 				for (size_t d = 0; d < dimension; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
-				init_row(attractors, maxPoints);
+				memset(attractors, 0, sizeof attractors); // Initialize to 0 to be sure
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -138,7 +147,7 @@ void bifurcation() {
 				for (size_t d = 0; d < dimension; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
-				init_row(attractors, maxPoints);
+				memset(attractors, 0, sizeof attractors); // Initialize to 0 to be sure
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -175,7 +184,7 @@ void bifurcation() {
 				for (size_t d = 0; d < dimension; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
-				init_row(attractors, maxPoints);
+				memset(attractors, 0, sizeof attractors); // Initialize to 0 to be sure
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -212,7 +221,7 @@ void bifurcation() {
 				for (size_t d = 0; d < dimension; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
-				init_row(attractors, maxPoints);
+				memset(attractors, 0, sizeof attractors); // Initialize to 0 to be sure
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -249,12 +258,12 @@ void bifurcation() {
 				for (size_t d = 0; d < dimension; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
-				init_row(attractors, maxPoints);
+				memset(attractors, 0, sizeof attractors); // Initialize to 0 to be sure
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
 				for (size_t n = 1; n <= minIterations; n++) {
-					hénon(trajectory);
+					henon(trajectory);
 				}
 				for (size_t n = minIterations + 1; n <= N; n++) {
 					/* We check the last point of the trajectory */
@@ -271,7 +280,7 @@ void bifurcation() {
 						divergence = true;
 						break;
 					}
-					hénon(trajectory);
+					henon(trajectory);
 				}
 				if (!divergence) {
 					for (size_t j = 0; j < i; j++) {
@@ -280,7 +289,7 @@ void bifurcation() {
 				}
 			}
 			break;
-/* The situation is completely different if there exist cycles. A stable period-3 orbit is not chaotic, for example. To make the difference between chaos (infinity of different cycles) and not chaos (eg 3 orbits in the Rössler map when b = 0.040) we will create a array of size three (nothing to do with my example of 3 cycle orbit, but we need three numbers to see if we have a local maximum) which will be a "window" to check when we get to a local maximum, and register the maximum. For eg a 3 orbit, there will be three different maxima. */
+/* The situation is completely different if there exist cycles. A stable period-3 orbit is not chaotic, for example. To make the difference between chaos (infinity of different cycles) and not chaos (eg 3 orbits in the rossler map when b = 0.040) we will create a array of size three (nothing to do with my example of 3 cycle orbit, but we need three numbers to see if we have a local maximum) which will be a "window" to check when we get to a local maximum, and register the maximum. For eg a 3 orbit, there will be three different maxima. */
 		case 8: {
 			float h = 0.02F;
 			float window[3];
@@ -292,7 +301,7 @@ void bifurcation() {
 				for (size_t d = 0; d < dimension; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
-				init_row(attractors, maxPoints);
+				memset(attractors, 0, sizeof attractors); // Initialize to 0 to be sure
 				i = 0;
 				j = 0;
 				divergence = false;
@@ -349,14 +358,14 @@ void bifurcation() {
 				for (size_t d = 0; d < dimension; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
-				init_row(attractors, maxPoints);
+				memset(attractors, 0, sizeof attractors); // Initialize to 0 to be sure
 				i = 0;
 				j = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
 				for (size_t n = 1; n <= minIterations; n++) {
-// 					rössler(trajectory, dt);
-					rösslerRK4(trajectory, h);
+// 					rossler(trajectory, dt);
+					rosslerRK4(trajectory, h);
 					/* Start to populate the window at the last five */
 					if (n > minIterations - 3) {
 						window[i % 5] = trajectory[0];
@@ -364,8 +373,8 @@ void bifurcation() {
 					}
 				}
 				for (size_t n = minIterations + 1; n <= N; n++) {
-// 					rössler(trajectory, dt);
-					rösslerRK4(trajectory, h);
+// 					rossler(trajectory, dt);
+					rosslerRK4(trajectory, h);
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
 						window[i % 3] = trajectory[0];
 						/* Check if just after a local maximum */

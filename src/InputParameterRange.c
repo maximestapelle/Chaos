@@ -1,5 +1,12 @@
 #include "Chaos.h"
 
+/*
+ * The inputParameterRange function will ask the user to input the parameter Range for Lyapunov and Bifurcation.
+ * If the user presses Return, the default values will be stored.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 void inputParameterRange() {
 
  	char line[30];

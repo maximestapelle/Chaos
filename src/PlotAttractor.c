@@ -1,7 +1,11 @@
 #include "Chaos.h"
 
+/*
+ * The plotAttractor function will hardcode a python file to be executed, which will produce a png file.
+ *
+ * The function is called from ChaosMain. 
+ */
 
-/* !!! This only works for 2D, have to do a switch case for 3D */
 void plotAttractor() {
 
 	const char pythonFile[20] = "img/PlotAttractor.py";

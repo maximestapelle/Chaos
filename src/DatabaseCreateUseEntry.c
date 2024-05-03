@@ -1,5 +1,12 @@
 #include "Chaos.h"
 
+/*
+ * The dbCreateUseEntry function is called if the user request has not been made in the past.
+ * It will create an entry in the database, as a historic.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 void dbCreateUseEntry() {
 
 	char sqlCreateUse[500] = "INSERT INTO useHistory (map_id, action_id, N, "; /* Stores the beginning of the query */

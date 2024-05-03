@@ -1,12 +1,18 @@
 #include "Chaos.h"
 
+/*
+ * The inputParameters function will ask the user to input the parameters.
+ * If the user presses Return, the default values will be stored.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 void inputParameters() {
 
  	char line[30];
 
-    /* CHOICE OF the parameters */
-    /* For al choices but Attractor, the range of the first parameters is already known. We still have to fetch the value of this first parameter, in the case of Attractor */
-    if (numberParameters == 1) {
+    if (numberParameters == 1) {	    /* For all choices but Attractor, the range of the first parameters is already known.
+    									   We still have to fetch the value of this first parameter, in the case of Attractor */
     	if (userAction != 3) return;
     	else {
     		printf(ANSI_COLOR_GREEN "Please enter a value for the parameter.\n\n"ANSI_COLOR_RESET);

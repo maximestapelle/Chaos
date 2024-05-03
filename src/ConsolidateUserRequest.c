@@ -1,5 +1,14 @@
 #include "Chaos.h"
 
+/*
+ * The consolidateUserRequest function will aggregate the data entered by the user, in order to :
+ * - display it on the console, as a summary for the user;
+ * - create a string for data and image filenames;
+ * - create a legend for the plots.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 void consolidateUserRequest() {
 
 	/* Map name */

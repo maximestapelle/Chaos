@@ -2,17 +2,17 @@
 #define UTILITIES_H
 
 /*
- * This header is used by utilities function.
+ * This header is used by utilities functions.
  */
 
 #include "Chaos.h"
 #include <complex.h>
 
 
-void init_row(float * array, unsigned int columns);
-void init_matrix(float matrix[][dimension], unsigned int numberRows, unsigned int dimension);
-bool is_in_row(float value, float * array, unsigned int size);
-bool is_in_matrix(float value[], float array[][dimension], unsigned int size);
+float **init_2DMatrix(const unsigned int nRows, const unsigned int nColumns);
+void free_2DMatrix(float **matrix, const unsigned int nRows);
+bool is_in_row(float value, float *array, const unsigned int size);
+bool is_in_matrix(float *value, float **matrix, const unsigned int size);
 void dot_product(float m1[][dimension], float m2[][dimension], float mp[][dimension]);
 void matrix_transpose(float m[][dimension], float mt[][dimension]);
 void eigen_values(float matrix[][dimension], float eigenvalues[]);

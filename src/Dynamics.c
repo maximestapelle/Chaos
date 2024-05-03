@@ -1,12 +1,17 @@
 #include "Chaos.h"
 #include "Utilities.h"
 
-/* Contains the dynamics of each map. */
-/* All functions work on the same 2D array trajectory :
-	- The first index (0 < idx < 2) gives the variable (eg indexes 1 and 2 are ignored if the function is one dimensional)
-	- The second index is the iteration number.*/
-/* Same thing with the parameters, but the latter are a global variable. */
-
+/* Contains the dynamics of each dynamical system.
+ *
+ * All functions work on the same array trajectory, of size DIMENSION_MAX:
+ *	- the 2nd and 3rd components are ignored for 1D dynamical systems;
+ *	- the 3rd component is ignored for 2D dynamical systems.
+ * It works the same with the parameters : array of size NUMBER_PARAMETERS_MAX.
+ *
+ * For flows, we also have here the derivatives (Jacobian) and implementation of the 
+ * Euler and Runge-Kutta 4th order methods.
+ *
+ * Dynamics are used by the functions attractor(), bifurcation() and bifurcation2D() */
 
 void logistic(float trajectory[]) {
 	trajectory[0] =  userMapValues.parameters[0] * trajectory[0] * (1 - trajectory[0]);
@@ -81,7 +86,7 @@ void tinkerbellJacobian(float trajectory[], float jacobian[][2]) {
 
 }
 
-void hénon(float trajectory[]) {
+void henon(float trajectory[]) {
 	float x, y;
 	x = 1 - userMapValues.parameters[0] * pow(trajectory[0], 2) + trajectory[1];
 	y = userMapValues.parameters[1] * trajectory[0];
@@ -89,7 +94,7 @@ void hénon(float trajectory[]) {
 	trajectory[0] = x;
 	trajectory[1] = y;
 }
-void hénonJacobian(float trajectory[], float jacobian[][2]) {
+void henonJacobian(float trajectory[], float jacobian[][2]) {
 	jacobian[0][0] = -2 * userMapValues.parameters[0] * trajectory[0];
 	jacobian[0][1] = 1;
 	jacobian[1][0] = userMapValues.parameters[1];
@@ -104,7 +109,7 @@ void lorenzEvolution(float input[], float fgh[]) {
 	
 }
 /* This is Newton/Euler method for Lorenz (so the easiest one, based on 1st order Taylor series) */
-void lorenz(float trajectory[], float dt) {
+void lorenz(float trajectory[], const float dt) {
 	float x, y, z;
 	float fgh[3];
 	
@@ -119,7 +124,7 @@ void lorenz(float trajectory[], float dt) {
 	trajectory[2] = z;
 }
 /* This is Runge-Kutta 4th order */
-void lorenzRK4(float trajectory[], float h) {
+void lorenzRK4(float trajectory[], const float h) {
 	float array[3];
 	float k1[3], k2[3], k3[3], k4[4];
 
@@ -148,18 +153,18 @@ void lorenzRK4(float trajectory[], float h) {
 	trajectory[2] = trajectory[2] + h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]);
 }
 
-void rösslerEvolution(float input[], float fgh[]) {
+void rosslerEvolution(float input[], float fgh[]) {
 	fgh[0] = -input[1] - input[2];
 	fgh[1] = input[0] + userMapValues.parameters[2] * input[1];
 	fgh[2] = userMapValues.parameters[0] + input[2] * (input[0] - userMapValues.parameters[1]);
 	
 }
 /* This is Newton/Euler method for Rossler (so the easiest one, based on 1st order Taylor series) */
-void rössler(float trajectory[], float dt) {
+void rossler(float trajectory[], const float dt) {
 	float x, y, z;
 	float fgh[3];
 	
-	rösslerEvolution(trajectory, fgh);
+	rosslerEvolution(trajectory, fgh);
 	
 	x = trajectory[0] + dt * fgh[0];
 	y = trajectory[1] + dt * fgh[1];
@@ -170,29 +175,29 @@ void rössler(float trajectory[], float dt) {
 	trajectory[2] = z;
 }
 /* This is Runge-Kutta 4th order */
-void rösslerRK4(float trajectory[], float h) {
+void rosslerRK4(float trajectory[], const float h) {
 	float array[3];
 	float k1[3], k2[3], k3[3], k4[4];
 
-	rösslerEvolution(trajectory, k1); 
+	rosslerEvolution(trajectory, k1); 
 	
 	array[0] = trajectory[0] + h / 2 * k1[0];
 	array[1] = trajectory[1] + h / 2 * k1[1];
 	array[2] = trajectory[2] + h / 2 * k1[2];
 	
-	rösslerEvolution(array, k2);
+	rosslerEvolution(array, k2);
 	
 	array[0] = trajectory[0] + h / 2 * k2[0];
 	array[1] = trajectory[1] + h / 2 * k2[1];
 	array[2] = trajectory[2] + h / 2 * k2[2];
 	
-	rösslerEvolution(array, k3); /* Now fgh = k3 */
+	rosslerEvolution(array, k3); /* Now fgh = k3 */
 
 	array[0] = trajectory[0] + h * k3[0];
 	array[1] = trajectory[1] + h * k3[1];
 	array[2] = trajectory[2] + h * k3[2];
 	
-	rösslerEvolution(array, k4); /* Now fgh = k4 */
+	rosslerEvolution(array, k4); /* Now fgh = k4 */
 
 	trajectory[0] = trajectory[0] + h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]);
 	trajectory[1] = trajectory[1] + h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);

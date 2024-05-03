@@ -1,5 +1,12 @@
 #include "Chaos.h"
 
+/*
+ * The inputIC function will ask the user to input the initial conditions. If the user presses Return,
+ * the default values will be stored.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 void inputIC() {
 
  	char line[30];

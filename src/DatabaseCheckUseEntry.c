@@ -1,5 +1,11 @@
 #include "Chaos.h"
 
+/*
+ * The dbCheckUseEntry function will check if the request from the user has already been made in the past.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 int dbCheckUseEntry() {
 
 	int id = 0;

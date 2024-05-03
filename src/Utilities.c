@@ -1,26 +1,34 @@
 #include "Utilities.h"
 
+/*
+ * The Utilities c file contains function that I considered to be "utilities" :
+ * array and matrices, linear algebra, check if a value exists in an array...
+ *
+ * Its functions are called from physics fuctions : Attracto, Bifurcation, Lyapunov
+ */
+
 /* Array utilities */
-
-/* Used to init the attractors array for bifurcation and lyapunov to NAN, to differentiate them from 0.00 which can be a real attractor */
-void init_row(float * array, unsigned int columns)
+float **init_2DMatrix(const unsigned int nRows, const unsigned int nColumns)
 {
-	for (size_t j = 0; j < columns; j++)
-	{
-		array[j] = 0;
+	float **matrix = calloc(nRows, sizeof *matrix); 
+	for (size_t i = 0; i < nRows; i++) {
+		matrix[i] = calloc(nColumns, sizeof **matrix);
 	}
+	
+	return matrix;
 }
-
-void init_matrix(float matrix[][dimension], unsigned int numberRows, unsigned int dimension) {
-	for (size_t i = 0; i < numberRows; i++) {
-		for (size_t j = 0; j < dimension; j++) {
-			matrix[i][j] = 0;
-		}
+void free_2DMatrix(float **matrix, const unsigned int nRows)
+{
+	for (size_t i = 0; i < nRows; i++) {
+	free(matrix[i]);
 	}
+	free(matrix);
+
+
 }
 
 /* Check if a value exists */
-bool is_in_row(float value, float * array, unsigned int size)
+bool is_in_row(float value, float *array, const unsigned int size)
 {
 	for (size_t i = 0; i < size; i++)
 	{
@@ -29,21 +37,21 @@ bool is_in_row(float value, float * array, unsigned int size)
 	}
 	return false;
 }
-/* Check if a value exists */
-bool is_in_matrix(float value[], float array[][dimension], unsigned int size)
+/* Check if a value exists, for 2D actions */
+bool is_in_matrix(float *value, float **matrix, const unsigned int size)
 {
 	for (size_t i = 0; i < size; i++)
 	{
-		if (array[i][0] == value[0] && array[i][1] == value[1])
+		if (matrix[i][0] == value[0] && matrix[i][1] == value[1])
 			return true;
 	}
 	return false;
 }
 
-/* Matrix product, coded so that the result mp can be set as on of the input matrices */
+/* Matrix product, coded so that the result mp can be set as one of the input matrices */
 void dot_product(float m1[][dimension], float m2[][dimension], float mp[][dimension]) {
 	float temp[dimension][dimension];
-	init_matrix(temp, dimension, dimension);
+	memset(temp, 0, sizeof temp);
 
 	for (size_t i = 0; i < dimension; i++) {
 		for (size_t j = 0; j < dimension; j++) {

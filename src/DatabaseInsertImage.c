@@ -1,5 +1,12 @@
 #include "Chaos.h"
 
+/*
+ * The dbInsertImage function is called if the user request has not been made in the past.
+ * It will upload the image file of the request in the database, as a historic.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 void dbInsertImage() {
 
 	FILE * fp = fopen(imageFile, "rb");

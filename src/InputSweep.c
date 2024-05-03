@@ -1,6 +1,14 @@
 #include "Chaos.h"
 
-void inputSweep(unsigned int SMin, long unsigned  int SMax) {
+/*
+ * The inputSweep function will ask the user to input the number of divisions for the principal parameter.
+ * It will display the allowed range from the database and verify that the input is in this range.
+ * If the user presses Return, the default value will be stored.
+ *
+ * The function is called from ChaosMain. 
+ */
+
+void inputSweep(const unsigned int SMin, const long unsigned  int SMax) {
 
  	char line[30];
 

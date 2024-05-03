@@ -1,5 +1,12 @@
 #include "Chaos.h"
 
+/*
+ * The attractor function will compute the trajectory of the selected dynamical system,
+ * and store it in a file. For now, it uses Runge-Kutta 4th order for flows.
+ *
+ * The function is called from ChaosMain. 
+ */
+
 void attractor() {
 	
 	FILE * fp;
@@ -27,7 +34,7 @@ void attractor() {
 			break;
 		case 7:
 			for (size_t n = 1; n <= N; n++) {
-				hénon(trajectory);
+				henon(trajectory);
 				for (size_t d = 0; d < dimension; d++) {
 					fprintf(fp, "%.4f", trajectory[d]);
 					if (d < dimension - 1) fprintf(fp, " ");
@@ -52,7 +59,7 @@ void attractor() {
 // 			float dt = 0.01F;
 			float h = 0.02F;
 			for (size_t n = 1; n <= N; n++) {
-				rösslerRK4(trajectory, h);
+				rosslerRK4(trajectory, h);
 				for (size_t d = 0; d < dimension; d++) {
 					fprintf(fp, "%.4f", trajectory[d]);
 					if (d < dimension - 1) fprintf(fp, " ");

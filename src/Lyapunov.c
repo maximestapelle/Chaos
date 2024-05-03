@@ -1,7 +1,11 @@
 #include "Chaos.h"
 #include "Utilities.h"
+/*
+ * The lyapunov function computes a trajectory and constructs lyapunov exponents.
+ *
+ * The function is called from ChaosMain. 
+ */
 
-/* Bifurcation will only check and return the first variable. Could be changed in the future. */
 void lyapunov() {
 	
 	FILE * fp;
@@ -121,10 +125,10 @@ and their Relation to Entropy **/
 				for (size_t d = 0; d < dimension; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
-				hénonJacobian(trajectory, nJacobianProduct);
+				henonJacobian(trajectory, nJacobianProduct);
 				for (size_t n = 1; n < N; n++) {
-					hénon(trajectory);
-					hénonJacobian(trajectory, nthJacobian);
+					henon(trajectory);
+					henonJacobian(trajectory, nthJacobian);
 					dot_product(nthJacobian, nJacobianProduct, nJacobianProduct);
 				}
 /**  Old solution based on http://dx.doi.org/10.1016/j.cnsns.2014.06.042 eq 2.6 **/
