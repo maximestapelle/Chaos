@@ -9,6 +9,11 @@
  ** Modified : 2 May 2024 Changed matrix definition and allocation in utilities.						   *
  **						  Improved comments.															   *
  ** 					  Added OS identification for image opening										   *
+ **																										   *
+ **			   5 May 2024 Fixed the crash when data/ or img/ directories don't exist					   *
+ **						  Added an "active flag" set to false in (map/action)'s where not ready. This is   *
+ **						  more for development purposes where I can have the entry in the database,        *
+ **						  not usable in working version but testable when I'm implementing it.			   *			
  **********************************************************************************************************/
 
 // TODO : 

@@ -6,7 +6,9 @@
 /*
  * The createFileName function creates the full filenames for data and image.
  * It also checks if the data/ and img/ directories exist, and creates them otherwise.
- * It is called from ChaosMain. 
+ * It is called from ChaosMain.
+ *
+ * Changes : 5 May 2024 : check existence of directories data/ and img/ create them if necessary.
  */
 
 int createFileName() {

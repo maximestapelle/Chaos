@@ -3,7 +3,9 @@
 /*
  * The inputActions function will propose the possible actions for the user, and fetch the user's choice.
  * It will also display some default values stored in the database, once the user's choice is known.
- * It is called from ChaosMain. 
+ * It is called from ChaosMain.
+ *
+ * Changes : 5 May 2024 "active" flag added to the database.
  */
 
 int inputActions(int *NMin, long int *NMax, int *SMin, long int *SMax) {
@@ -11,7 +13,7 @@ int inputActions(int *NMin, long int *NMax, int *SMin, long int *SMax) {
  	sqlite3_stmt *res;
  	int step;
  	char line[30];
-	char sqlfetchActions[250] = "SELECT A.rowid, A.name, A.description, CASE WHEN A.rowid IN (SELECT b.action_id FROM map a INNER JOIN actionConcernsMap b ON a.rowid = b.map_id where a.rowid = ?) THEN 'Y' ELSE 'N' END FROM action A ORDER BY A.rowid;";
+	char sqlfetchActions[250] = "SELECT A.rowid, A.name, A.description, CASE WHEN A.rowid IN (SELECT b.action_id FROM map a INNER JOIN actionConcernsMap b ON a.rowid = b.map_id WHERE a.rowid = ? AND active) THEN 'Y' ELSE 'N' END FROM action A ORDER BY A.rowid;";
 	char sqlverifyAction[250] = "SELECT b.N, b.Nmin, b.Nmax, b.S, b.Smin, b.SMax, c.name FROM map a INNER JOIN actionConcernsMap b ON a.rowid = b.map_id INNER JOIN action c ON b.action_id = c.rowid WHERE a.rowid = ? AND c.rowid = ?;";
 
 	printf(ANSI_COLOR_GREEN "\nYou can now choose the action you want the program to perform:" ANSI_COLOR_RESET "\n\n");
