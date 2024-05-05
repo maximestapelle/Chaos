@@ -152,7 +152,7 @@ void plotBifurcation();
 void plotLyapunov();
 
 /* File utilities */
-void createFileName(); /* This procedure also creates a legend for the plots, containing the same data as the file names */
+int createFileName(); /* This procedure also creates a legend for the plots, containing the same data as the file names */
 
 /* Database functions */
 int dbConnect();

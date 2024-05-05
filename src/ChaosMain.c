@@ -61,7 +61,7 @@ int main() {
 /*** We're done with user input ! ***/
 INPUT_DONE:
 	consolidateUserRequest(); 							/* Create the summaries of the request */
-	createFileName();		  							/* Create the name of files */
+	if (createFileName()) exit(1);						/* Check directories and create the name of the files */
 	
 	if (!choseDefaults)	{								/* Print Summary of the user's request on the console */
 		printf(ANSI_COLOR_CYAN "Here below a summary of your choices:\n\n%s\n\n" ANSI_COLOR_RESET, summaryStdout);
