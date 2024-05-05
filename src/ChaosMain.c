@@ -13,7 +13,8 @@
  **			   5 May 2024 Fixed the crash when data/ or img/ directories don't exist					   *
  **						  Added an "active flag" set to false in (map/action)'s where not ready. This is   *
  **						  more for development purposes where I can have the entry in the database,        *
- **						  not usable in working version but testable when I'm implementing it.			   *			
+ **						  not usable in working version but testable when I'm implementing it.			   *
+ **						  Added the same flag at action level (Lyapunov2D not ready)					   *			
  **********************************************************************************************************/
 
 // TODO : 
