@@ -8,7 +8,7 @@
 
 void plotAttractor() {
 
-	const char pythonFile[20] = "img/PlotAttractor.py";
+	char *pythonFile;
 	char pythonFileContents[2000] = "import matplotlib.pyplot as plt\n";
 
 	char command[30] = "python3 ";
@@ -20,6 +20,7 @@ void plotAttractor() {
 	strcat(title, " ");
 	strcat(title, LaTeXformula);
 	
+	pythonFile = "img/PlotAttractor.py";
 	fp = fopen(pythonFile, "w");
 	
 	strcat(pythonFileContents, "plt.style.use(\'dark_background\')\n");

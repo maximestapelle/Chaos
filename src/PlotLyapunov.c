@@ -9,7 +9,7 @@
 /*** !!! Only works for discrete maps, for flows there are a shit ton of exponents, syntax and plot ***/
 void plotLyapunov() {
 
-	const char pythonFile[25] = "img/PlotLyapunov.py";
+	char *pythonFile;
 	char pythonFileContents[2500] = "import matplotlib.pyplot as plt\n";
 	strcat(pythonFileContents, "import numpy as np\n");
 
@@ -22,6 +22,7 @@ void plotLyapunov() {
 	strcat(title, " ");
 	strcat(title, LaTeXformula);
 	
+	pythonFile = "img/PlotLyapunov.py";
 	fp = fopen(pythonFile, "w");
 	
 	strcat(pythonFileContents, "plt.style.use(\'dark_background\')\n");

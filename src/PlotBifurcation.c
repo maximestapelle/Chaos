@@ -8,7 +8,7 @@
 
 void plotBifurcation() {
 
-	const char pythonFile[25] = "img/PlotBifurcation.py";
+	char *pythonFile;
 	char pythonFileContents[2000] = "import matplotlib.pyplot as plt\n";
 
 	char command[35] = "python3 ";
@@ -20,6 +20,7 @@ void plotBifurcation() {
 	strcat(title, " ");
 	strcat(title, LaTeXformula);
 	
+	pythonFile = "img/PlotBifurcation.py";
 	fp = fopen(pythonFile, "w");
 	
 	strcat(pythonFileContents, "plt.style.use(\'dark_background\')\n");
