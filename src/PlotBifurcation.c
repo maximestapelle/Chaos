@@ -68,8 +68,10 @@ void plotBifurcation() {
 	fclose(fp);
 
 	strcat(command, pythonFile);
-	status = system(command);
-	
+	if ((status = system(command)) != 0) {
+		printf("Issue when executing python command to plot the Bifurcation graph!\n");
+		exit(1);
+	}
 	remove(pythonFile);
 
 	printf("Image file created: '%s'.\n\n", imageFile);

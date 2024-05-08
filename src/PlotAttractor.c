@@ -85,8 +85,10 @@ void plotAttractor() {
 	fclose(fp);
 
 	strcat(command, pythonFile);
-	status = system(command);
-	
+	if ((status = system(command)) != 0) {
+		printf("Issue when executing python command to plot the Atractor!\n");
+		exit(1);
+	}
 	remove(pythonFile);
 
 	printf("Image file created: '%s'.\n\n", imageFile);
