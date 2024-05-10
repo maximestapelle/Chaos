@@ -314,7 +314,7 @@ void bifurcation() {
 			const unsigned int varPlot = 0;
 			float window[windowSize];
 			size_t j;
-			minIterations = 50000;
+			minIterations = 100000;
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				for (size_t d = 0; d < dimension; d++) {
@@ -333,7 +333,9 @@ void bifurcation() {
 				}
 				/* First, check if we have a fixed point */
 				lorenzRK4(trajectory, h);
-				if (fabsf(trajectory[varPlot] - window[(j - 1) % windowSize]) < 1E-5) {
+				window[j % windowSize] = trajectory[varPlot];
+				j++;
+				if (fabsf(trajectory[varPlot] - window[(j - 2) % windowSize]) < 1E-4) {
 					attractors[i] = trajectory[varPlot];
 					i++;
 				}
@@ -344,7 +346,7 @@ void bifurcation() {
 						window[j % windowSize] = trajectory[varPlot];
 						if ((window[j % windowSize] < window[(j - 1) % windowSize]) && (window[(j - 1) % windowSize] >= window[(j - 2) % windowSize])) {
 							/* window[(j - 1) % 3] is a local MAXIMUM. We check if the value already exists, and if not, we store it */
-							if (i > 0 && window[(j - 1) % windowSize] == attractors[0]) break;
+							if (fabsf(window[(j - 1) % windowSize] - attractors[0]) < 1E-5) break;
 							else {
 								attractors[i] = window[(j - 1) % windowSize];
 								i++;
@@ -385,7 +387,9 @@ void bifurcation() {
 				}
 				/* First, check if we have a fixed point */
 				rosslerRK4(trajectory, h);
-				if (fabsf(trajectory[varPlot] - window[(j - 1) % windowSize]) < 1E-5) {
+				window[j % windowSize] = trajectory[varPlot];
+				j++;
+				if (fabsf(trajectory[varPlot] - window[(j - 2) % windowSize]) < 1E-5) {
 					attractors[i] = trajectory[varPlot];
 					i++;
 				}
@@ -396,7 +400,7 @@ void bifurcation() {
 						window[j % windowSize] = trajectory[varPlot];
 						if (window[j % windowSize] < window[(j - 1) % windowSize] && window[(j - 1) % windowSize] >= window[(j - 2) % windowSize]) {
 							/* window[(j - 1) % 3] is a local EXTREMUM. We check if the value already exists, and if not, we store it */
-							if (i > 0 && window[(j - 1) % 3] == attractors[0]) break;
+							if (fabsf(window[(j - 1) % windowSize] - attractors[0]) < 1E-4) break;
 							else {
 								attractors[i] = window[(j - 1) % 3];
 								i++;
