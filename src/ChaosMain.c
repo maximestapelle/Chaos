@@ -1,20 +1,21 @@
-/***********************************************************************************************************
- **     CHAOS application                                                                                  *
- **                                                                                                        *
- ** Generates data and plots with Bifurcation figures, Lyapunov exponents, Attractors of chaotic maps      *
- **                                                                                                        *
- ** AUTHOR   : Maxime Stapelle                                                                             *
- ** CREATED  : 24 March - 10 April 2024                                                                    *
- **                                                                                                        *
- ** Modified : 2 May 2024 Changed matrix definition and allocation in utilities.						   *
- **						  Improved comments.															   *
- ** 					  Added OS identification for image opening										   *
- **																										   *
- **			   5 May 2024 Fixed the crash when data/ or img/ directories don't exist					   *
- **						  Added an "active flag" set to false in (map/action)'s where not ready. This is   *
- **						  more for development purposes where I can have the entry in the database,        *
- **						  not usable in working version but testable when I'm implementing it.			   *
- **						  Added the same flag at action level (Lyapunov2D not ready)					   *			
+/**********************************************************************************************************
+ **     CHAOS application                                                                                 *
+ **                                                                                                       *
+ ** Generates data and plots with Bifurcation figures, Lyapunov exponents, Attractors of chaotic maps     *
+ **                                                                                                       *
+ ** AUTHOR   : Maxime Stapelle                                                                            *
+ ** CREATED  : 24 March - 10 April 2024                                                                   *
+ **                                                                                                       *
+ ** Modified : 2 May 2024 Changed matrix definition and allocation in utilities.						  *
+ **						  Improved comments.															  *
+ ** 					  Added OS identification for image opening										  *
+ **																										  *
+ **			   5 May 2024 Fixed the crash when data/ or img/ directories don't exist					  *
+ **						  Added an "active flag" set to false in (map/action)'s where not ready. This is  *
+ **						  more for development purposes where I can have the entry in the database,       *
+ **						  not usable in working version but testable when I'm implementing it.			  *
+ **						  Added the same flag at action level (Lyapunov2D not ready)					  *
+ **			  10 May 2024 Improved bifurcation graphs													  *
  **********************************************************************************************************/
 
 // TODO : 
@@ -23,7 +24,7 @@
 //	 a database is non trivial. Sort it out. If reactivated, maintenance from the user has to be done once
 //	 in a while as the size of the database can become huge if the user gets carried away.
 // - Plots for Bifurcation2D.
-// - Bifurcations not quite done for flows.
+// - Bifurcations : more parameters to be put in the table (eg dt/h for flows, minimum iterations).
 // - Lyapunov exponents to improve.
 // - The user should choose if he wants to display the image file or not. But it will be better with a UI.
 

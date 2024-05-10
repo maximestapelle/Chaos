@@ -29,7 +29,7 @@ long unsigned int SDefault;					  /* Default number of divisions of the range of
 long unsigned int S; 		  				  /* Effective number of divisions of the range of parameter(s) for Bifurcation and Lyapunov */
 
 //Parameters for physics
-unsigned int maxPoints = 300;			/* Number of points to keep after we consider we have converged (bifurcation). Changed by bifurcation2D */
+unsigned int maxPoints = 500;			/* Number of points to keep after we consider we have converged (bifurcation). Changed by bifurcation2D */
 unsigned int minIterations;				/* Minimum of iterations we have to do to consider we have converged (bifurcation) */
 
 //Text to be displayed on plots or in file names
