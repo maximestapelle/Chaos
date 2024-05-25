@@ -126,7 +126,7 @@ void lorenz(float trajectory[], const float dt) {
 /* This is Runge-Kutta 4th order */
 void lorenzRK4(float trajectory[], const float h) {
 	float array[3];
-	float k1[3], k2[3], k3[3], k4[4];
+	float k1[3], k2[3], k3[3], k4[3];
 
 	lorenzEvolution(trajectory, k1); 
 	
@@ -177,7 +177,7 @@ void rossler(float trajectory[], const float dt) {
 /* This is Runge-Kutta 4th order */
 void rosslerRK4(float trajectory[], const float h) {
 	float array[3];
-	float k1[3], k2[3], k3[3], k4[4];
+	float k1[3], k2[3], k3[3], k4[3];
 
 	rosslerEvolution(trajectory, k1); 
 	

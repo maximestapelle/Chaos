@@ -13,7 +13,7 @@ DEPS = $(wildcard $(INCLUDE_DIR)/*.h)
 
 # Compiler settings
 CC = clang
-OPT = -O3
+OPT = -O0
 CFLAGS = -Wall -Wextra -Werror -g -I $(INCLUDE_DIR) $(OPT)
 LDLIBS = -lm -ldl
 SQLITE = -lsqlite3
