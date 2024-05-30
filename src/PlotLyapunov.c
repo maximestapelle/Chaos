@@ -42,9 +42,9 @@ void plotLyapunov() {
 	strcat(pythonFileContents, dataFile);
 	strcat(pythonFileContents, "\') as f:\n");
 	strcat(pythonFileContents, "\tlines = f.readlines()\n");
-	strcat(pythonFileContents, "\tparam = [double(line.split()[0]) for line in lines]\n");
+	strcat(pythonFileContents, "\tparam = [float(line.split()[0]) for line in lines]\n");
 	for (size_t d = 1; d <= dimension; d++) {
-		snprintf(pythonFileContents, sizeof(pythonFileContents), "%s\tlya%zu = [double(line.split()[%zu]) for line in lines]\n", pythonFileContents, d, d);
+		snprintf(pythonFileContents, sizeof(pythonFileContents), "%s\tlya%zu = [float(line.split()[%zu]) for line in lines]\n", pythonFileContents, d, d);
 	}
 	strcat(pythonFileContents, "lya = np.empty((2, len(param)))\nparam = np.array(param)\n");
 	for (size_t d = 0; d < dimension; d++) {

@@ -11,7 +11,7 @@
    Plays the role of F or Jacobian of F   */
 typedef void (*t_flow)(const double  *,					/* actual state x or extended to x+variational state */
 					   double *,						/* return F or Jacobian of F */
-					   const double  *);					/* parameters */
+					   const double  *);				/* parameters */
 
 /* Structure of a dynamical system */
 typedef struct {
@@ -43,10 +43,10 @@ void tinkerbellJacobian(double trajectory[], double jacobian[][dimension]);
 void henon(double trajectory[]);
 void henonJacobian(double trajectory[], double jacobian[][dimension]);
 void lorenzEvolution(double input[], double fgh[]);
-void lorenz(double trajectory[], const float dt);
+void lorenzEuler(double trajectory[], const float dt);
 void lorenzRK4(double trajectory[], const float h);
 void rosslerEvolution(double input[], double fgh[]);
-void rossler(double trajectory[], const float dt);
+void rosslerEuler(double trajectory[], const float dt);
 void rosslerRK4(double trajectory[], const float h);
 
 

@@ -109,8 +109,9 @@ void lorenzEvolution(double input[], double fgh[]) {
 	fgh[2] = input[0] * input[1] - userMapValues.parameters[2] * input[2];
 	
 }
+
 /* This is Newton/Euler method for Lorenz (so the easiest one, based on 1st order Taylor series) */
-void lorenz(double trajectory[], const float dt) {
+void lorenzEuler(double trajectory[], const float dt) {
 	double x, y, z;
 	double fgh[3];
 	
@@ -161,7 +162,7 @@ void rosslerEvolution(double input[], double fgh[]) {
 	
 }
 /* This is Newton/Euler method for Rossler (so the easiest one, based on 1st order Taylor series) */
-void rossler(double trajectory[], const float dt) {
+void rosslerEuler(double trajectory[], const float dt) {
 	double x, y, z;
 	double fgh[3];
 	
