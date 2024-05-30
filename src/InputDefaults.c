@@ -24,12 +24,12 @@ int inputDefaults() {
 	while (step == SQLITE_ROW) {
 		if (strncmp((char *) sqlite3_column_text(res, 0), "V", 1) == 0) {
 			strcpy(variablesNames[d], (char *) sqlite3_column_text(res, 1));
-			defaultMapValues.IC[d] = (float) sqlite3_column_double(res, 2);
+			defaultMapValues.IC[d] = (double) sqlite3_column_double(res, 2);
 			d++;
 		}
 		if (strncmp((char *) sqlite3_column_text(res, 0), "P", 1) == 0) {
 			strcpy(parametersNames[p], (char *) sqlite3_column_text(res, 1));
-			defaultMapValues.parameters[p] = (float) sqlite3_column_double(res, 2);
+			defaultMapValues.parameters[p] = (double) sqlite3_column_double(res, 2);
 			/* Fetch parameter range only for the only top priority parameter */
 			if (p == 0) {
 				defaultMapValues.parameterRange[0] = sqlite3_column_double(res, 3);

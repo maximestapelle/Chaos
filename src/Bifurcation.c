@@ -14,10 +14,10 @@
 void bifurcation() {
 	
 	FILE * fp;
-	float parameterIncrement = (userMapValues.parameterRange[1] - userMapValues.parameterRange[0]) / S;
-	float x;
-	float trajectory[dimension]; /* The current point of the trajectory */
-	float attractors[maxPoints]; /* We need to store, for each value of s, all encountered attractors. */
+	double parameterIncrement = (userMapValues.parameterRange[1] - userMapValues.parameterRange[0]) / S;
+	double x;
+	double trajectory[dimension]; /* The current point of the trajectory */
+	double attractors[maxPoints]; /* We need to store, for each value of s, all encountered attractors. */
 	unsigned int i;
 	bool divergence;
 
@@ -52,7 +52,7 @@ void bifurcation() {
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
 						/* check if we are back to x */
-						if (fabsf(x - trajectory[0]) < 1E-3) break;
+						if (fabs(x - trajectory[0]) < 1E-3) break;
 						attractors[i] = trajectory[0];
 						i++;
 					}
@@ -92,7 +92,7 @@ void bifurcation() {
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
 						/* check if we are back to x */
-						if (fabsf(x - trajectory[0]) < 1E-3) break;
+						if (fabs(x - trajectory[0]) < 1E-3) break;
 						attractors[i] = trajectory[0];
 						i++;
 					}
@@ -132,7 +132,7 @@ void bifurcation() {
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
 						/* check if we are back to x */
-						if (fabsf(x - trajectory[0]) < 1E-4) break;
+						if (fabs(x - trajectory[0]) < 1E-4) break;
 						attractors[i] = trajectory[0];
 						i++;
 					}
@@ -172,7 +172,7 @@ void bifurcation() {
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
 						/* check if we are back to x */
-						if (fabsf(x - trajectory[0]) < 1E-3) break;
+						if (fabs(x - trajectory[0]) < 1E-3) break;
 						attractors[i] = trajectory[0];
 						i++;
 					}
@@ -212,7 +212,7 @@ void bifurcation() {
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
 						/* check if we are back to x */
-						if (fabsf(x - trajectory[0]) < 1E-4) break;
+						if (fabs(x - trajectory[0]) < 1E-4) break;
 						attractors[i] = trajectory[0];
 						i++;
 					}
@@ -252,7 +252,7 @@ void bifurcation() {
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
 						/* check if we are back to x */
-						if (fabsf(x - trajectory[0]) < 1E-3) break;
+						if (fabs(x - trajectory[0]) < 1E-3) break;
 						attractors[i] = trajectory[0];
 						i++;
 					}
@@ -292,7 +292,7 @@ void bifurcation() {
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
 						/* check if we are back to x */
-						if (fabsf(x - trajectory[0]) < 1E-3) break;
+						if (fabs(x - trajectory[0]) < 1E-3) break;
 						attractors[i] = trajectory[0];
 						i++;
 					}
@@ -313,7 +313,7 @@ void bifurcation() {
 			const float h = 0.001F;
 			const unsigned int windowSize = 3;
 			const unsigned int varPlot = 0;
-			float window[windowSize];
+			double window[windowSize];
 			size_t j;
 			minIterations = 100000;
 			for (size_t s = 0; s <= S; s++) {
@@ -336,7 +336,7 @@ void bifurcation() {
 				lorenzRK4(trajectory, h);
 				window[j % windowSize] = trajectory[varPlot];
 				j++;
-				if (fabsf(trajectory[varPlot] - window[(j - 2) % windowSize]) < 1E-4) {
+				if (fabs(trajectory[varPlot] - window[(j - 2) % windowSize]) < 1E-4) {
 					attractors[i] = trajectory[varPlot];
 					i++;
 				}
@@ -347,7 +347,7 @@ void bifurcation() {
 						window[j % windowSize] = trajectory[varPlot];
 						if ((window[j % windowSize] < window[(j - 1) % windowSize]) && (window[(j - 1) % windowSize] >= window[(j - 2) % windowSize])) {
 							/* window[(j - 1) % 3] is a local MAXIMUM. We check if the value already exists, and if not, we store it */
-							if (fabsf(window[(j - 1) % windowSize] - attractors[0]) < 1E-5) break;
+							if (fabs(window[(j - 1) % windowSize] - attractors[0]) < 1E-5) break;
 							else {
 								attractors[i] = window[(j - 1) % windowSize];
 								i++;
@@ -367,7 +367,7 @@ void bifurcation() {
 			const float h = 0.01F;
 			const unsigned int windowSize = 3;
 			const int varPlot = 0;
-			float window[windowSize];
+			double window[windowSize];
 			size_t j;
 			minIterations = 50000;
 			for (size_t s = 0; s <= S; s++) {
@@ -390,7 +390,7 @@ void bifurcation() {
 				rosslerRK4(trajectory, h);
 				window[j % windowSize] = trajectory[varPlot];
 				j++;
-				if (fabsf(trajectory[varPlot] - window[(j - 2) % windowSize]) < 1E-5) {
+				if (fabs(trajectory[varPlot] - window[(j - 2) % windowSize]) < 1E-5) {
 					attractors[i] = trajectory[varPlot];
 					i++;
 				}
@@ -401,7 +401,7 @@ void bifurcation() {
 						window[j % windowSize] = trajectory[varPlot];
 						if (window[j % windowSize] < window[(j - 1) % windowSize] && window[(j - 1) % windowSize] >= window[(j - 2) % windowSize]) {
 							/* window[(j - 1) % 3] is a local EXTREMUM. We check if the value already exists, and if not, we store it */
-							if (fabsf(window[(j - 1) % windowSize] - attractors[0]) < 1E-4) break;
+							if (fabs(window[(j - 1) % windowSize] - attractors[0]) < 1E-4) break;
 							else {
 								attractors[i] = window[(j - 1) % 3];
 								i++;

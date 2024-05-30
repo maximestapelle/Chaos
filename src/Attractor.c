@@ -10,7 +10,7 @@
 void attractor() {
 	
 	FILE * fp;
-	float trajectory[dimension];
+	double trajectory[dimension];
 
 	fp = fopen(dataFile, "w");
 		
@@ -43,7 +43,7 @@ void attractor() {
 			}
 			break;
 		case 8: {
-// 			float dt = 0.01F;
+// 			double dt = 0.01F;
 			float h = 0.02F;
 			for (size_t n = 1; n <= N; n++) {
 				lorenzRK4(trajectory, h);
@@ -56,7 +56,7 @@ void attractor() {
 			break;
 		}
 		case 9: {
-// 			float dt = 0.01F;
+// 			double dt = 0.01F;
 			float h = 0.02F;
 			for (size_t n = 1; n <= N; n++) {
 				rosslerRK4(trajectory, h);

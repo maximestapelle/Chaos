@@ -14,37 +14,37 @@
  *
  * Dynamics are used by the functions attractor(), bifurcation() and bifurcation2D() */
 
-void logistic(float trajectory[]) {
+void logistic(double trajectory[]) {
 	trajectory[0] =  userMapValues.parameters[0] * trajectory[0] * (1 - trajectory[0]);
 }
-float logisticDerivative(float trajectory[]) {
+double logisticDerivative(double trajectory[]) {
 	return userMapValues.parameters[0] * (1 - 2 * trajectory[0]);
 }
-float logisticLyapunov(float trajectory[]) {
-	return log(fabsf(userMapValues.parameters[0])) + log(fabsf(1 - 2 * trajectory[0]));
+double logisticLyapunov(double trajectory[]) {
+	return log(fabs(userMapValues.parameters[0])) + log(fabs(1 - 2 * trajectory[0]));
 }
 
-void logisticExp(float trajectory[]) {
+void logisticExp(double trajectory[]) {
 	trajectory[0] = userMapValues.parameters[0] * trajectory[0] * exp(-trajectory[0]);
 }
-float logisticExpDerivative(float trajectory[]) {
+double logisticExpDerivative(double trajectory[]) {
 	return userMapValues.parameters[0] * (1 - trajectory[0]) * exp(-trajectory[0]);
 }
-float logisticExpLyapunov(float trajectory[]) {
-	return log(fabsf(userMapValues.parameters[0])) + log(fabsf(1 - trajectory[0])) - trajectory[0];
+double logisticExpLyapunov(double trajectory[]) {
+	return log(fabs(userMapValues.parameters[0])) + log(fabs(1 - trajectory[0])) - trajectory[0];
 }
 
-void gauss(float trajectory[]) {
+void gauss(double trajectory[]) {
 	 trajectory[0] = exp(- userMapValues.parameters[1] * pow(trajectory[0], 2)) + userMapValues.parameters[0];
 }
-float gaussDerivative(float trajectory[]) {
+double gaussDerivative(double trajectory[]) {
 	return -2 * userMapValues.parameters[1] * trajectory[0] * exp(- userMapValues.parameters[1] * pow(trajectory[0], 2));
 }
-float gaussLyapunov(float trajectory[]) {
-	return - userMapValues.parameters[1] * pow(trajectory[0], 2) + log(fabsf(2 * userMapValues.parameters[1] * trajectory[0]));
+double gaussLyapunov(double trajectory[]) {
+	return - userMapValues.parameters[1] * pow(trajectory[0], 2) + log(fabs(2 * userMapValues.parameters[1] * trajectory[0]));
 }
 
-void tent(float trajectory[]) {
+void tent(double trajectory[]) {
 	if (trajectory[0] < 0.5) {
 		trajectory[0] =  userMapValues.parameters[0] * trajectory[0];
 	}
@@ -53,33 +53,33 @@ void tent(float trajectory[]) {
 	}
 }
 
-void circle(float trajectory[]) {
-	float result;
+void circle(double trajectory[]) {
+	double result;
 	
-	result = trajectory[0] + userMapValues.parameters[0] / (2 * M_PI) * ((float) sin(2 * M_PI * trajectory[0])) + userMapValues.parameters[1];
+	result = trajectory[0] + userMapValues.parameters[0] / (2 * M_PI) * ((double) sin(2 * M_PI * trajectory[0])) + userMapValues.parameters[1];
 	// Result is modulo 1
 	result -= floor(result);
 
 	trajectory[0] = result;
 }
-float circleDerivative(float trajectory[]) {
+double circleDerivative(double trajectory[]) {
 	return 1 + userMapValues.parameters[0] * cos(2 * M_PI * trajectory[0]);
 }
-float circleLyapunov(float trajectory[]) {
-	return log(fabsf(circleDerivative(trajectory)));
+double circleLyapunov(double trajectory[]) {
+	return log(fabs(circleDerivative(trajectory)));
 }
 
 
 
-void tinkerbell(float trajectory[]) {
-	float x, y;
+void tinkerbell(double trajectory[]) {
+	double x, y;
 	x = pow(trajectory[0], 2) - pow(trajectory[1], 2) + userMapValues.parameters[1] * trajectory[0] + userMapValues.parameters[0] * trajectory[1];
 	y = 2 * trajectory[0] * trajectory[1] + userMapValues.parameters[2] * trajectory[0] + userMapValues.parameters[3] * trajectory[1];
 	
 	trajectory[0] = x;
 	trajectory[1] = y;
 }
-void tinkerbellJacobian(float trajectory[], float jacobian[][2]) {
+void tinkerbellJacobian(double trajectory[], double jacobian[][2]) {
 	jacobian[0][0] = 2 * trajectory[0] + userMapValues.parameters[1];
 	jacobian[0][1] = -2 * trajectory[1] + userMapValues.parameters[0];
 	jacobian[1][0] = 2 * trajectory[1] + userMapValues.parameters[2];
@@ -87,15 +87,15 @@ void tinkerbellJacobian(float trajectory[], float jacobian[][2]) {
 
 }
 
-void henon(float trajectory[]) {
-	float x, y;
+void henon(double trajectory[]) {
+	double x, y;
 	x = 1 - userMapValues.parameters[0] * pow(trajectory[0], 2) + trajectory[1];
 	y = userMapValues.parameters[1] * trajectory[0];
 
 	trajectory[0] = x;
 	trajectory[1] = y;
 }
-void henonJacobian(float trajectory[], float jacobian[][2]) {
+void henonJacobian(double trajectory[], double jacobian[][2]) {
 	jacobian[0][0] = -2 * userMapValues.parameters[0] * trajectory[0];
 	jacobian[0][1] = 1;
 	jacobian[1][0] = userMapValues.parameters[1];
@@ -103,16 +103,16 @@ void henonJacobian(float trajectory[], float jacobian[][2]) {
 
 }
 
-void lorenzEvolution(float input[], float fgh[]) {
+void lorenzEvolution(double input[], double fgh[]) {
 	fgh[0] = userMapValues.parameters[1] * (input[1] - input[0]);
 	fgh[1] = input[0] * (userMapValues.parameters[0] - input[2]) - input[1];
 	fgh[2] = input[0] * input[1] - userMapValues.parameters[2] * input[2];
 	
 }
 /* This is Newton/Euler method for Lorenz (so the easiest one, based on 1st order Taylor series) */
-void lorenz(float trajectory[], const float dt) {
-	float x, y, z;
-	float fgh[3];
+void lorenz(double trajectory[], const float dt) {
+	double x, y, z;
+	double fgh[3];
 	
 	lorenzEvolution(trajectory, fgh);
 	
@@ -125,9 +125,9 @@ void lorenz(float trajectory[], const float dt) {
 	trajectory[2] = z;
 }
 /* This is Runge-Kutta 4th order */
-void lorenzRK4(float trajectory[], const float h) {
-	float array[3];
-	float k1[3], k2[3], k3[3], k4[3];
+void lorenzRK4(double trajectory[], const float h) {
+	double array[3];
+	double k1[3], k2[3], k3[3], k4[3];
 
 	lorenzEvolution(trajectory, k1); 
 	
@@ -154,16 +154,16 @@ void lorenzRK4(float trajectory[], const float h) {
 	trajectory[2] = trajectory[2] + h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]);
 }
 
-void rosslerEvolution(float input[], float fgh[]) {
+void rosslerEvolution(double input[], double fgh[]) {
 	fgh[0] = -input[1] - input[2];
 	fgh[1] = input[0] + userMapValues.parameters[2] * input[1];
 	fgh[2] = userMapValues.parameters[0] + input[2] * (input[0] - userMapValues.parameters[1]);
 	
 }
 /* This is Newton/Euler method for Rossler (so the easiest one, based on 1st order Taylor series) */
-void rossler(float trajectory[], const float dt) {
-	float x, y, z;
-	float fgh[3];
+void rossler(double trajectory[], const float dt) {
+	double x, y, z;
+	double fgh[3];
 	
 	rosslerEvolution(trajectory, fgh);
 	
@@ -176,9 +176,9 @@ void rossler(float trajectory[], const float dt) {
 	trajectory[2] = z;
 }
 /* This is Runge-Kutta 4th order */
-void rosslerRK4(float trajectory[], const float h) {
-	float array[3];
-	float k1[3], k2[3], k3[3], k4[3];
+void rosslerRK4(double trajectory[], const float h) {
+	double array[3];
+	double k1[3], k2[3], k3[3], k4[3];
 
 	rosslerEvolution(trajectory, k1); 
 	

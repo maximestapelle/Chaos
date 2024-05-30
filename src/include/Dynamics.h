@@ -25,29 +25,29 @@ typedef struct {
 
 
 /* Dynamics functions - those do not use the structure above yet */
-void logistic(float trajectory[]);
-float logisticDerivative(float trajectory[]);
-float logisticLyapunov(float trajectory[]);
-void logisticExp(float trajectory[]);
-float logisticExpDerivative(float trajectory[]);
-float logisticExpLyapunov(float trajectory[]);
-void gauss(float trajectory[]);
-float gaussDerivative(float trajectory[]);
-float gaussLyapunov(float trajectory[]);
-void tent(float trajectory[]);
-void circle(float trajectory[]);
-float circleDerivative(float trajectory[]);
-float circleLyapunov(float trajectory[]);
-void tinkerbell(float trajectory[]);
-void tinkerbellJacobian(float trajectory[], float jacobian[][dimension]);
-void henon(float trajectory[]);
-void henonJacobian(float trajectory[], float jacobian[][dimension]);
-void lorenzEvolution(float input[], float fgh[]);
-void lorenz(float trajectory[], const float dt);
-void lorenzRK4(float trajectory[], const float h);
-void rosslerEvolution(float input[], float fgh[]);
-void rossler(float trajectory[], const float dt);
-void rosslerRK4(float trajectory[], const float h);
+void logistic(double trajectory[]);
+double logisticDerivative(double trajectory[]);
+double logisticLyapunov(double trajectory[]);
+void logisticExp(double trajectory[]);
+double logisticExpDerivative(double trajectory[]);
+double logisticExpLyapunov(double trajectory[]);
+void gauss(double trajectory[]);
+double gaussDerivative(double trajectory[]);
+double gaussLyapunov(double trajectory[]);
+void tent(double trajectory[]);
+void circle(double trajectory[]);
+double circleDerivative(double trajectory[]);
+double circleLyapunov(double trajectory[]);
+void tinkerbell(double trajectory[]);
+void tinkerbellJacobian(double trajectory[], double jacobian[][dimension]);
+void henon(double trajectory[]);
+void henonJacobian(double trajectory[], double jacobian[][dimension]);
+void lorenzEvolution(double input[], double fgh[]);
+void lorenz(double trajectory[], const float dt);
+void lorenzRK4(double trajectory[], const float h);
+void rosslerEvolution(double input[], double fgh[]);
+void rossler(double trajectory[], const float dt);
+void rosslerRK4(double trajectory[], const float h);
 
 
 

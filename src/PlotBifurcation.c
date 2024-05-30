@@ -40,8 +40,8 @@ void plotBifurcation() {
 	strcat(pythonFileContents, dataFile);
 	strcat(pythonFileContents, "\') as f:\n");
 	strcat(pythonFileContents, "\tlines = f.readlines()\n");
-	strcat(pythonFileContents, "\tparam = [float(line.split()[0]) for line in lines]\n");
-	strcat(pythonFileContents, "\tx = [float(line.split()[1]) for line in lines]\n");
+	strcat(pythonFileContents, "\tparam = [double(line.split()[0]) for line in lines]\n");
+	strcat(pythonFileContents, "\tx = [double(line.split()[1]) for line in lines]\n");
 
 	strcat(pythonFileContents, "ax = plt.figure(figsize = (16, 9), constrained_layout=True).add_subplot()\n");
 	strcat(pythonFileContents, "ax.plot(param, x, \',\', color = \'cornflowerblue\')\n");

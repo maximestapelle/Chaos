@@ -10,9 +10,9 @@
 void lyapunov() {
 	
 	FILE * fp;
-	float parameterIncrement = (userMapValues.parameterRange[1] - userMapValues.parameterRange[0]) / S;
-	float trajectory[dimension]; /* The current point of the trajectory */
-	float lyapunovExponents[dimension]; 
+	double parameterIncrement = (userMapValues.parameterRange[1] - userMapValues.parameterRange[0]) / S;
+	double trajectory[dimension]; /* The current point of the trajectory */
+	double lyapunovExponents[dimension]; 
 
 	fp = fopen(dataFile, "w");
 		
@@ -87,10 +87,10 @@ void lyapunov() {
 			}
 			break;
 		case 6: {
-			float nJacobianProduct[dimension][dimension];
-			float nthJacobian[dimension][dimension];
-			float transposednJacobianProduct[dimension][dimension];
-			float H[dimension][dimension];
+			double nJacobianProduct[dimension][dimension];
+			double nthJacobian[dimension][dimension];
+			double transposednJacobianProduct[dimension][dimension];
+			double H[dimension][dimension];
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				for (size_t d = 0; d < dimension; d++) {
@@ -104,23 +104,23 @@ void lyapunov() {
 				}
 /**  Old solution based on http://dx.doi.org/10.1016/j.cnsns.2014.06.042 eq 2.6 **/
 // 				eigen_values(nJacobianProduct, lyapunovExponents);
-// 				lyapunovExponents[0] = log(fabsf(lyapunovExponents[0])) / N;
-// 				lyapunovExponents[1] = log(fabsf(lyapunovExponents[1])) / N;
+// 				lyapunovExponents[0] = log(fabs(lyapunovExponents[0])) / N;
+// 				lyapunovExponents[1] = log(fabs(lyapunovExponents[1])) / N;
 /** New solution based on Phys 221A Lecture Notes - Lyapunov Exponents
 and their Relation to Entropy **/ 
 				matrix_transpose(nJacobianProduct, transposednJacobianProduct);
 				dot_product(transposednJacobianProduct, nJacobianProduct, H);
-				lyapunovExponents[0] = log(fabsf(H[0][0])) / (2 * N);
-				lyapunovExponents[1] = log(fabsf(H[1][1])) / (2 * N);
+				lyapunovExponents[0] = log(fabs(H[0][0])) / (2 * N);
+				lyapunovExponents[1] = log(fabs(H[1][1])) / (2 * N);
 				fprintf(fp, "%f %.4f %.4f\n", userMapValues.parameters[0], lyapunovExponents[0], lyapunovExponents[1]);
 			}
 			break;
 		}
 		case 7: {
-			float nJacobianProduct[dimension][dimension];
-			float nthJacobian[dimension][dimension];
-			float transposednJacobianProduct[dimension][dimension];
-			float H[dimension][dimension];
+			double nJacobianProduct[dimension][dimension];
+			double nthJacobian[dimension][dimension];
+			double transposednJacobianProduct[dimension][dimension];
+			double H[dimension][dimension];
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				for (size_t d = 0; d < dimension; d++) {
@@ -134,14 +134,14 @@ and their Relation to Entropy **/
 				}
 /**  Old solution based on http://dx.doi.org/10.1016/j.cnsns.2014.06.042 eq 2.6 **/
 // 				eigen_values(nJacobianProduct, lyapunovExponents);
-// 				lyapunovExponents[0] = log(fabsf(lyapunovExponents[0])) / N;
-// 				lyapunovExponents[1] = log(fabsf(lyapunovExponents[1])) / N;
+// 				lyapunovExponents[0] = log(fabs(lyapunovExponents[0])) / N;
+// 				lyapunovExponents[1] = log(fabs(lyapunovExponents[1])) / N;
 /** New solution based on Phys 221A Lecture Notes - Lyapunov Exponents
 and their Relation to Entropy **/ 
 				matrix_transpose(nJacobianProduct, transposednJacobianProduct);
 				dot_product(transposednJacobianProduct, nJacobianProduct, H);
-				lyapunovExponents[0] = log(fabsf(H[0][0])) / (2 * N);
-				lyapunovExponents[1] = log(fabsf(H[1][1])) / (2 * N);
+				lyapunovExponents[0] = log(fabs(H[0][0])) / (2 * N);
+				lyapunovExponents[1] = log(fabs(H[1][1])) / (2 * N);
 // 				if (isnan(lyapunovExponents[0]) || isinf(lyapunovExponents[0])) {
 // 					if (isnan(lyapunovExponents[1]) || isinf(lyapunovExponents[1])) continue;
 // 					else fprintf(fp, "%f  %.4f\n", userMapValues.parameters[0], lyapunovExponents[1]);

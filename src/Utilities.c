@@ -8,16 +8,16 @@
  */
 
 /* Array utilities */
-float **init_2DMatrix(const unsigned int nRows, const unsigned int nColumns)
+double **init_2DMatrix(const unsigned int nRows, const unsigned int nColumns)
 {
-	float **matrix = calloc(nRows, sizeof *matrix); 
+	double **matrix = calloc(nRows, sizeof *matrix); 
 	for (size_t i = 0; i < nRows; i++) {
 		matrix[i] = calloc(nColumns, sizeof **matrix);
 	}
 	
 	return matrix;
 }
-void free_2DMatrix(float **matrix, const unsigned int nRows)
+void free_2DMatrix(double **matrix, const unsigned int nRows)
 {
 	for (size_t i = 0; i < nRows; i++) {
 	free(matrix[i]);
@@ -28,7 +28,7 @@ void free_2DMatrix(float **matrix, const unsigned int nRows)
 }
 
 /* Check if a value exists */
-bool is_in_row(float value, float *array, const unsigned int size)
+bool is_in_row(double value, double *array, const unsigned int size)
 {
 	for (size_t i = 0; i < size; i++)
 	{
@@ -38,7 +38,7 @@ bool is_in_row(float value, float *array, const unsigned int size)
 	return false;
 }
 /* Check if a value exists, for 2D actions */
-bool is_in_matrix(float *value, float **matrix, const unsigned int size)
+bool is_in_matrix(double *value, double **matrix, const unsigned int size)
 {
 	for (size_t i = 0; i < size; i++)
 	{
@@ -49,8 +49,8 @@ bool is_in_matrix(float *value, float **matrix, const unsigned int size)
 }
 
 /* Matrix product, coded so that the result mp can be set as one of the input matrices */
-void dot_product(float m1[][dimension], float m2[][dimension], float mp[][dimension]) {
-	float temp[dimension][dimension];
+void dot_product(double m1[][dimension], double m2[][dimension], double mp[][dimension]) {
+	double temp[dimension][dimension];
 	memset(temp, 0, sizeof temp);
 
 	for (size_t i = 0; i < dimension; i++) {
@@ -64,7 +64,7 @@ void dot_product(float m1[][dimension], float m2[][dimension], float mp[][dimens
 	memcpy(mp, temp, sizeof(temp));
 }
 /* Square Matrix transpose */
-void matrix_transpose(float m[][dimension], float mt[][dimension]) {
+void matrix_transpose(double m[][dimension], double mt[][dimension]) {
 	for (size_t i = 0; i < dimension; i++) {
 		for (size_t j = 0; j < dimension; j++) {
 			mt[j][i] = m[i][j];
@@ -73,17 +73,17 @@ void matrix_transpose(float m[][dimension], float mt[][dimension]) {
 }
 
 /* Specific to dimension = 2 !! */
-void eigen_values(float matrix[][dimension], float eigenvalues[]) {
-	float temp1 = matrix[0][0] + matrix[1][1];
-	float temp2 = pow(temp1, 2) - 4 * (matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1]);
+void eigen_values(double matrix[][dimension], double eigenvalues[]) {
+	double temp1 = matrix[0][0] + matrix[1][1];
+	double temp2 = pow(temp1, 2) - 4 * (matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1]);
 	
 	if (temp2 >= 0) {
 		eigenvalues[0] = (temp1 + sqrtf(temp2)) / 2;
 		eigenvalues[1] = (temp1 - sqrtf(temp2)) / 2;
 	}
 	else {
-		eigenvalues[0] = cabsf(temp1 + csqrtf(temp2)) / 2;
-		eigenvalues[1] = cabsf(temp1 - csqrtf(temp2)) / 2;
+		eigenvalues[0] = cabs(temp1 + csqrtf(temp2)) / 2;
+		eigenvalues[1] = cabs(temp1 - csqrtf(temp2)) / 2;
 	}
 
 }

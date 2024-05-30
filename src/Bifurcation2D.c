@@ -14,14 +14,14 @@
 void bifurcation2D() {
 	
 	FILE * fp;
-	float parameterIncrement = (userMapValues.parameterRange[1] - userMapValues.parameterRange[0]) / S;
+	double parameterIncrement = (userMapValues.parameterRange[1] - userMapValues.parameterRange[0]) / S;
 	/* Redefine maxPoints : we should have a big number of values of each attractor ! */
 	maxPoints = 1000;
-	float xy[dimension];
-	float powerof10; /* for rounding of the trajectory */
+	double xy[dimension];
+	double powerof10; /* for rounding of the trajectory */
 	int significantDigits = 4;
-	float trajectory[dimension]; /* The current point of the trajectory */
-	float **attractors = init_2DMatrix(maxPoints, dimension); /* We need to store, for each value of s, the points to see if the current one is already recorded. */
+	double trajectory[dimension]; /* The current point of the trajectory */
+	double **attractors = init_2DMatrix(maxPoints, dimension); /* We need to store, for each value of s, the points to see if the current one is already recorded. */
 	
 	unsigned int i;
 	bool divergence;
@@ -48,10 +48,10 @@ void bifurcation2D() {
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0]) && !isnan(trajectory[1]) && !isinf(trajectory[1])) {
 						// Round x to significantDigits significant digits
-						powerof10 = pow(10, significantDigits - ceil(log10f(fabsf(trajectory[0]))));
+						powerof10 = pow(10, significantDigits - ceil(log10f(fabs(trajectory[0]))));
 						xy[0] = round(trajectory[0] * powerof10) / powerof10;
 						// Round y to significantDigits significant digits
-						powerof10 = pow(10, significantDigits - ceil(log10f(fabsf(trajectory[1]))));
+						powerof10 = pow(10, significantDigits - ceil(log10f(fabs(trajectory[1]))));
 						xy[1] = round(trajectory[1] * powerof10) / powerof10;
 						/* check if it already exists */
 						if (is_in_matrix(xy, attractors, maxPoints)) break;
@@ -88,10 +88,10 @@ void bifurcation2D() {
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0]) && !isnan(trajectory[1]) && !isinf(trajectory[1])) {
 						// Round x to significantDigits significant digits
-						powerof10 = pow(10, significantDigits - ceil(log10f(fabsf(trajectory[0]))));
+						powerof10 = pow(10, significantDigits - ceil(log10f(fabs(trajectory[0]))));
 						xy[0] = round(trajectory[0] * powerof10) / powerof10;
 						// Round y to significantDigits significant digits
-						powerof10 = pow(10, significantDigits - ceil(log10f(fabsf(trajectory[1]))));
+						powerof10 = pow(10, significantDigits - ceil(log10f(fabs(trajectory[1]))));
 						xy[1] = round(trajectory[1] * powerof10) / powerof10;
 						/* check if it already exists */
 						if (is_in_matrix(xy, attractors, maxPoints)) break;
