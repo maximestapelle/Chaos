@@ -87,15 +87,15 @@ INPUT_DONE:
 		switch (userAction) {				/* Now we decide what to call based on the requested action */
 			case 1:
 				bifurcation();
-	    		plotBifurcation();
+// 	    		plotBifurcation();
 				break;
 	    	case 2:
 	    		lyapunov();
-	    		plotLyapunov();
+// 	    		plotLyapunov();
 	    		break;
 			case 3:
 				attractor();
-				plotAttractor();
+// 				plotAttractor();
 				break;
 	    	case 4:
 	    		bifurcation2D();
@@ -122,17 +122,17 @@ INPUT_DONE:
 	}
 	
 	/* Open the image file */
-	if (strcmp(PLATFORM_NAME, "linux") == 0) strcat(commandOpenImageFile,"xdg-open \"");
-	else if (strcmp(PLATFORM_NAME, "osx") == 0) strcat(commandOpenImageFile,"open \"");
-	else {
-		printf("Unknown OS. Don't know how to open image file.\n");
-		goto END;
-	}
-	strcat(commandOpenImageFile, imageFile);
-	strcat(commandOpenImageFile, "\"");
-	system(commandOpenImageFile);
-
-END:
+// 	if (strcmp(PLATFORM_NAME, "linux") == 0) strcat(commandOpenImageFile,"xdg-open \"");
+// 	else if (strcmp(PLATFORM_NAME, "osx") == 0) strcat(commandOpenImageFile,"open \"");
+// 	else {
+// 		printf("Unknown OS. Don't know how to open image file.\n");
+// 		goto END;
+// 	}
+// 	strcat(commandOpenImageFile, imageFile);
+// 	strcat(commandOpenImageFile, "\"");
+// 	system(commandOpenImageFile);
+// 
+// END:
 	sqlite3_close(database);
 	return 0;
 }
