@@ -1,4 +1,5 @@
 #include "Utilities.h"
+#include "Dynamics.h"
 
 /*
  * The bifurcation function computes a trajectory and waits for a transient period. After that :

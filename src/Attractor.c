@@ -1,4 +1,4 @@
-#include "Chaos.h"
+#include "Dynamics.h"
 
 /*
  * The attractor function will compute the trajectory of the selected dynamical system,

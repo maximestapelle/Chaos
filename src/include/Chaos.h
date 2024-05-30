@@ -33,24 +33,6 @@
 #define DIMENSION_MAX 3
 #define NUMBER_PARAMETERS_MAX 5
 
-/* SOLUTION WITH STRUCTURES ; CHANGES NOTHING TO PERFORMANCE. More elegant for the default/actual values ; not for the map as you havbe map.everything everywhere.
-
-struct mapAttributes {
-	int id;
-	char name[25];
-	char LaTeXformula[100];
-	unsigned int dimension;
-	char variablesNames[DIMENSION_MAX][15];
-	unsigned int numberParameters;
-	char parametersNames[NUMBER_PARAMETERS_MAX][15];
-	char space[2];
-	char type[10];
-};
-
-extern struct mapAttributes map;
-
-*/
-
 /********************/
 /* Structures       */
 struct mapValues {
@@ -121,31 +103,6 @@ void attractor();
 void bifurcation();
 void lyapunov();
 void bifurcation2D();
-/* Dynamics functions */
-void logistic(float trajectory[]);
-float logisticDerivative(float trajectory[]);
-float logisticLyapunov(float trajectory[]);
-void logisticExp(float trajectory[]);
-float logisticExpDerivative(float trajectory[]);
-float logisticExpLyapunov(float trajectory[]);
-void gauss(float trajectory[]);
-float gaussDerivative(float trajectory[]);
-float gaussLyapunov(float trajectory[]);
-void tent(float trajectory[]);
-void circle(float trajectory[]);
-float circleDerivative(float trajectory[]);
-float circleLyapunov(float trajectory[]);
-void tinkerbell(float trajectory[]);
-void tinkerbellJacobian(float trajectory[], float jacobian[][dimension]);
-void henon(float trajectory[]);
-void henonJacobian(float trajectory[], float jacobian[][dimension]);
-void lorenzEvolution(float input[], float fgh[]);
-void lorenz(float trajectory[], const float dt);
-void lorenzRK4(float trajectory[], const float h);
-void rosslerEvolution(float input[], float fgh[]);
-void rossler(float trajectory[], const float dt);
-void rosslerRK4(float trajectory[], const float h);
-
 /* Plots */
 void plotAttractor();
 void plotBifurcation();

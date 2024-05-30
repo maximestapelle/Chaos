@@ -1,5 +1,6 @@
-#include "Chaos.h"
 #include "Utilities.h"
+#include "Dynamics.h"
+
 /*
  * The lyapunov function computes a trajectory and constructs lyapunov exponents.
  *

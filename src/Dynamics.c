@@ -1,5 +1,6 @@
 #include "Chaos.h"
 #include "Utilities.h"
+#include "Dynamics.h"
 
 /* Contains the dynamics of each dynamical system.
  *
