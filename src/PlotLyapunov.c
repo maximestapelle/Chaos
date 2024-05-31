@@ -67,40 +67,40 @@ void plotLyapunov() {
 			}
 			else {
 				for (size_t d = 0; d < dimension; d++) {
-					snprintf(pythonFileContents, sizeof(pythonFileContents), "%sax.plot(param[lya[%zu] < 0], lya[%zu][lya[%zu] < 0], \',\', color = (0, 0, (255 - 127 * %zu)/255), label = r\'Exponent along ", pythonFileContents, d, d, d, d);
+					snprintf(pythonFileContents, sizeof(pythonFileContents), "%sax.plot(param[lya[%zu] < 0], lya[%zu][lya[%zu] < 0], \',\', color = (0, 0, (255 - 127 * %zu)/255), label = r\'Exponent along $", pythonFileContents, d, d, d, d);
 					strcat(pythonFileContents, variablesNames[d]);
-					strcat(pythonFileContents, ", when $<0$\')\n");
-					snprintf(pythonFileContents, sizeof(pythonFileContents), "%sax.plot(param[lya[%zu] > 0], lya[%zu][lya[%zu] > 0], \',\', color = ((255 - 127 * %zu)/255, 0, 0), label = r\'Exponent along ", pythonFileContents, d, d, d, d);
+					strcat(pythonFileContents, "$, when $<0$\')\n");
+					snprintf(pythonFileContents, sizeof(pythonFileContents), "%sax.plot(param[lya[%zu] > 0], lya[%zu][lya[%zu] > 0], \',\', color = ((255 - 127 * %zu)/255, 0, 0), label = r\'Exponent along $", pythonFileContents, d, d, d, d);
 					strcat(pythonFileContents, variablesNames[d]);
-					strcat(pythonFileContents, ", when $>0$\')\n");
+					strcat(pythonFileContents, "$, when $>0$\')\n");
 				}
 			}
 			break;
 		case 0:
-// 			if (dimension > 1) {
-// 				strcat(pythonFileContents, "sum = []\n");
-// 				strcat(pythonFileContents, "for l in range(len(lya1)):\n");
-// 				strcat(pythonFileContents, "\tsum.append(lya1[l]");
-// 				for (size_t d = 2; d <= dimension; d++) {
-// 					snprintf(pythonFileContents, sizeof (pythonFileContents), "%s+ lya%zu[l]", pythonFileContents, d);
-// 				}
-// 				strcat(pythonFileContents, ")\n");
-// 				strcat(pythonFileContents, "plt.plot(param,sum,\',-\', color=\'white\',label=\'$\\sum\\limits_{i\\in\\{\\\\rm $\'+\'");
-// 				strcat(pythonFileContents, variablesNames[0]);
-// 				for (size_t d = 1; d < dimension; d++) {
-// 					snprintf(pythonFileContents, sizeof (pythonFileContents), "%s\'+\', \'+\'%s", pythonFileContents, variablesNames[d]);
-// 				}
-// 				strcat(pythonFileContents, "\'+\'\\}}\\lambda_{i}$\')\n");
-// 			}
 			for (size_t d = 1; d <= dimension; d++) {
-				snprintf(pythonFileContents, sizeof (pythonFileContents), "%splt.plot(param,lya%zu,\',-\',color=((255 - 50 * %zu)/255, (255 - 25 * %zu)/255, (255 - 75 * %zu)/255),label=\'$\\lambda_%zu", pythonFileContents, d, d, d, d, d);
+				snprintf(pythonFileContents, sizeof (pythonFileContents), "%splt.plot(param,lya%zu,\',-\',color=((255 - 50 * %zu)/255, (255 - 25 * %zu)/255, (255 - 75 * %zu)/255),label=\'$\\lambda_{\\\\rm %s}", pythonFileContents, d, d, d, d, variablesNames[d - 1]);
 				strcat(pythonFileContents, "$\')\n");
+			}
+			if (dimension > 1) {
+				strcat(pythonFileContents, "sum = []\n");
+				strcat(pythonFileContents, "for l in range(len(lya1)):\n");
+				strcat(pythonFileContents, "\tsum.append(lya1[l]");
+				for (size_t d = 2; d <= dimension; d++) {
+					snprintf(pythonFileContents, sizeof (pythonFileContents), "%s+ lya%zu[l]", pythonFileContents, d);
+				}
+				strcat(pythonFileContents, ")\n");
+				strcat(pythonFileContents, "plt.plot(param,sum,\',-\', color=\'cornflowerblue\',label=\'$\\sum\\limits_{i\\in\\{\\\\rm ");
+				strcat(pythonFileContents, variablesNames[0]);
+				for (size_t d = 1; d < dimension; d++) {
+					snprintf(pythonFileContents, sizeof (pythonFileContents), "%s, %s", pythonFileContents, variablesNames[d]);
+				}
+				strcat(pythonFileContents, "\\}}\\lambda_{i}$\')\n");
 			}
 			break;
 	}
-	strcat(pythonFileContents, "ax.set_xlabel(r\'Values of the parameter ");
+	strcat(pythonFileContents, "ax.set_xlabel(r\'Values of the parameter $");
 	strcat(pythonFileContents, parametersNames[0]);
-	strcat(pythonFileContents, "\')\n");
+	strcat(pythonFileContents, "$\')\n");
 	switch (dimension) {
 		case 1:
 			strcat(pythonFileContents, "ax.set_ylabel(r\'Value of the Lyapunov exponent\')\n");

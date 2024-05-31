@@ -20,6 +20,7 @@
  **						  Specific header for dynamics.													  *
  **						  float to double when applicable.												  *
  **						  Implementation of Lyapunov for flows											  *
+ **						  Small change in the handling of LaTeX variable names in plots					  *
  **********************************************************************************************************/
 
 // TODO : 

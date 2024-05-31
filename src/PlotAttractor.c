@@ -57,16 +57,16 @@ void plotAttractor() {
 		strcat(pythonFileContents, "z, ");
 	}
 	strcat(pythonFileContents, "\',\', color = \'cornflowerblue\')\n");
-	strcat(pythonFileContents, "ax.set_xlabel(r\'Value of ");
+	strcat(pythonFileContents, "ax.set_xlabel(r\'Value of $");
 	strcat(pythonFileContents, variablesNames[0]);
-	strcat(pythonFileContents, "\')\n");
-	strcat(pythonFileContents, "ax.set_ylabel(r\'Value of ");
+	strcat(pythonFileContents, "$\')\n");
+	strcat(pythonFileContents, "ax.set_ylabel(r\'Value of $");
 	strcat(pythonFileContents, variablesNames[1]);
-	strcat(pythonFileContents, "\')\n");
+	strcat(pythonFileContents, "$\')\n");
 	if (dimension == 3) {
-		strcat(pythonFileContents, "ax.set_zlabel(r\'Value of ");
+		strcat(pythonFileContents, "ax.set_zlabel(r\'Value of $");
 		strcat(pythonFileContents, variablesNames[2]);
-		strcat(pythonFileContents, "\')\n");
+		strcat(pythonFileContents, "$\')\n");
 	}
 	strcat(pythonFileContents, "ax.set_title(r\'");
 	strcat(pythonFileContents, title);

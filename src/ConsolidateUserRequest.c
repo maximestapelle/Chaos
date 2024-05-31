@@ -24,7 +24,7 @@ void consolidateUserRequest() {
 	
 	for (size_t d = 0; d < dimension; d++) {
 		sprintf(summaryStdout, "%s%s = %.3f", summaryStdout, variablesNames[d], userMapValues.IC[d]);
-		sprintf(summaryPlotLegend, "%s%s = %.3f", summaryPlotLegend, variablesNames[d], userMapValues.IC[d]);
+		sprintf(summaryPlotLegend, "%s$%s$ = %.3f", summaryPlotLegend, variablesNames[d], userMapValues.IC[d]);
 		sprintf(summaryFileName, "%s%.3f", summaryFileName, userMapValues.IC[d]);
 		if (d < dimension - 1) {
 			sprintf(summaryStdout, "%s, ", summaryStdout);
@@ -56,7 +56,7 @@ void consolidateUserRequest() {
 	}
 	else {
 		sprintf(summaryStdout, "%sParameter(s): %s = %.3f", summaryStdout, parametersNames[0], userMapValues.parameters[0]);
-		sprintf(summaryPlotLegend, "%sParameter(s): %s = %.3f", summaryPlotLegend, parametersNames[0], userMapValues.parameters[0]);
+		sprintf(summaryPlotLegend, "%sParameter(s): $%s$ = %.3f", summaryPlotLegend, parametersNames[0], userMapValues.parameters[0]);
 		sprintf(summaryFileName, "%sParameter(s)(%.3f", summaryFileName, userMapValues.parameters[0]);
 		if (numberParameters > 1) {
 			sprintf(summaryStdout, "%s, ", summaryStdout);
@@ -72,7 +72,7 @@ void consolidateUserRequest() {
 	/* All the others */
 	for (size_t p = 1; p < numberParameters; p++) {
 		sprintf(summaryStdout, "%s%s = %.3f", summaryStdout, parametersNames[p], userMapValues.parameters[p]);
-		sprintf(summaryPlotLegend, "%s%s = %.3f", summaryPlotLegend, parametersNames[p], userMapValues.parameters[p]);
+		sprintf(summaryPlotLegend, "%s$%s$ = %.3f", summaryPlotLegend, parametersNames[p], userMapValues.parameters[p]);
 		sprintf(summaryFileName, "%s%.3f", summaryFileName, userMapValues.parameters[p]);
 		if (p < numberParameters - 1) {
 			sprintf(summaryStdout, "%s, ", summaryStdout);

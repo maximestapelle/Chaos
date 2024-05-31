@@ -45,12 +45,12 @@ void plotBifurcation() {
 
 	strcat(pythonFileContents, "ax = plt.figure(figsize = (16, 9), constrained_layout=True).add_subplot()\n");
 	strcat(pythonFileContents, "ax.plot(param, x, \',\', color = \'cornflowerblue\')\n");
-	strcat(pythonFileContents, "ax.set_xlabel(r\'Values of the parameter ");
+	strcat(pythonFileContents, "ax.set_xlabel(r\'Values of the parameter $");
 	strcat(pythonFileContents, parametersNames[0]);
-	strcat(pythonFileContents, "\')\n");
-	strcat(pythonFileContents, "ax.set_ylabel(r\'Value of ");
+	strcat(pythonFileContents, "$\')\n");
+	strcat(pythonFileContents, "ax.set_ylabel(r\'Value of $");
 	strcat(pythonFileContents, variablesNames[0]);
-	strcat(pythonFileContents, "\')\n");
+	strcat(pythonFileContents, "$\')\n");
 	strcat(pythonFileContents, "ax.set_title(r\'");
 	strcat(pythonFileContents, title);
 	strcat(pythonFileContents, "\')\n");
