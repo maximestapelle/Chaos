@@ -21,6 +21,7 @@
  **						  float to double when applicable.												  *
  **						  Implementation of Lyapunov for flows											  *
  **						  Small change in the handling of LaTeX variable names in plots					  *
+ **						  Small bug fix : selecting unavailable action was possible						  *
  **********************************************************************************************************/
 
 // TODO : 

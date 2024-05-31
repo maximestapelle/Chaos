@@ -14,7 +14,7 @@ int inputActions(int *NMin, long int *NMax, int *SMin, long int *SMax) {
  	int step;
  	char line[30];
 	char sqlfetchActions[250] = "SELECT A.rowid, A.name, A.description, CASE WHEN A.rowid IN (SELECT b.action_id FROM map a INNER JOIN actionConcernsMap b ON a.rowid = b.map_id WHERE a.rowid = ? AND active) THEN 'Y' ELSE 'N' END FROM action A WHERE active ORDER BY A.rowid;";
-	char sqlverifyAction[250] = "SELECT b.N, b.Nmin, b.Nmax, b.S, b.Smin, b.SMax, c.name FROM map a INNER JOIN actionConcernsMap b ON a.rowid = b.map_id INNER JOIN action c ON b.action_id = c.rowid WHERE a.rowid = ? AND c.rowid = ?;";
+	char sqlverifyAction[250] = "SELECT b.N, b.Nmin, b.Nmax, b.S, b.Smin, b.SMax, c.name FROM map a INNER JOIN actionConcernsMap b ON a.rowid = b.map_id INNER JOIN action c ON b.action_id = c.rowid WHERE a.rowid = ? AND c.rowid = ? AND b.active;";
 
 	printf(ANSI_COLOR_GREEN "\nYou can now choose the action you want the program to perform:" ANSI_COLOR_RESET "\n\n");
 	
