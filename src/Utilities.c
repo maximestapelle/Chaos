@@ -87,3 +87,41 @@ void eigen_values(double matrix[][dimension], double eigenvalues[]) {
 	}
 
 }
+double norm(const double vector[])
+{
+	double square = 0.0;
+	
+	for (size_t i = 0; i < dimension; i++) {
+		square += pow(vector[i], 2);
+	}
+	
+	return sqrt(square);
+}
+
+double normColumn(const double vector[],
+				  const int column)
+{
+	/* Input is a dimension*dimension vector representing a matrix */
+	double square = 0.0;
+	
+	for (size_t i = 0; i < dimension; i++) {
+		square += pow(vector[i * dimension + column], 2);
+	}
+
+	return sqrt(square);
+}
+double normOfDifference(const double vector1[],
+						const double vector2[])
+{
+	double square = 0.0;
+	
+	for (size_t i = 0; i < dimension; i++) {
+		square += pow(vector1[i] - vector2[i], 2);
+	}
+	
+	return sqrt(square);
+}
+size_t computeStateDimension(const unsigned int dimension)
+{
+	return (size_t) dimension + (size_t) pow(dimension, 2);
+}

@@ -109,6 +109,28 @@ void lorenzEvolution(double input[], double fgh[]) {
 	fgh[2] = input[0] * input[1] - userMapValues.parameters[2] * input[2];
 	
 }
+void lorenzEvolutionFull(const double *state,
+						  	   double stateEvolution[])
+{
+	/* Vector of size DIMENSION + DIMENSION^2 for the evolution of extended state */
+	/* This is a f, g and h functions of xdot, ydot, zdot in indices 0, 1 and 2 */
+	/* And a hardcoding of the 3x3 evolution of variational equations (delta or Phi_t), 
+	   written as a 9-vector. Its evolution is given by the Jacobian times delta itself. */
+
+	stateEvolution[0]  = userMapValues.parameters[1] * (state[1] - state[0]);
+	stateEvolution[1]  = state[0] * (userMapValues.parameters[0] - state[2]) - state[1];
+	stateEvolution[2]  = state[0] * state[1] - userMapValues.parameters[2] * state[2];
+
+	stateEvolution[3]  = userMapValues.parameters[1] * (- state[3] + state[6]);
+	stateEvolution[4]  = userMapValues.parameters[1] * (- state[4] + state[7]);
+	stateEvolution[5]  = userMapValues.parameters[1] * (- state[5] + state[8]);
+	stateEvolution[6]  = (userMapValues.parameters[0] - state[2]) * state[3] - state[6] - state[0] * state[9];
+	stateEvolution[7]  = (userMapValues.parameters[0] - state[2]) * state[4] - state[7] - state[0] * state[10];
+	stateEvolution[8]  = (userMapValues.parameters[0] - state[2]) * state[5] - state[8] - state[0] * state[11];
+	stateEvolution[9]  = state[1] * state[3] + state[0] * state[6] - userMapValues.parameters[2] * state[9];
+	stateEvolution[10] = state[1] * state[4] + state[0] * state[7] - userMapValues.parameters[2] * state[10];
+	stateEvolution[11] = state[1] * state[5] + state[0] * state[8] - userMapValues.parameters[2] * state[11];
+}
 
 /* This is Newton/Euler method for Lorenz (so the easiest one, based on 1st order Taylor series) */
 void lorenzEuler(double trajectory[], const float dt) {
@@ -154,6 +176,37 @@ void lorenzRK4(double trajectory[], const float h) {
 	trajectory[1] = trajectory[1] + h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
 	trajectory[2] = trajectory[2] + h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]);
 }
+void lorenzRK4Full(const float   h,
+		       	   double *state,
+		       	   size_t stateDimension)
+{
+	double array[stateDimension];
+	double k1[stateDimension], k2[stateDimension], k3[stateDimension], k4[stateDimension];
+
+	lorenzEvolutionFull(state, k1);
+	
+	for (size_t i = 0; i < stateDimension; i++) {
+		array[i] = state[i] + h / 2 * k1[i];
+	}
+		
+	lorenzEvolutionFull(array, k2);
+	
+	for (size_t i = 0; i < stateDimension; i++) {
+		array[i] = state[i] + h / 2 * k2[i];
+	}
+	
+	lorenzEvolutionFull(array, k3);
+
+	for (size_t i = 0; i < stateDimension; i++) {
+		array[i] = state[i] + h / 2 * k3[i];
+	}
+
+	lorenzEvolutionFull(array, k4);
+
+	for (size_t i = 0; i < stateDimension; i++) {
+		state[i] = state[i] + h / 6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
+	}
+}
 
 void rosslerEvolution(double input[], double fgh[]) {
 	fgh[0] = -input[1] - input[2];
@@ -161,6 +214,29 @@ void rosslerEvolution(double input[], double fgh[]) {
 	fgh[2] = userMapValues.parameters[0] + input[2] * (input[0] - userMapValues.parameters[1]);
 	
 }
+void rosslerEvolutionFull(const double *state,
+						  		double stateEvolution[])
+{
+	/* Vector of size DIMENSION + DIMENSION^2 for the evolution of extended state */
+	/* This is a f, g and h functions of xdot, ydot, zdot in indices 0, 1 and 2 */
+	/* And a hardcoding of the 3x3 evolution of variational equations (delta or Phi_t), 
+	   written as a 9-vector. Its evolution is given by the Jacobian times delta itself. */
+
+	stateEvolution[0]  = - state[1] - state[2];
+	stateEvolution[1]  = state[0] + userMapValues.parameters[2] * state[1];
+	stateEvolution[2]  = userMapValues.parameters[0] + state[2] * (state[0] - userMapValues.parameters[1]);
+
+	stateEvolution[3]  = - state[6] - state[9];
+	stateEvolution[4]  = - state[7] - state[10];
+	stateEvolution[5]  = - state[8] - state[11];
+	stateEvolution[6]  = state[3] + userMapValues.parameters[2] * state[6];
+	stateEvolution[7]  = state[4] + userMapValues.parameters[2] * state[7];
+	stateEvolution[8]  = state[5] + userMapValues.parameters[2] * state[8];
+	stateEvolution[9]  = state[2] * state[3] + (state[0] - userMapValues.parameters[1]) * state[9];
+	stateEvolution[10] = state[2] * state[4] + (state[0] - userMapValues.parameters[1]) * state[10];
+	stateEvolution[11] = state[2] * state[5] + (state[0] - userMapValues.parameters[1]) * state[11];
+}
+
 /* This is Newton/Euler method for Rossler (so the easiest one, based on 1st order Taylor series) */
 void rosslerEuler(double trajectory[], const float dt) {
 	double x, y, z;
@@ -204,4 +280,35 @@ void rosslerRK4(double trajectory[], const float h) {
 	trajectory[0] = trajectory[0] + h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]);
 	trajectory[1] = trajectory[1] + h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
 	trajectory[2] = trajectory[2] + h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]);
+}
+void rosslerRK4Full(const float h,
+		       		double *state,
+		       		size_t stateDimension)
+{
+	double array[stateDimension];
+	double k1[stateDimension], k2[stateDimension], k3[stateDimension], k4[stateDimension];
+
+	rosslerEvolutionFull(state, k1);
+	
+	for (size_t i = 0; i < stateDimension; i++) {
+		array[i] = state[i] + h / 2 * k1[i];
+	}
+		
+	rosslerEvolutionFull(array, k2);
+	
+	for (size_t i = 0; i < stateDimension; i++) {
+		array[i] = state[i] + h / 2 * k2[i];
+	}
+	
+	rosslerEvolutionFull(array, k3);
+
+	for (size_t i = 0; i < stateDimension; i++) {
+		array[i] = state[i] + h / 2 * k3[i];
+	}
+
+	rosslerEvolutionFull(array, k4);
+
+	for (size_t i = 0; i < stateDimension; i++) {
+		state[i] = state[i] + h / 6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
+	}
 }

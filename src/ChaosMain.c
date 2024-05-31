@@ -16,9 +16,10 @@
  **						  not usable in working version but testable when I'm implementing it.			  *
  **						  Added the same flag at action level (Lyapunov2D not ready)					  *
  **			  10 May 2024 Improved bifurcation graphs													  *
- **			  27 May 2024 -> 30 May 2024																  *
+ **			  27 May 2024 -> 31 May 2024																  *
  **						  Specific header for dynamics.													  *
  **						  float to double when applicable.												  *
+ **						  Implementation of Lyapunov for flows											  *
  **********************************************************************************************************/
 
 // TODO : 

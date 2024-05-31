@@ -16,5 +16,11 @@ bool is_in_matrix(double *value, double **matrix, const unsigned int size);
 void dot_product(double m1[][dimension], double m2[][dimension], double mp[][dimension]);
 void matrix_transpose(double m[][dimension], double mt[][dimension]);
 void eigen_values(double matrix[][dimension], double eigenvalues[]);
+double norm(const double vector[]);
+double normColumn(const double vector[],
+				  const int column);
+double normOfDifference(const double vector1[],
+						const double vector2[]);
+size_t computeStateDimension(const unsigned int dimension);
 
 #endif
