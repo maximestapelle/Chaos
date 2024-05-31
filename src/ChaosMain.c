@@ -22,6 +22,8 @@
  **						  Implementation of Lyapunov for flows											  *
  **						  Small change in the handling of LaTeX variable names in plots					  *
  **						  Small bug fix : selecting unavailable action was possible						  *
+ **						  History: even if the insertion of usage history in the database is deactivated, *
+ **								   check if data or img files exist for the request.					  *
  **********************************************************************************************************/
 
 // TODO : 
@@ -80,31 +82,46 @@ INPUT_DONE:
 		printf(ANSI_COLOR_CYAN "Here below a summary of your choices:\n\n%s\n\n" ANSI_COLOR_RESET, summaryStdout);
 	}
 
-/* Check if the requested action already exists; if not, we're in business ! DEACTIVATED */
+/* Check if the requested action already exists; if not, we're in business ! DEACTIVATED on database level */
 // 	rowid = dbCheckUseEntry();
-	if (rowid == 0)	{
+// 	if (rowid == 0)	{
+	bool dataExists = checkDataFile();
+	bool  imgExists = checkImageFile();
 
+	if (dataExists || imgExists) {
+		printf(ANSI_COLOR_CYAN"The request you made has already been done in the past.\n"ANSI_COLOR_RESET);
+		if (dataExists)	{
+			printf("Data file found: %s\n", dataFile);
+		}
+		else printf("Data file not found. Recreating from scratch.\n");
+		if (imgExists)	{
+			printf("Image file found: %s\n", imageFile);
+		}
+		else printf("Image file not found. Recreating from data file.\n");
+	}
+
+	if (!dataExists || !imgExists) {
 // 		dbCreateUseEntry();					/* No entry exists -> create one // DEACTIVATED */
 
 		minIterations = N - maxPoints;		/* The size of the transient will depend on the user's choice of N. maxPoints is hardcoded. */
 		
 		switch (userAction) {				/* Now we decide what to call based on the requested action */
 			case 1:
-				bifurcation();
-	    		plotBifurcation();
+				if (!dataExists) bifurcation();
+	    		if (!imgExists ) plotBifurcation();
 				break;
 	    	case 2:
-	    		lyapunov();
-	    		plotLyapunov();
+	    		if (!dataExists) lyapunov();
+	    		if (!imgExists ) plotLyapunov();
 	    		break;
 			case 3:
-				attractor();
-				plotAttractor();
+				if (!dataExists) attractor();
+				if (!imgExists ) plotAttractor();
 				break;
-	    	case 4:
-	    		bifurcation2D();
+// 	    	case 4:
+// 	    		bifurcation2D();
 // 	    		plotBifurcation2D();		
-	    		break;
+// 	    		break;
 // 	    	case 5:
 // 	    		lyapunov2D();
 // 	    		plotLyapunov2D();
@@ -116,14 +133,14 @@ INPUT_DONE:
 // 		dbInsertImage();						/* INSERT the image file and image into the database */
 
 	}
-	else {
-		printf(ANSI_COLOR_GREEN"The request you made has already been done in the past.\n"ANSI_COLOR_RESET);
-		/* Check if the files exist and if not, create them */
-		if (!checkDataFile()) dbCreateDataFile();
-		if (!checkImageFile()) dbCreateImageFile();
-		printf("Data file: %s\n", dataFile);
-		printf("Image file: %s\n", imageFile);
-	}
+// 	else {
+// 		printf(ANSI_COLOR_GREEN"The request you made has already been done in the past.\n"ANSI_COLOR_RESET);
+// 		/* Check if the files exist and if not, create them from the database -> DEACTIVATED */
+// 		if (!checkDataFile()) dbCreateDataFile();
+// 		if (!checkImageFile()) dbCreateImageFile();
+// 		printf("Data file: %s\n", dataFile);
+// 		printf("Image file: %s\n", imageFile);
+// 	}
 	
 	/* Open the image file */
 	if (strcmp(PLATFORM_NAME, "linux") == 0) strcat(commandOpenImageFile,"xdg-open \"");
