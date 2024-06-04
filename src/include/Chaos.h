@@ -61,7 +61,7 @@ extern char parametersNames[][15];					     /* Whatever the number of parameters
 												    		dimension vector. Subsequent programs will ignore non-existing dimensions.*/
 //Action
 extern int userAction;   	 				/* The user's choice of action */
-char actionName[25]; 						/* The name of the requested action */
+extern char actionName[25]; 						/* The name of the requested action */
 //Default and actual values
 extern struct mapValues userMapValues, defaultMapValues;
 
