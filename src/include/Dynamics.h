@@ -7,21 +7,6 @@
 
 #include "Chaos.h"
 
-/* Function model for dynamical systems dx/dt = F(x)
-   Plays the role of F or Jacobian of F   */
-typedef void (*t_flow)(const double  *,					/* actual state x or extended to x+variational state */
-					   double *,						/* return F or Jacobian of F */
-					   const double  *);				/* parameters */
-
-/* Structure of a dynamical system */
-typedef struct {
-	t_flow dynamics;
-	t_flow jacobian;
-	double *parameters;
-} flow;
-
-
-
 
 
 /* Dynamics functions - those do not use the structure above yet */
