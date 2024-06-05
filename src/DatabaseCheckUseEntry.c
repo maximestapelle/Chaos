@@ -13,34 +13,47 @@ int dbCheckUseEntry() {
  	sqlite3_stmt *res;
 
 	char sqlCheckUse[500] = "SELECT rowid FROM useHistory WHERE map_id = "; /* Stores the beginning of the query */
-	snprintf(sqlCheckUse, sizeof(sqlCheckUse), "%s%d AND action_id = %d AND ", sqlCheckUse, userMap, userAction);
-	snprintf(sqlCheckUse, sizeof(sqlCheckUse), "%sN = %ld AND ", sqlCheckUse, N);
+	char buffer[200];
+
+	snprintf(buffer, sizeof (buffer), "%d AND action_id = %d AND N = %zu AND ", userMap, userAction, N);
+	strcat(sqlCheckUse, buffer);
 	if (userAction != 3) {
-		snprintf(sqlCheckUse, sizeof(sqlCheckUse), "%sS = %ld AND ", sqlCheckUse, S);
+		snprintf(buffer, sizeof (buffer), "S = %zu AND ", S);
+		strcat(sqlCheckUse, buffer);
 	}
 
 	for (size_t d = 0; d < dimension; d++) {
 		strcat(sqlCheckUse, "var");
-		snprintf(sqlCheckUse, sizeof(sqlCheckUse), "%s%zu0 = %f AND ", sqlCheckUse, d + 1, userMapValues.IC[d]);
+		snprintf(buffer, sizeof (buffer), "%zu0 = %f AND ", d + 1, userMapValues.IC[d]);
+		strcat(sqlCheckUse, buffer);
 	}
  	/* Double switch statement for the columns of useHistory to consider */
 	switch (userAction) {
 		case 1:
-			snprintf(sqlCheckUse, sizeof(sqlCheckUse), "%sparam1min = %f AND param1max = %f ", sqlCheckUse, userMapValues.parameterRange[0], userMapValues.parameterRange[1]);
+			snprintf(buffer, sizeof (buffer),   "param1min = %f AND param1max = %f ",
+												userMapValues.parameterRange[0], userMapValues.parameterRange[1]);
+			strcat(sqlCheckUse, buffer);
 			break;
 		case 2: 
-			snprintf(sqlCheckUse, sizeof(sqlCheckUse), "%sparam1min = %f AND param1max = %f ", sqlCheckUse, userMapValues.parameterRange[0], userMapValues.parameterRange[1]);
+			snprintf(buffer, sizeof (buffer),   "param1min = %f AND param1max = %f ",
+												userMapValues.parameterRange[0], userMapValues.parameterRange[1]);
+			strcat(sqlCheckUse, buffer);
 			break;
 		case 3:
-			snprintf(sqlCheckUse, sizeof(sqlCheckUse), "%sparam10 = %f ", sqlCheckUse, userMapValues.parameters[0]);
+			snprintf(buffer, sizeof (buffer), "param10 = %f ", userMapValues.parameters[0]);
+			strcat(sqlCheckUse, buffer);
 			break;
 		case 4:
 			/**** !!!!! Second range of parameters not yet implemented in main, I'l put 1.0 in the meantime *****/
-			snprintf(sqlCheckUse, sizeof(sqlCheckUse), "%sparam1min = %f AND param1max = %f AND param2min = %f AND param2max = %f ", sqlCheckUse, userMapValues.parameterRange[0], userMapValues.parameterRange[1], 1.0F, 1.0F);
+			snprintf(buffer, sizeof (buffer), "param1min = %f AND param1max = %f AND param2min = %f AND param2max = %f "
+											, userMapValues.parameterRange[0], userMapValues.parameterRange[1], 1.0F, 1.0F);
+			strcat(sqlCheckUse, buffer);
 			break;
 		case 5:
 			/**** !!!!! Second range of parameters not yet implemented in main, I'l put 1.0 in the meantime *****/
-			snprintf(sqlCheckUse, sizeof(sqlCheckUse), "%sparam1min = %f AND param1max = %f AND param2min = %f AND param2max = %f ", sqlCheckUse, userMapValues.parameterRange[0], userMapValues.parameterRange[1], 1.0F, 1.0F);
+			snprintf(buffer, sizeof (buffer), "param1min = %f AND param1max = %f AND param2min = %f AND param2max = %f "
+											, userMapValues.parameterRange[0], userMapValues.parameterRange[1], 1.0F, 1.0F);
+			strcat(sqlCheckUse, buffer);
 			break;
 	}
 	switch (numberParameters) {
@@ -52,12 +65,14 @@ int dbCheckUseEntry() {
 				strcat(sqlCheckUse, ";");
 			}
 			else {
-				snprintf(sqlCheckUse, sizeof(sqlCheckUse), "%sAND param20 = %f ", sqlCheckUse, userMapValues.parameters[1]);
+				snprintf(buffer, sizeof (buffer), "AND param20 = %f ", userMapValues.parameters[1]);
+				strcat(sqlCheckUse, buffer);
 			}
 			break;
 		default:
 			for (size_t p = 2; p <= numberParameters; p++) {
-				snprintf(sqlCheckUse, sizeof(sqlCheckUse), "%sAND param%zu0 = %f ", sqlCheckUse, p, userMapValues.parameters[p - 1]);
+				snprintf(buffer, sizeof (buffer), "AND param%zu0 = %f ", p, userMapValues.parameters[p - 1]);
+				strcat(sqlCheckUse, buffer);
 			}
 			strcat(sqlCheckUse, ";");
 			break;

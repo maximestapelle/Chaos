@@ -24,9 +24,9 @@ void circle(double trajectory[]);
 double circleDerivative(double trajectory[]);
 double circleLyapunov(double trajectory[]);
 void tinkerbell(double trajectory[]);
-void tinkerbellJacobian(double trajectory[], double jacobian[][dimension]);
+void tinkerbellJacobian(double trajectory[], double jacobian[][2]);
 void henon(double trajectory[]);
-void henonJacobian(double trajectory[], double jacobian[][dimension]);
+void henonJacobian(double trajectory[], double jacobian[][2]);
 void lorenzEvolution(double input[], double fgh[]);
 void lorenzEvolutionFull(const double *state,
 						  	   double stateEvolution[]);

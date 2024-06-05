@@ -14,6 +14,7 @@ void plotLyapunov() {
 
 	char *pythonFile;
 	char pythonFileContents[2500] = "import matplotlib.pyplot as plt\n";
+	char buffer[200];
 
 	char command[35] = "python3 ";
 	FILE *fp;
@@ -46,7 +47,8 @@ void plotLyapunov() {
 	strcat(pythonFileContents, "\tlines = f.readlines()\n");
 	strcat(pythonFileContents, "\tparam = [float(line.split()[0]) for line in lines]\n");
 	for (size_t d = 1; d <= dimension; d++) {
-		snprintf(pythonFileContents, sizeof(pythonFileContents), "%s\tlya%zu = [float(line.split()[%zu]) for line in lines]\n", pythonFileContents, d, d);
+		snprintf(buffer, sizeof (buffer), "\tlya%zu = [float(line.split()[%zu]) for line in lines]\n", d, d);
+		strcat(pythonFileContents, buffer);
 	}
 	strcat(pythonFileContents, "ax = plt.figure(figsize = (16, 9), constrained_layout=True).add_subplot()\n");
 
@@ -57,20 +59,28 @@ void plotLyapunov() {
 			strcat(pythonFileContents, "import numpy as np\n");
 			strcat(pythonFileContents, "lya = np.empty((2, len(param)))\nparam = np.array(param)\n");
 			for (size_t d = 0; d < dimension; d++) {
-			snprintf(pythonFileContents, sizeof(pythonFileContents), "%slya[%zu] = lya%zu\n", pythonFileContents, d, d + 1);
-	
+				snprintf(buffer, sizeof (buffer), "lya[%zu] = lya%zu\n", d, d + 1);
+				strcat(pythonFileContents, buffer);
 			}
 			/* If only 1D, we don't print the variable name as there is only one exponent -> no ambiguity */
 			if (dimension == 1) {
-				strcat(pythonFileContents, "ax.plot(param[lya[0] < 0], lya[0][lya[0] < 0], \',\', color = (0, 0, 1), label = r\'Exponent when $<0$\')\n");
-				strcat(pythonFileContents, "ax.plot(param[lya[0] > 0], lya[0][lya[0] > 0], \',\', color = (1, 0, 0), label = r\'Exponent when $>0$\')\n");
+				strcat(pythonFileContents,  "ax.plot(param[lya[0] < 0], lya[0][lya[0] < 0], \',\', "
+											"color = (0, 0, 1), label = r\'Exponent when $<0$\')\n"
+											"ax.plot(param[lya[0] > 0], lya[0][lya[0] > 0], \',\', "
+											"color = (1, 0, 0), label = r\'Exponent when $>0$\')\n");
 			}
 			else {
 				for (size_t d = 0; d < dimension; d++) {
-					snprintf(pythonFileContents, sizeof(pythonFileContents), "%sax.plot(param[lya[%zu] < 0], lya[%zu][lya[%zu] < 0], \',\', color = (0, 0, (255 - 127 * %zu)/255), label = r\'Exponent along $", pythonFileContents, d, d, d, d);
+					snprintf(buffer, sizeof (buffer),   "ax.plot(param[lya[%zu] < 0], lya[%zu][lya[%zu] < 0], \',\', "
+														"color = (0, 0, (255 - 127 * %zu)/255), label = r\'Exponent along $",
+														d, d, d, d);
+					strcat(pythonFileContents, buffer);
 					strcat(pythonFileContents, variablesNames[d]);
 					strcat(pythonFileContents, "$, when $<0$\')\n");
-					snprintf(pythonFileContents, sizeof(pythonFileContents), "%sax.plot(param[lya[%zu] > 0], lya[%zu][lya[%zu] > 0], \',\', color = ((255 - 127 * %zu)/255, 0, 0), label = r\'Exponent along $", pythonFileContents, d, d, d, d);
+					snprintf(buffer, sizeof (buffer),   "ax.plot(param[lya[%zu] > 0], lya[%zu][lya[%zu] > 0], \',\', "
+														"color = ((255 - 127 * %zu)/255, 0, 0), label = r\'Exponent along $",
+														d, d, d, d);
+					strcat(pythonFileContents, buffer);
 					strcat(pythonFileContents, variablesNames[d]);
 					strcat(pythonFileContents, "$, when $>0$\')\n");
 				}
@@ -78,7 +88,11 @@ void plotLyapunov() {
 			break;
 		case 0:
 			for (size_t d = 1; d <= dimension; d++) {
-				snprintf(pythonFileContents, sizeof (pythonFileContents), "%splt.plot(param,lya%zu,\',-\',color=((255 - 50 * %zu)/255, (255 - 25 * %zu)/255, (255 - 75 * %zu)/255),label=\'$\\lambda_{\\\\rm %s}", pythonFileContents, d, d, d, d, variablesNames[d - 1]);
+				snprintf(buffer, sizeof (buffer),   "plt.plot(param,lya%zu,\',-\', "
+													"color=((255 - 50 * %zu)/255, (255 - 25 * %zu)/255, "
+													"(255 - 75 * %zu)/255),label=\'$\\lambda_{\\\\rm %s}",
+													d, d, d, d, variablesNames[d - 1]);
+				strcat(pythonFileContents, buffer);
 				strcat(pythonFileContents, "$\')\n");
 			}
 			if (dimension > 1) {
@@ -86,13 +100,16 @@ void plotLyapunov() {
 				strcat(pythonFileContents, "for l in range(len(lya1)):\n");
 				strcat(pythonFileContents, "\tsum.append(lya1[l]");
 				for (size_t d = 2; d <= dimension; d++) {
-					snprintf(pythonFileContents, sizeof (pythonFileContents), "%s+ lya%zu[l]", pythonFileContents, d);
+					snprintf(buffer, sizeof (buffer), "+ lya%zu[l]", d);
+					strcat(pythonFileContents, buffer);
 				}
 				strcat(pythonFileContents, ")\n");
-				strcat(pythonFileContents, "plt.plot(param,sum,\',-\', color=\'cornflowerblue\',label=\'$\\sum\\limits_{i\\in\\{\\\\rm ");
+				strcat(pythonFileContents,  "plt.plot(param,sum,\',-\', color=\'cornflowerblue\', "
+											"label=\'$\\sum\\limits_{i\\in\\{\\\\rm ");
 				strcat(pythonFileContents, variablesNames[0]);
 				for (size_t d = 1; d < dimension; d++) {
-					snprintf(pythonFileContents, sizeof (pythonFileContents), "%s, %s", pythonFileContents, variablesNames[d]);
+					snprintf(buffer, sizeof (buffer), ", %s", variablesNames[d]);
+					strcat(pythonFileContents, buffer);
 				}
 				strcat(pythonFileContents, "\\}}\\lambda_{i}$\')\n");
 			}
@@ -118,12 +135,14 @@ void plotLyapunov() {
 		case 1:
 			strcat(pythonFileContents,"\'], fontsize = \'x-large\', loc = \'upper left\', handlelength=0)\n");
 			if (dimension > 1) {
-				strcat(pythonFileContents,"ax.add_artist(leg)\nleg1 = ax.legend(loc = \'upper right\', fontsize = \'x-large\', handlelength=1)\n");
+				strcat(pythonFileContents,  "ax.add_artist(leg)\nleg1 = ax.legend(loc = \'upper right\', "
+											"fontsize = \'x-large\', handlelength=1)\n");
 			}
 			break;
 		case 0:
 			strcat(pythonFileContents,"\'], fontsize = \'x-large\', loc = \'center left\', handlelength=0)\n");
-			strcat(pythonFileContents,"ax.add_artist(leg)\nleg1 = ax.legend(loc = \'center right\', fontsize = \'x-large\', handlelength=1)\n");
+			strcat(pythonFileContents,  "ax.add_artist(leg)\nleg1 = ax.legend(loc = \'center right\', "
+										"fontsize = \'x-large\', handlelength=1)\n");
 			break;
 	}
 	strcat(pythonFileContents, "for item in leg.legend_handles:\n\titem.set_visible(False)\n");
@@ -142,7 +161,7 @@ void plotLyapunov() {
 		printf("Issue when executing python command to plot the Lyapunov exponents!\n");
 		exit(1);
 	}
-// 	remove(pythonFile);
+	remove(pythonFile);
 
 	printf("Image file created: '%s'.\n\n", imageFile);
 }

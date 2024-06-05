@@ -9,42 +9,54 @@
 
 void dbCreateUseEntry() {
 
-	char sqlCreateUse[500] = "INSERT INTO useHistory (map_id, action_id, N, "; /* Stores the beginning of the query */
-	char sqlValues[200] = ""; /* Stores the values */
+	char sqlCreateUse[500] = "INSERT INTO useHistory (map_id, action_id, N, ";  /* Stores the beginning of the query */
+	char sqlValues[200] = ""; 													/* Stores the values */
+	char buffer[200];
+
 	snprintf(sqlValues, sizeof(sqlValues), "%d, %d, %ld, ", userMap, userAction, N);
 	if (userAction != 3) {
-	strcat(sqlCreateUse, "S, ");
-		snprintf(sqlValues, sizeof(sqlValues), "%s%ld, ", sqlValues, S);
+		strcat(sqlCreateUse, "S, ");
+		snprintf(buffer, sizeof (buffer), "%zu, ", S);
+		strcat(sqlValues, buffer);
 	}
 
 	for (size_t d = 1; d <= dimension; d++) {
 		strcat(sqlCreateUse, "var");
-		snprintf(sqlCreateUse, sizeof(sqlCreateUse), "%s%zu0, ", sqlCreateUse, d);
-		snprintf(sqlValues, sizeof(sqlValues), "%s%f, ", sqlValues, userMapValues.IC[d - 1]);
+		snprintf(buffer, sizeof (buffer), "%zu0, ", d);
+		strcat(sqlCreateUse, buffer);
+		snprintf(buffer, sizeof (buffer), "%f, ", userMapValues.IC[d - 1]);
+		strcat(sqlValues, buffer);
 	}
  	/* Double switch statement for the columns of useHistory to consider */
 	switch (userAction) {
 		case 1:
 			strcat(sqlCreateUse, "param1min, param1max");
-			snprintf(sqlValues, sizeof(sqlValues), "%s%f, %f", sqlValues, userMapValues.parameterRange[0], userMapValues.parameterRange[1]);
+			snprintf(buffer, sizeof (buffer), "%f, %f", userMapValues.parameterRange[0], userMapValues.parameterRange[1]);
+			strcat(sqlValues, buffer);
 			break;
 		case 2: 
 			strcat(sqlCreateUse, "param1min, param1max");
-			snprintf(sqlValues, sizeof(sqlValues), "%s%f, %f", sqlValues, userMapValues.parameterRange[0], userMapValues.parameterRange[1]);
+			snprintf(buffer, sizeof (buffer), "%f, %f", userMapValues.parameterRange[0], userMapValues.parameterRange[1]);
+			strcat(sqlValues, buffer);
 			break;
 		case 3:
 			strcat(sqlCreateUse, "param10");
-			snprintf(sqlValues, sizeof(sqlValues), "%s%f", sqlValues, userMapValues.parameters[0]);
+			snprintf(buffer, sizeof (buffer), "%f", userMapValues.parameters[0]);
+			strcat(sqlValues, buffer);
 			break;
 		case 4:
 			strcat(sqlCreateUse, "param1min, param1max, param2min, param2max");
 			/**** !!!!! Second range of parameters not yet implemented in main, I'l put 1.0 in the meantime *****/
-			snprintf(sqlValues, sizeof(sqlValues), "%s%f, %f, %f, %f", sqlValues, userMapValues.parameterRange[0], userMapValues.parameterRange[1], 1.0F, 1.0F);
+			snprintf(buffer, sizeof (buffer),   "%f, %f, %f, %f", userMapValues.parameterRange[0],
+												userMapValues.parameterRange[1], 1.0F, 1.0F);
+			strcat(sqlValues, buffer);
 			break;
 		case 5:
 			strcat(sqlCreateUse, "param1min, param1max, param2min, param2max");
 			/**** !!!!! Second range of parameters not yet implemented in main, I'l put 1.0 in the meantime *****/
-			snprintf(sqlValues, sizeof(sqlValues), "%s%f, %f, %f, %f", sqlValues, userMapValues.parameterRange[0], userMapValues.parameterRange[1], 1.0F, 1.0F);
+			snprintf(buffer, sizeof (buffer),   "%f, %f, %f, %f", userMapValues.parameterRange[0],
+												userMapValues.parameterRange[1], 1.0F, 1.0F);
+			strcat(sqlValues, buffer);
 			break;
 	}
 	switch (numberParameters) {
@@ -59,14 +71,17 @@ void dbCreateUseEntry() {
 			}
 			else {
 				strcat(sqlCreateUse, ", param20) VALUES (");
-				snprintf(sqlValues, sizeof(sqlValues), "%s, %f)", sqlValues, userMapValues.parameters[1]);
+				snprintf(buffer, sizeof (buffer), ", %f)", userMapValues.parameters[1]);
+				strcat(sqlValues, buffer);
 			}
 			break;
 		default:
 			for (size_t p = 2; p <= numberParameters; p++) {
 				strcat(sqlCreateUse, ", param");
-				snprintf(sqlCreateUse, sizeof(sqlCreateUse), "%s%zu0", sqlCreateUse, p);
-				snprintf(sqlValues, sizeof(sqlValues), "%s, %f", sqlValues, userMapValues.parameters[p - 1]);
+				snprintf(buffer, sizeof (buffer), "%zu0", p);
+				strcat(sqlCreateUse, buffer);
+				snprintf(buffer, sizeof (buffer), ", %f", userMapValues.parameters[p - 1]);
+				strcat(sqlValues, buffer);
 			}
 			strcat(sqlCreateUse, ") VALUES (");
 			strcat(sqlValues, ")");

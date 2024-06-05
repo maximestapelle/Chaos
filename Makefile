@@ -12,7 +12,7 @@ OBJECTS = $(patsubst $(SRC_DIR)%,$(OBJECT_DIR)%, $(patsubst %.c,%.o, $(SOURCES))
 DEPS = $(wildcard $(INCLUDE_DIR)/*.h)
 
 # Compiler settings
-CC = clang
+CC = gcc
 OPT = -Ofast
 CFLAGS = -Wall -Wextra -I $(INCLUDE_DIR) $(OPT)
 LDLIBS = -lm -ldl
