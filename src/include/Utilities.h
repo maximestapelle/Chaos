@@ -21,6 +21,5 @@ double normColumn(const double vector[],
 				  const int column);
 double normOfDifference(const double vector1[],
 						const double vector2[]);
-size_t computeStateDimension(const unsigned int dimension);
 
 #endif

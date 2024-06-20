@@ -8,11 +8,11 @@
  * For now, it uses Runge-Kutta 4th order for flows. Also, it records only the two first components
  * of the trajectory. For simplicity, it does that only for 2D maps.
  *
- * The function is called from ChaosMain. 
+ * The function is called from ChaosMain.
  */
 
 void bifurcation2D() {
-	
+
 	FILE * fp;
 	double parameterIncrement = (userMapValues.parameterRange[1] - userMapValues.parameterRange[0]) / S;
 	/* Redefine maxPoints : we should have a big number of values of each attractor ! */
@@ -22,22 +22,21 @@ void bifurcation2D() {
 	int significantDigits = 4;
 	double trajectory[dimension]; /* The current point of the trajectory */
 	double **attractors = init_2DMatrix(maxPoints, dimension); /* We need to store, for each value of s, the points to see if the current one is already recorded. */
-	
+
 	unsigned int i;
 	bool divergence;
 
 	fp = fopen(dataFile, "w");
-		
+
 	/* Set the parameter to its minimum value. We subtract parameterIncrement because in the loop, we will add as from s = 0. */
 	userMapValues.parameters[0] = userMapValues.parameterRange[0] - parameterIncrement;
-	
+
 	switch (userMap) {
 		case 6:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
+				trajectory[1] = userMapValues.IC[1];
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -75,9 +74,8 @@ void bifurcation2D() {
 		case 7:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
+				trajectory[1] = userMapValues.IC[1];
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */

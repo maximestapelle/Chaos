@@ -9,7 +9,7 @@
  *	- the 3rd component is ignored for 2D dynamical systems.
  * It works the same with the parameters : array of size NUMBER_PARAMETERS_MAX.
  *
- * For flows, we also have here the derivatives (Jacobian) and implementation of the 
+ * For flows, we also have here the derivatives (Jacobian) and implementation of the
  * Euler and Runge-Kutta 4th order methods.
  *
  * Dynamics are used by the functions attractor(), bifurcation() and bifurcation2D() */
@@ -55,7 +55,7 @@ void tent(double trajectory[]) {
 
 void circle(double trajectory[]) {
 	double result;
-	
+
 	result = trajectory[0] + userMapValues.parameters[0] / (2 * M_PI) * ((double) sin(2 * M_PI * trajectory[0])) + userMapValues.parameters[1];
 	// Result is modulo 1
 	result -= floor(result);
@@ -75,7 +75,7 @@ void tinkerbell(double trajectory[]) {
 	double x, y;
 	x = pow(trajectory[0], 2) - pow(trajectory[1], 2) + userMapValues.parameters[1] * trajectory[0] + userMapValues.parameters[0] * trajectory[1];
 	y = 2 * trajectory[0] * trajectory[1] + userMapValues.parameters[2] * trajectory[0] + userMapValues.parameters[3] * trajectory[1];
-	
+
 	trajectory[0] = x;
 	trajectory[1] = y;
 }
@@ -107,14 +107,14 @@ void lorenzEvolution(double input[], double fgh[]) {
 	fgh[0] = userMapValues.parameters[1] * (input[1] - input[0]);
 	fgh[1] = input[0] * (userMapValues.parameters[0] - input[2]) - input[1];
 	fgh[2] = input[0] * input[1] - userMapValues.parameters[2] * input[2];
-	
+
 }
 void lorenzEvolutionFull(const double *state,
 						  	   double stateEvolution[])
 {
 	/* Vector of size DIMENSION + DIMENSION^2 for the evolution of extended state */
 	/* This is a f, g and h functions of xdot, ydot, zdot in indices 0, 1 and 2 */
-	/* And a hardcoding of the 3x3 evolution of variational equations (delta or Phi_t), 
+	/* And a hardcoding of the 3x3 evolution of variational equations (delta or Phi_t),
 	   written as a 9-vector. Its evolution is given by the Jacobian times delta itself. */
 
 	stateEvolution[0]  = userMapValues.parameters[1] * (state[1] - state[0]);
@@ -136,9 +136,9 @@ void lorenzEvolutionFull(const double *state,
 void lorenzEuler(double trajectory[], const float dt) {
 	double x, y, z;
 	double fgh[3];
-	
+
 	lorenzEvolution(trajectory, fgh);
-	
+
 	x = trajectory[0] + dt * fgh[0];
 	y = trajectory[1] + dt * fgh[1];
 	z = trajectory[2] + dt * fgh[2];
@@ -152,58 +152,56 @@ void lorenzRK4(double trajectory[], const float h) {
 	double array[3];
 	double k1[3], k2[3], k3[3], k4[3];
 
-	lorenzEvolution(trajectory, k1); 
-	
+	lorenzEvolution(trajectory, k1);
+
 	array[0] = trajectory[0] + h / 2 * k1[0];
 	array[1] = trajectory[1] + h / 2 * k1[1];
 	array[2] = trajectory[2] + h / 2 * k1[2];
-	
+
 	lorenzEvolution(array, k2);
-	
+
 	array[0] = trajectory[0] + h / 2 * k2[0];
 	array[1] = trajectory[1] + h / 2 * k2[1];
 	array[2] = trajectory[2] + h / 2 * k2[2];
-	
+
 	lorenzEvolution(array, k3); /* Now fgh = k3 */
 
 	array[0] = trajectory[0] + h * k3[0];
 	array[1] = trajectory[1] + h * k3[1];
 	array[2] = trajectory[2] + h * k3[2];
-	
+
 	lorenzEvolution(array, k4); /* Now fgh = k4 */
 
 	trajectory[0] = trajectory[0] + h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]);
 	trajectory[1] = trajectory[1] + h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
 	trajectory[2] = trajectory[2] + h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]);
 }
-void lorenzRK4Full(const float   h,
-		       	   double *state,
-		       	   size_t stateDimension)
+void lorenzRK4Full(double *state, const float h)
 {
-	double array[stateDimension];
-	double k1[stateDimension], k2[stateDimension], k3[stateDimension], k4[stateDimension];
+	double array[12];
+	double k1[12], k2[12], k3[12], k4[12];
 
 	lorenzEvolutionFull(state, k1);
-	
-	for (size_t i = 0; i < stateDimension; i++) {
+
+	for (size_t i = 0; i < 12; i++) {
 		array[i] = state[i] + h / 2 * k1[i];
 	}
-		
+
 	lorenzEvolutionFull(array, k2);
-	
-	for (size_t i = 0; i < stateDimension; i++) {
+
+	for (size_t i = 0; i < 12; i++) {
 		array[i] = state[i] + h / 2 * k2[i];
 	}
-	
+
 	lorenzEvolutionFull(array, k3);
 
-	for (size_t i = 0; i < stateDimension; i++) {
+	for (size_t i = 0; i < 12; i++) {
 		array[i] = state[i] + h / 2 * k3[i];
 	}
 
 	lorenzEvolutionFull(array, k4);
 
-	for (size_t i = 0; i < stateDimension; i++) {
+	for (size_t i = 0; i < 12; i++) {
 		state[i] = state[i] + h / 6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
 	}
 }
@@ -212,14 +210,14 @@ void rosslerEvolution(double input[], double fgh[]) {
 	fgh[0] = -input[1] - input[2];
 	fgh[1] = input[0] + userMapValues.parameters[2] * input[1];
 	fgh[2] = userMapValues.parameters[0] + input[2] * (input[0] - userMapValues.parameters[1]);
-	
+
 }
 void rosslerEvolutionFull(const double *state,
 						  		double stateEvolution[])
 {
 	/* Vector of size DIMENSION + DIMENSION^2 for the evolution of extended state */
 	/* This is a f, g and h functions of xdot, ydot, zdot in indices 0, 1 and 2 */
-	/* And a hardcoding of the 3x3 evolution of variational equations (delta or Phi_t), 
+	/* And a hardcoding of the 3x3 evolution of variational equations (delta or Phi_t),
 	   written as a 9-vector. Its evolution is given by the Jacobian times delta itself. */
 
 	stateEvolution[0]  = - state[1] - state[2];
@@ -241,9 +239,9 @@ void rosslerEvolutionFull(const double *state,
 void rosslerEuler(double trajectory[], const float dt) {
 	double x, y, z;
 	double fgh[3];
-	
+
 	rosslerEvolution(trajectory, fgh);
-	
+
 	x = trajectory[0] + dt * fgh[0];
 	y = trajectory[1] + dt * fgh[1];
 	z = trajectory[2] + dt * fgh[2];
@@ -257,58 +255,56 @@ void rosslerRK4(double trajectory[], const float h) {
 	double array[3];
 	double k1[3], k2[3], k3[3], k4[3];
 
-	rosslerEvolution(trajectory, k1); 
-	
+	rosslerEvolution(trajectory, k1);
+
 	array[0] = trajectory[0] + h / 2 * k1[0];
 	array[1] = trajectory[1] + h / 2 * k1[1];
 	array[2] = trajectory[2] + h / 2 * k1[2];
-	
+
 	rosslerEvolution(array, k2);
-	
+
 	array[0] = trajectory[0] + h / 2 * k2[0];
 	array[1] = trajectory[1] + h / 2 * k2[1];
 	array[2] = trajectory[2] + h / 2 * k2[2];
-	
+
 	rosslerEvolution(array, k3); /* Now fgh = k3 */
 
 	array[0] = trajectory[0] + h * k3[0];
 	array[1] = trajectory[1] + h * k3[1];
 	array[2] = trajectory[2] + h * k3[2];
-	
+
 	rosslerEvolution(array, k4); /* Now fgh = k4 */
 
 	trajectory[0] = trajectory[0] + h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]);
 	trajectory[1] = trajectory[1] + h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
 	trajectory[2] = trajectory[2] + h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]);
 }
-void rosslerRK4Full(const float h,
-		       		double *state,
-		       		size_t stateDimension)
+void rosslerRK4Full(double *state, const float h)
 {
-	double array[stateDimension];
-	double k1[stateDimension], k2[stateDimension], k3[stateDimension], k4[stateDimension];
+	double array[12];
+	double k1[12], k2[12], k3[12], k4[12];
 
 	rosslerEvolutionFull(state, k1);
-	
-	for (size_t i = 0; i < stateDimension; i++) {
+
+	for (size_t i = 0; i < 12; i++) {
 		array[i] = state[i] + h / 2 * k1[i];
 	}
-		
+
 	rosslerEvolutionFull(array, k2);
-	
-	for (size_t i = 0; i < stateDimension; i++) {
+
+	for (size_t i = 0; i < 12; i++) {
 		array[i] = state[i] + h / 2 * k2[i];
 	}
-	
+
 	rosslerEvolutionFull(array, k3);
 
-	for (size_t i = 0; i < stateDimension; i++) {
+	for (size_t i = 0; i < 12; i++) {
 		array[i] = state[i] + h / 2 * k3[i];
 	}
 
 	rosslerEvolutionFull(array, k4);
 
-	for (size_t i = 0; i < stateDimension; i++) {
+	for (size_t i = 0; i < 12; i++) {
 		state[i] = state[i] + h / 6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
 	}
 }

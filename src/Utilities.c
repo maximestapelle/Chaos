@@ -10,11 +10,11 @@
 /* Array utilities */
 double **init_2DMatrix(const unsigned int nRows, const unsigned int nColumns)
 {
-	double **matrix = calloc(nRows, sizeof *matrix); 
+	double **matrix = calloc(nRows, sizeof *matrix);
 	for (size_t i = 0; i < nRows; i++) {
 		matrix[i] = calloc(nColumns, sizeof **matrix);
 	}
-	
+
 	return matrix;
 }
 void free_2DMatrix(double **matrix, const unsigned int nRows)
@@ -76,7 +76,7 @@ void matrix_transpose(double m[][dimension], double mt[][dimension]) {
 void eigen_values(double matrix[][dimension], double eigenvalues[]) {
 	double temp1 = matrix[0][0] + matrix[1][1];
 	double temp2 = pow(temp1, 2) - 4 * (matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1]);
-	
+
 	if (temp2 >= 0) {
 		eigenvalues[0] = (temp1 + sqrtf(temp2)) / 2;
 		eigenvalues[1] = (temp1 - sqrtf(temp2)) / 2;
@@ -90,11 +90,11 @@ void eigen_values(double matrix[][dimension], double eigenvalues[]) {
 double norm(const double vector[])
 {
 	double square = 0.0;
-	
+
 	for (size_t i = 0; i < dimension; i++) {
 		square += pow(vector[i], 2);
 	}
-	
+
 	return sqrt(square);
 }
 
@@ -103,7 +103,7 @@ double normColumn(const double vector[],
 {
 	/* Input is a dimension*dimension vector representing a matrix */
 	double square = 0.0;
-	
+
 	for (size_t i = 0; i < dimension; i++) {
 		square += pow(vector[i * dimension + column], 2);
 	}
@@ -114,14 +114,10 @@ double normOfDifference(const double vector1[],
 						const double vector2[])
 {
 	double square = 0.0;
-	
+
 	for (size_t i = 0; i < dimension; i++) {
 		square += pow(vector1[i] - vector2[i], 2);
 	}
-	
+
 	return sqrt(square);
-}
-size_t computeStateDimension(const unsigned int dimension)
-{
-	return (size_t) dimension + (size_t) pow(dimension, 2);
 }

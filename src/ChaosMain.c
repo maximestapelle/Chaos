@@ -24,9 +24,13 @@
  **						  Small bug fix : selecting unavailable action was possible						  *
  **						  History: even if the insertion of usage history in the database is deactivated, *
  **								   check if data or img files exist for the request.					  *
+ **			  20 Jun 2024 Added hardcoding of stateDimension in RK4Full in Dynamics.c, since this version *
+ **						  of Chaos uses a lot of hardcoding that improves performance. Also added		  *
+ **						  explicit loop unrolling and safer optimization level -O2						  *
+ **						  Actually, full hardcoding of all dimensions to improve performance.			  *
  **********************************************************************************************************/
 
-// TODO : 
+// TODO :
 // - Improve error handling which is very bad for the moment.
 // - I've deactivated the historical data in the database, as the problematic of uploading data files into
 //	 a database is non trivial. Sort it out. If reactivated, maintenance from the user has to be done once
@@ -43,7 +47,7 @@ int main() {
 	int NMin; long int NMax; 		/* Interval of allowed values for N */
 	int SMin; long int SMax; 		/* Interval of allowed values for S */
 	bool choseDefaults;				/* Does the user choose the default values for his request ? */
- 
+
 
 	if (dbConnect()) exit(1); 							/* Connect to the database */
 
@@ -54,30 +58,30 @@ int main() {
 	}
 
 	if (inputDefaults()) exit(1); 						/* Store all default values */
-	
+
 	choseDefaults = inputChooseDefaults(); 				/* Ask if the user wants the default values */
 	if (choseDefaults) goto INPUT_DONE;
 	else {
 		printf(ANSI_COLOR_BLUE "\nFor each of the values asked below, we will consider the default values if you just press Enter.\n" ANSI_COLOR_RESET);
 	}
-	
+
 	inputIterations(NMin, NMax); 						/* Fetch the user's desired number of iterations */
-	
+
 	inputIC(); 											/* Fetch the user's initial conditions */
-	
+
 	if (userAction != 3) {								/* Only if the user wants a bifurcation figure or the Lyapunov exponents */
 		inputParameterRange(); 							/* Fetch the user's desired range for the principal parameter */
 		inputSweep(SMin, SMax); 						/* Fetch the user's desired division of the parameter for bifurcation/Lyapunov */
 	}
 
-	inputParameters(); 									/* Fetch the user's input parameters : all of them if attractor, and the remaining ones - 
+	inputParameters(); 									/* Fetch the user's input parameters : all of them if attractor, and the remaining ones -
 														   if any - for other actions. */
 
 /*** We're done with user input ! ***/
 INPUT_DONE:
 	consolidateUserRequest(); 							/* Create the summaries of the request */
 	if (createFileName()) exit(1);						/* Check directories and create the name of the files */
-	
+
 	if (!choseDefaults)	{								/* Print Summary of the user's request on the console */
 		printf(ANSI_COLOR_CYAN "Here below a summary of your choices:\n\n%s\n\n" ANSI_COLOR_RESET, summaryStdout);
 	}
@@ -104,7 +108,7 @@ INPUT_DONE:
 // 		dbCreateUseEntry();					/* No entry exists -> create one // DEACTIVATED */
 
 		minIterations = N - maxPoints;		/* The size of the transient will depend on the user's choice of N. maxPoints is hardcoded. */
-		
+
 		switch (userAction) {				/* Now we decide what to call based on the requested action */
 			case 1:
 				if (!dataExists) bifurcation();
@@ -120,7 +124,7 @@ INPUT_DONE:
 				break;
 // 	    	case 4:
 // 	    		bifurcation2D();
-// 	    		plotBifurcation2D();		
+// 	    		plotBifurcation2D();
 // 	    		break;
 // 	    	case 5:
 // 	    		lyapunov2D();
@@ -141,7 +145,7 @@ INPUT_DONE:
 // 		printf("Data file: %s\n", dataFile);
 // 		printf("Image file: %s\n", imageFile);
 // 	}
-	
+
 	/* Open the image file */
 	if (strcmp(PLATFORM_NAME, "linux") == 0) strcat(commandOpenImageFile,"xdg-open \"");
 	else if (strcmp(PLATFORM_NAME, "osx") == 0) strcat(commandOpenImageFile,"open \"");

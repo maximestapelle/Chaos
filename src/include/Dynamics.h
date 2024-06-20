@@ -32,17 +32,13 @@ void lorenzEvolutionFull(const double *state,
 						  	   double stateEvolution[]);
 void lorenzEuler(double trajectory[], const float dt);
 void lorenzRK4(double trajectory[], const float h);
-void lorenzRK4Full(const float   h,
-		       	   double *state,
-		       	   size_t stateDimension);
+void lorenzRK4Full(double *state, const float h);
 void rosslerEvolution(double input[], double fgh[]);
 void rosslerEvolutionFull(const double *state,
 						  		double stateEvolution[]);
 void rosslerEuler(double trajectory[], const float dt);
 void rosslerRK4(double trajectory[], const float h);
-void rosslerRK4Full(const float h,
-		       		double *state,
-		       		size_t stateDimension);
+void rosslerRK4Full(double *state, const float h);
 
 
 

@@ -8,11 +8,11 @@
  * For now, it uses Runge-Kutta 4th order for flows. Also, it records only the first component
  * of the trajectory.
  *
- * The function is called from ChaosMain. 
+ * The function is called from ChaosMain.
  */
 
 void bifurcation() {
-	
+
 	FILE * fp;
 	double parameterIncrement = (userMapValues.parameterRange[1] - userMapValues.parameterRange[0]) / S;
 	double x;
@@ -22,18 +22,16 @@ void bifurcation() {
 	bool divergence;
 
 	fp = fopen(dataFile, "w");
-		
+
 	/* Set the parameter to its minimum value. We subtract parameterIncrement because in the loop, we will add as from s = 0. */
 	userMapValues.parameters[0] = userMapValues.parameterRange[0] - parameterIncrement;
 
-	
+
 	switch (userMap) {
 		case 1:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -71,9 +69,7 @@ void bifurcation() {
 		case 2:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -111,9 +107,7 @@ void bifurcation() {
 		case 3:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -151,9 +145,7 @@ void bifurcation() {
 		case 4:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -191,9 +183,7 @@ void bifurcation() {
 		case 5:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -231,9 +221,8 @@ void bifurcation() {
 		case 6:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
+				trajectory[1] = userMapValues.IC[1];
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -271,9 +260,8 @@ void bifurcation() {
 		case 7:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
+				trajectory[1] = userMapValues.IC[1];
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
@@ -318,7 +306,7 @@ void bifurcation() {
 			minIterations = 100000;
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
+				for (size_t d = 0; d < 3; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
 				i = 0;
@@ -372,7 +360,7 @@ void bifurcation() {
 			minIterations = 50000;
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
+				for (size_t d = 0; d < 3; d++) {
 					trajectory[d] = userMapValues.IC[d];
 				}
 				i = 0;

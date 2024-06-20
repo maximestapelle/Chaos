@@ -4,28 +4,26 @@
 /*
  * The lyapunov function computes a trajectory and constructs lyapunov exponents.
  *
- * The function is called from ChaosMain. 
+ * The function is called from ChaosMain.
  */
 
 void lyapunov() {
-	
+
 	FILE * fp = fopen(dataFile, "w");
 	double parameterIncrement = (userMapValues.parameterRange[1] - userMapValues.parameterRange[0]) / S;
 	double trajectory[dimension]; /* The current point of the trajectory */
-	double lyapunovExponents[dimension]; 
+	double lyapunovExponents[dimension];
 
-	
+
 	/* Set the parameter to its minimum value. We subtract parameterIncrement because in the loop, we will add as from s = 0. */
 	userMapValues.parameters[0] = userMapValues.parameterRange[0] - parameterIncrement;
 
-	
+
 	switch (userMap) {
 		case 1:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
 				lyapunovExponents[0] = 0;
 				for (size_t n = 1; n <= N; n++) {
 					lyapunovExponents[0] += logisticLyapunov(trajectory) / N;
@@ -37,9 +35,7 @@ void lyapunov() {
 		case 2:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
 				lyapunovExponents[0] = 0;
 				for (size_t n = 1; n <= N; n++) {
 					lyapunovExponents[0] += logisticExpLyapunov(trajectory) / N;
@@ -51,9 +47,7 @@ void lyapunov() {
 		case 3:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
 				lyapunovExponents[0] = 0;
 				for (size_t n = 1; n <= N; n++) {
 					lyapunovExponents[0] += gaussLyapunov(trajectory) / N;
@@ -73,9 +67,7 @@ void lyapunov() {
 		case 5:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
 				lyapunovExponents[0] = 0;
 				for (size_t n = 1; n <= N; n++) {
 					lyapunovExponents[0] += circleLyapunov(trajectory) / N;
@@ -91,9 +83,8 @@ void lyapunov() {
 			double H[dimension][dimension];
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
+				trajectory[1] = userMapValues.IC[1];
 				tinkerbellJacobian(trajectory, nJacobianProduct);
 				for (size_t n = 1; n < N; n++) {
 					tinkerbell(trajectory);
@@ -105,7 +96,7 @@ void lyapunov() {
 // 				lyapunovExponents[0] = log(fabs(lyapunovExponents[0])) / N;
 // 				lyapunovExponents[1] = log(fabs(lyapunovExponents[1])) / N;
 /** New solution based on Phys 221A Lecture Notes - Lyapunov Exponents
-and their Relation to Entropy **/ 
+and their Relation to Entropy **/
 				matrix_transpose(nJacobianProduct, transposednJacobianProduct);
 				dot_product(transposednJacobianProduct, nJacobianProduct, H);
 				lyapunovExponents[0] = log(fabs(H[0][0])) / (2 * N);
@@ -121,9 +112,8 @@ and their Relation to Entropy **/
 			double H[dimension][dimension];
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t d = 0; d < dimension; d++) {
-					trajectory[d] = userMapValues.IC[d];
-				}
+				trajectory[0] = userMapValues.IC[0];
+				trajectory[1] = userMapValues.IC[1];
 				henonJacobian(trajectory, nJacobianProduct);
 				for (size_t n = 1; n < N; n++) {
 					henon(trajectory);
@@ -135,7 +125,7 @@ and their Relation to Entropy **/
 // 				lyapunovExponents[0] = log(fabs(lyapunovExponents[0])) / N;
 // 				lyapunovExponents[1] = log(fabs(lyapunovExponents[1])) / N;
 /** New solution based on Phys 221A Lecture Notes - Lyapunov Exponents
-and their Relation to Entropy **/ 
+and their Relation to Entropy **/
 				matrix_transpose(nJacobianProduct, transposednJacobianProduct);
 				dot_product(transposednJacobianProduct, nJacobianProduct, H);
 				lyapunovExponents[0] = log(fabs(H[0][0])) / (2 * N);
@@ -150,7 +140,7 @@ and their Relation to Entropy **/
 // 				else fprintf(fp, "%f %.4f %.4f\n", userMapValues.parameters[0], lyapunovExponents[0], lyapunovExponents[1]);
 				fprintf(fp, "%f %.4f %.4f\n", userMapValues.parameters[0], lyapunovExponents[0], lyapunovExponents[1]);
 			}
-			break;		
+			break;
 		}
 		case 8: {
 			const float h = 0.001;
@@ -158,73 +148,71 @@ and their Relation to Entropy **/
 			const float E_a = 1E-6;
 			const float E_r = 1E-6;
 
-			double lyapunovExponentsOld[dimension];
-			double sum[dimension];
-			size_t stateDimension = computeStateDimension(dimension);
-			double *state = (double *) malloc(stateDimension * sizeof (double));		/* 12-dim state */
-			size_t variationalDimension = stateDimension - dimension;
-			double *u = (double *) malloc(variationalDimension * sizeof (double));		/* 3x3 matrix is a 9 vector */
-			double *v = (double *) malloc(variationalDimension * sizeof (double));		/* 3x3 matrix is a 9 vector */
+			double lyapunovExponentsOld[3];
+			double sum[3];
+			double *state = (double *) malloc(12 * sizeof (double));	/* 12-dim state */
+			double *u = (double *) malloc(9 * sizeof (double));			/* 3x3 matrix is a 9 vector */
+			double *v = (double *) malloc(9 * sizeof (double));			/* 3x3 matrix is a 9 vector */
 
 			double prodScal;
 			double normV;
 			// Main loop
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t i = 0; i < dimension; i++) {
+				for (size_t i = 0; i < 3; i++) {
 					lyapunovExponents[i] = 0.0;
 					sum[i] 				 = 0.0;
 				}
-				for (size_t d = 0; d < dimension; d++) {
+				for (size_t d = 0; d < 3; d++) {
 					state[d] = userMapValues.IC[d];
 				}
-				for (size_t i = dimension; i < stateDimension; i++) {
+				for (size_t i = 3; i < 12; i++) {
 					// Those are delta's for the variational equation -> initalize to Identity 3x3
 					if (i == 3 || i == 7 || i == 11) state[i] = 1.0;
 					else 							 state[i] = 0.0;
 				}
-				for (size_t i = 0; i < variationalDimension; i++) {
+				for (size_t i = 0; i < 9; i++) {
 					u[i] = state[i];
 				}
 
 				for (size_t k = 1; k <= N; k++) {
-					for (size_t i = 0; i < dimension; i++) {
+					for (size_t i = 0; i < 3; i++) {
 						lyapunovExponentsOld[i] = lyapunovExponents[i];
 					}
 					float t = 0.0;
 					do {
-						lorenzRK4Full(h, state, stateDimension);
+						lorenzRK4Full(state, h);
 						t += h;
 					} while (t < T);
-					for (size_t i = 0; i < dimension; i++) {
+					for (size_t i = 0; i < 3; i++) {
 						// First, set the ith column of v to the ith column of the current state
-						for (size_t j = 0; j < dimension; j++) {
-							v[j * dimension + i] = state[dimension + j * dimension + i];
+						for (size_t j = 0; j < 3; j++) {
+							v[j * 3 + i] = state[3 + j * 3 + i];
 						}
 						// Gram-Schmidt orthonormalisation
 						for (size_t j = 0; j < i ; j++) {
 							// scalar product between ith column of v and jth column of delta's
 							prodScal = 0;
-							for (size_t l = 0; l < dimension; l++) {
-								prodScal += v[l * dimension + i] * u[l * dimension + j];
+							for (size_t l = 0; l < 3; l++) {
+								prodScal += v[l * 3 + i] * u[l * 3 + j];
 							}
 							// Update the ith column of v
-							for (size_t l = 0; l < dimension; l++) {
-								v[l * dimension + i] -= prodScal * u[l * dimension + j];
+							for (size_t l = 0; l < 3; l++) {
+								v[l * 3 + i] -= prodScal * u[l * 3 + j];
 							}
 						}
 						normV = normColumn(v, i);
 						// Update the delta's
-						for (size_t j = 0; j < dimension; j++) {
-							u[j * dimension + i] = v[j * dimension + i] / normV;
+						for (size_t j = 0; j < 3; j++) {
+							u[j * 3 + i] = v[j * 3 + i] / normV;
 						}
-			
+
 						sum[i] += log(normV);
 						lyapunovExponents[i] = sum[i] / (k * T);
 					}
 					// Update state with the new u
-					for (size_t i = 3; i < stateDimension; i++) {
-						state[i] = u[i - dimension];
+					for (size_t i = 3; i < 12; i++) {
+						state[i] = u[i - 3];
 					}
 					/* Check convergence */
 					if (normOfDifference(lyapunovExponentsOld, lyapunovExponents) < E_r * norm(lyapunovExponents) + E_a) {
@@ -241,73 +229,71 @@ and their Relation to Entropy **/
 			const float E_a = 1E-6;
 			const float E_r = 1E-6;
 
-			double lyapunovExponentsOld[dimension];
-			double sum[dimension];
-			size_t stateDimension = computeStateDimension(dimension);
-			double *state = (double *) malloc(stateDimension * sizeof (double));		/* 12-dim state */
-			size_t variationalDimension = stateDimension - dimension;
-			double *u = (double *) malloc(variationalDimension * sizeof (double));		/* 3x3 matrix is a 9 vector */
-			double *v = (double *) malloc(variationalDimension * sizeof (double));		/* 3x3 matrix is a 9 vector */
+			double lyapunovExponentsOld[3];
+			double sum[3];
+			double *state = (double *) malloc(12 * sizeof (double));		/* 12-dim state */
+			double *u = (double *) malloc(9 * sizeof (double));		/* 3x3 matrix is a 9 vector */
+			double *v = (double *) malloc(9 * sizeof (double));		/* 3x3 matrix is a 9 vector */
 
 			double prodScal;
 			double normV;
 			// Main loop
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				for (size_t i = 0; i < dimension; i++) {
+				for (size_t i = 0; i < 3; i++) {
 					lyapunovExponents[i] = 0.0;
 					sum[i] 				 = 0.0;
 				}
-				for (size_t d = 0; d < dimension; d++) {
+				for (size_t d = 0; d < 3; d++) {
 					state[d] = userMapValues.IC[d];
 				}
-				for (size_t i = dimension; i < stateDimension; i++) {
+				for (size_t i = 3; i < 12; i++) {
 					// Those are delta's for the variational equation -> initalize to Identity 3x3
 					if (i == 3 || i == 7 || i == 11) state[i] = 1.0;
 					else 							 state[i] = 0.0;
 				}
-				for (size_t i = 0; i < variationalDimension; i++) {
+				for (size_t i = 0; i < 9; i++) {
 					u[i] = state[i];
 				}
 
 				for (size_t k = 1; k <= N; k++) {
-					for (size_t i = 0; i < dimension; i++) {
+					for (size_t i = 0; i < 3; i++) {
 						lyapunovExponentsOld[i] = lyapunovExponents[i];
 					}
 					float t = 0.0;
 					do {
-						rosslerRK4Full(h, state, stateDimension);
+						rosslerRK4Full(state, h);
 						t += h;
 					} while (t < T);
-					for (size_t i = 0; i < dimension; i++) {
+					for (size_t i = 0; i < 3; i++) {
 						// First, set the ith column of v to the ith column of the current state
-						for (size_t j = 0; j < dimension; j++) {
-							v[j * dimension + i] = state[dimension + j * dimension + i];
+						for (size_t j = 0; j < 3; j++) {
+							v[j * 3 + i] = state[3 + j * 3 + i];
 						}
 						// Gram-Schmidt orthonormalisation
 						for (size_t j = 0; j < i ; j++) {
 							// scalar product between ith column of v and jth column of delta's
 							prodScal = 0;
-							for (size_t l = 0; l < dimension; l++) {
-								prodScal += v[l * dimension + i] * u[l * dimension + j];
+							for (size_t l = 0; l < 3; l++) {
+								prodScal += v[l * 3 + i] * u[l * 3 + j];
 							}
 							// Update the ith column of v
-							for (size_t l = 0; l < dimension; l++) {
-								v[l * dimension + i] -= prodScal * u[l * dimension + j];
+							for (size_t l = 0; l < 3; l++) {
+								v[l * 3 + i] -= prodScal * u[l * 3 + j];
 							}
 						}
 						normV = normColumn(v, i);
 						// Update the delta's
-						for (size_t j = 0; j < dimension; j++) {
-							u[j * dimension + i] = v[j * dimension + i] / normV;
+						for (size_t j = 0; j < 3; j++) {
+							u[j * 3 + i] = v[j * 3 + i] / normV;
 						}
-			
+
 						sum[i] += log(normV);
 						lyapunovExponents[i] = sum[i] / (k * T);
 					}
 					// Update state with the new u
-					for (size_t i = 3; i < stateDimension; i++) {
-						state[i] = u[i - dimension];
+					for (size_t i = 3; i < 12; i++) {
+						state[i] = u[i - 3];
 					}
 					/* Check convergence */
 					if (normOfDifference(lyapunovExponentsOld, lyapunovExponents) < E_r * norm(lyapunovExponents) + E_a) {
