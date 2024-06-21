@@ -28,10 +28,10 @@ double 	circleDerivative(double trajectory[]);
 double 	circleLyapunov(double trajectory[]);
 
 void 	tinkerbell(double trajectory[]);
-void 	tinkerbellJacobian(double trajectory[], double jacobian[][2]);
+void 	tinkerbellJacobian(const double trajectory[], double jacobian[][2]);
 
 void 	henon(double trajectory[]);
-void 	henonJacobian(double trajectory[], double jacobian[][2]);
+void 	henonJacobian(const double trajectory[], double jacobian[][2]);
 
 
 /*	Flows  */

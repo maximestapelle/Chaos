@@ -88,7 +88,7 @@ void tinkerbell(double trajectory[]) {
 	trajectory[0] = x;
 	trajectory[1] = y;
 }
-void tinkerbellJacobian(double trajectory[], double jacobian[][2]) {
+void tinkerbellJacobian(const double trajectory[], double jacobian[][2]) {
 	jacobian[0][0] = 2 * trajectory[0] + userMapValues.parameters[1];
 	jacobian[0][1] = -2 * trajectory[1] + userMapValues.parameters[0];
 	jacobian[1][0] = 2 * trajectory[1] + userMapValues.parameters[2];
@@ -105,7 +105,7 @@ void henon(double trajectory[]) {
 	trajectory[0] = x;
 	trajectory[1] = y;
 }
-void henonJacobian(double trajectory[], double jacobian[][2]) {
+void henonJacobian(const double trajectory[], double jacobian[][2]) {
 	jacobian[0][0] = -2 * userMapValues.parameters[0] * trajectory[0];
 	jacobian[0][1] = 1;
 	jacobian[1][0] = userMapValues.parameters[1];
@@ -114,7 +114,7 @@ void henonJacobian(double trajectory[], double jacobian[][2]) {
 }
 
 /*	8 - The Lorenz system */
-static void lorenzEvolution(double input[], double fgh[]) {
+static void lorenzEvolution(const double input[], double fgh[]) {
 	fgh[0] = userMapValues.parameters[1] * (input[1] - input[0]);
 	fgh[1] = input[0] * (userMapValues.parameters[0] - input[2]) - input[1];
 	fgh[2] = input[0] * input[1] - userMapValues.parameters[2] * input[2];
@@ -128,9 +128,7 @@ static void lorenzEvolutionFull(const double *state,
 	/* And a hardcoding of the 3x3 evolution of variational equations (delta or Phi_t),
 	   written as a 9-vector. Its evolution is given by the Jacobian times delta itself. */
 
-	stateEvolution[0]  = userMapValues.parameters[1] * (state[1] - state[0]);
-	stateEvolution[1]  = state[0] * (userMapValues.parameters[0] - state[2]) - state[1];
-	stateEvolution[2]  = state[0] * state[1] - userMapValues.parameters[2] * state[2];
+	lorenzEvolution(state, stateEvolution);
 
 	stateEvolution[3]  = userMapValues.parameters[1] * (- state[3] + state[6]);
 	stateEvolution[4]  = userMapValues.parameters[1] * (- state[4] + state[7]);
@@ -218,7 +216,7 @@ void lorenzRK4Full(double *state, const float h)
 }
 
 /*	9 - The Rössler system */
-static void rosslerEvolution(double input[], double fgh[]) {
+static void rosslerEvolution(const double input[], double fgh[]) {
 	fgh[0] = -input[1] - input[2];
 	fgh[1] = input[0] + userMapValues.parameters[2] * input[1];
 	fgh[2] = userMapValues.parameters[0] + input[2] * (input[0] - userMapValues.parameters[1]);
@@ -232,9 +230,7 @@ static void rosslerEvolutionFull(const  double *state,
 	/* And a hardcoding of the 3x3 evolution of variational equations (delta or Phi_t),
 	   written as a 9-vector. Its evolution is given by the Jacobian times delta itself. */
 
-	stateEvolution[0]  = - state[1] - state[2];
-	stateEvolution[1]  = state[0] + userMapValues.parameters[2] * state[1];
-	stateEvolution[2]  = userMapValues.parameters[0] + state[2] * (state[0] - userMapValues.parameters[1]);
+	rosslerEvolution(state, stateEvolution);
 
 	stateEvolution[3]  = - state[6] - state[9];
 	stateEvolution[4]  = - state[7] - state[10];
