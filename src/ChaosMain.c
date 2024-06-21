@@ -30,6 +30,7 @@
  **						  Actually, full hardcoding of all dimensions to improve performance.			  *
  **			  21 Jun 2024 Implement use of NMin from the database for minimum iterations				  *
  **						  Aesthetic changes																  *
+ **						  Fix small bug in bifurcation (check on maxPoints)								  *
  **********************************************************************************************************/
 
 // TODO :

@@ -28,7 +28,7 @@ void bifurcation(unsigned int NMin) {
 	/*	Main process  */
 	switch (userMap) {
 		case 1:
-			for (size_t s = 0; s <= S; s++) {
+			for (size_t s = 0; s < S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				trajectory[0] = userMapValues.IC[0];
 				i = 0;
@@ -52,6 +52,7 @@ void bifurcation(unsigned int NMin) {
 						if (fabs(x - trajectory[0]) < 1E-3) break;
 						attractors[i] = trajectory[0];
 						i++;
+						if (i == maxPoints) break;
 					}
 					else { /* If we record a divergence we just skip this value of s */
 						divergence = true;
@@ -66,7 +67,7 @@ void bifurcation(unsigned int NMin) {
 			}
 			break;
 		case 2:
-			for (size_t s = 0; s <= S; s++) {
+			for (size_t s = 0; s < S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				trajectory[0] = userMapValues.IC[0];
 				i = 0;
@@ -90,6 +91,7 @@ void bifurcation(unsigned int NMin) {
 						if (fabs(x - trajectory[0]) < 1E-3) break;
 						attractors[i] = trajectory[0];
 						i++;
+						if (i == maxPoints) break;
 					}
 					else { /* If we record a divergence we just skip this value of s */
 						divergence = true;
@@ -104,7 +106,7 @@ void bifurcation(unsigned int NMin) {
 			}
 			break;
 		case 3:
-			for (size_t s = 0; s <= S; s++) {
+			for (size_t s = 0; s < S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				trajectory[0] = userMapValues.IC[0];
 				i = 0;
@@ -128,6 +130,7 @@ void bifurcation(unsigned int NMin) {
 						if (fabs(x - trajectory[0]) < 1E-4) break;
 						attractors[i] = trajectory[0];
 						i++;
+						if (i == maxPoints) break;
 					}
 					else { /* If we record a divergence we just skip this value of s */
 						divergence = true;
@@ -142,7 +145,7 @@ void bifurcation(unsigned int NMin) {
 			}
 			break;
 		case 4:
-			for (size_t s = 0; s <= S; s++) {
+			for (size_t s = 0; s < S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				trajectory[0] = userMapValues.IC[0];
 				i = 0;
@@ -166,6 +169,7 @@ void bifurcation(unsigned int NMin) {
 						if (fabs(x - trajectory[0]) < 1E-3) break;
 						attractors[i] = trajectory[0];
 						i++;
+						if (i == maxPoints) break;
 					}
 					else { /* If we record a divergence we just skip this value of s */
 						divergence = true;
@@ -180,7 +184,7 @@ void bifurcation(unsigned int NMin) {
 			}
 			break;
 		case 5:
-			for (size_t s = 0; s <= S; s++) {
+			for (size_t s = 0; s < S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				trajectory[0] = userMapValues.IC[0];
 				i = 0;
@@ -204,6 +208,7 @@ void bifurcation(unsigned int NMin) {
 						if (fabs(x - trajectory[0]) < 1E-4) break;
 						attractors[i] = trajectory[0];
 						i++;
+						if (i == maxPoints) break;
 					}
 					else { /* If we record a divergence we just skip this value of s */
 						divergence = true;
@@ -218,7 +223,7 @@ void bifurcation(unsigned int NMin) {
 			}
 			break;
 		case 6:
-			for (size_t s = 0; s <= S; s++) {
+			for (size_t s = 0; s < S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				trajectory[0] = userMapValues.IC[0];
 				trajectory[1] = userMapValues.IC[1];
@@ -243,6 +248,7 @@ void bifurcation(unsigned int NMin) {
 						if (fabs(x - trajectory[0]) < 1E-3) break;
 						attractors[i] = trajectory[0];
 						i++;
+						if (i == maxPoints) break;
 					}
 					else { /* If we record a divergence we just skip this value of s */
 						divergence = true;
@@ -257,7 +263,7 @@ void bifurcation(unsigned int NMin) {
 			}
 			break;
 		case 7:
-			for (size_t s = 0; s <= S; s++) {
+			for (size_t s = 0; s < S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				trajectory[0] = userMapValues.IC[0];
 				trajectory[1] = userMapValues.IC[1];
@@ -282,6 +288,7 @@ void bifurcation(unsigned int NMin) {
 						if (fabs(x - trajectory[0]) < 1E-3) break;
 						attractors[i] = trajectory[0];
 						i++;
+						if (i == maxPoints) break;
 					}
 					else { /* If we record a divergence we just skip this value of s */
 						divergence = true;
@@ -307,7 +314,7 @@ void bifurcation(unsigned int NMin) {
 			const unsigned int varPlot = 0;
 			double window[windowSize];
 			size_t j;
-			for (size_t s = 0; s <= S; s++) {
+			for (size_t s = 0; s < S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				for (size_t d = 0; d < 3; d++) {
 					trajectory[d] = userMapValues.IC[d];
@@ -341,7 +348,7 @@ void bifurcation(unsigned int NMin) {
 							else {
 								attractors[i] = window[(j - 1) % windowSize];
 								i++;
-								if (i >= maxPoints) break;
+								if (i == maxPoints) break;
 							}
 						}
 						j++;
@@ -359,7 +366,7 @@ void bifurcation(unsigned int NMin) {
 			const int varPlot = 0;
 			double window[windowSize];
 			size_t j;
-			for (size_t s = 0; s <= S; s++) {
+			for (size_t s = 0; s < S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				for (size_t d = 0; d < 3; d++) {
 					trajectory[d] = userMapValues.IC[d];
@@ -393,7 +400,7 @@ void bifurcation(unsigned int NMin) {
 							else {
 								attractors[i] = window[(j - 1) % 3];
 								i++;
-								if (i >= maxPoints) break;
+								if (i == maxPoints) break;
 							}
 						}
 						j++;
