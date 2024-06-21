@@ -96,7 +96,7 @@ int inputActions(
         "map a INNER JOIN actionConcernsMap b ON a.rowid = b.map_id WHERE a.rowid = ? AND "
         "active) THEN 'Y' ELSE 'N' END FROM action A WHERE active ORDER BY A.rowid;";
 	char sqlverifyAction[250] =
-        "SELECT b.N, b.Nmin, b.Nmax, b.S, b.Smin, b.SMax, c.name FROM map a INNER JOIN "
+        "SELECT b.N, b.Nmin, b.Nmax, b.S, b.Smin, b.SMax, b.h, b.T, c.name FROM map a INNER JOIN "
         "actionConcernsMap b ON a.rowid = b.map_id INNER JOIN action c ON "
         "b.action_id = c.rowid WHERE a.rowid = ? AND c.rowid = ? AND b.active;";
 
@@ -159,7 +159,11 @@ CHOOSE_ACTION:
 				*SMin = sqlite3_column_int(res, 4);
 				*SMax = sqlite3_column_int(res, 5);
 			}
-			strcpy(actionName, (char *) sqlite3_column_text(res, 6));
+            if (strcmp(type, "flow") == 0) {
+                h = (float) sqlite3_column_double(res, 6);
+                T = (unsigned int) sqlite3_column_int(res, 7);
+            }
+			strcpy(actionName, (char *) sqlite3_column_text(res, 8));
 			sqlite3_finalize(res);
 		}
 	}

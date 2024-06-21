@@ -144,8 +144,6 @@ and their Relation to Entropy **/
 			break;
 		}
 		case 8: {
-			const float h = 0.001;
-			const float T = h * 10;
 			const float E_a = 1E-6;
 			const float E_r = 1E-6;
 
@@ -165,7 +163,7 @@ and their Relation to Entropy **/
 					sum[i] 				 = 0.0;
 				}
 				for (size_t d = 0; d < 3; d++) {
-					state[d] = userMapValues.IC[d];
+					state[d] = (double) userMapValues.IC[d];
 				}
 				for (size_t i = 3; i < 12; i++) {
 					// Those are delta's for the variational equation -> initalize to Identity 3x3
@@ -180,10 +178,10 @@ and their Relation to Entropy **/
 					for (size_t i = 0; i < 3; i++) {
 						lyapunovExponentsOld[i] = lyapunovExponents[i];
 					}
-					float t = 0.0;
+					unsigned int t = 0;
 					do {
 						lorenzRK4Full(state, h);
-						t += h;
+						t += 1;
 					} while (t < T);
 					for (size_t i = 0; i < 3; i++) {
 						// First, set the ith column of v to the ith column of the current state
@@ -209,7 +207,7 @@ and their Relation to Entropy **/
 						}
 
 						sum[i] += log(normV);
-						lyapunovExponents[i] = sum[i] / (k * T);
+						lyapunovExponents[i] = sum[i] / (k * (h * T));
 					}
 					// Update state with the new u
 					for (size_t i = 3; i < 12; i++) {
@@ -227,8 +225,6 @@ and their Relation to Entropy **/
 		}
 		break;
 		case 9: {
-			const float h = 0.01;
-			const float T = h * 10;
 			const float E_a = 1E-6;
 			const float E_r = 1E-6;
 
@@ -248,7 +244,7 @@ and their Relation to Entropy **/
 					sum[i] 				 = 0.0;
 				}
 				for (size_t d = 0; d < 3; d++) {
-					state[d] = userMapValues.IC[d];
+					state[d] = (double) userMapValues.IC[d];
 				}
 				for (size_t i = 3; i < 12; i++) {
 					// Those are delta's for the variational equation -> initalize to Identity 3x3
@@ -263,10 +259,10 @@ and their Relation to Entropy **/
 					for (size_t i = 0; i < 3; i++) {
 						lyapunovExponentsOld[i] = lyapunovExponents[i];
 					}
-					float t = 0.0;
+					unsigned int t = 0;
 					do {
 						rosslerRK4Full(state, h);
-						t += h;
+						t += 1;
 					} while (t < T);
 					for (size_t i = 0; i < 3; i++) {
 						// First, set the ith column of v to the ith column of the current state
@@ -292,7 +288,7 @@ and their Relation to Entropy **/
 						}
 
 						sum[i] += log(normV);
-						lyapunovExponents[i] = sum[i] / (k * T);
+						lyapunovExponents[i] = sum[i] / (k * (h * T));
 					}
 					// Update state with the new u
 					for (size_t i = 3; i < 12; i++) {

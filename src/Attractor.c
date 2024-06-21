@@ -37,8 +37,6 @@ void attractor() {
 			}
 			break;
 		case 8: {
-// 			double dt = 0.01F;	In case of Euler
-			float h = 0.02F;
 			for (size_t n = 1; n <= N; n++) {
 				lorenzRK4(trajectory, h);
 				fprintf(fp, "%.4f ",  trajectory[0]);
@@ -48,8 +46,6 @@ void attractor() {
 			break;
 		}
 		case 9: {
-// 			double dt = 0.01F;	In case of Euler
-			float h = 0.02F;
 			for (size_t n = 1; n <= N; n++) {
 				rosslerRK4(trajectory, h);
 				fprintf(fp, "%.4f ",  trajectory[0]);

@@ -30,6 +30,9 @@ long unsigned int N;            /*  Effective number of iterations */
 long unsigned int SDefault;     /*  Default number of divisions of the range of parameter(s)  */
 long unsigned int S;            /*  Effective number of divisions of the range of parameter(s)  */
 
+float h;                    /*  For flows: timestep */
+unsigned int T;             /*  For flows and lyapunov: mutliplicative term */
+
 //Parameters for physics
 unsigned int maxPoints = 500;   /*  Number of points to keep after we consider we have converged
                                     (bifurcation). Changed by bifurcation2D */

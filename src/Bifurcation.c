@@ -309,7 +309,6 @@ void bifurcation(unsigned int NMin) {
 	three numbers to see if we have a local maximum) which will be a "window" to check when we get to a local maximum,
 	and register the maximum. For eg a 3 orbit, there will be three different maxima.  */
 		case 8: {
-			const float h = 0.001F;
 			const unsigned int windowSize = 3;
 			const unsigned int varPlot = 0;
 			double window[windowSize];
@@ -361,7 +360,6 @@ void bifurcation(unsigned int NMin) {
 			break;
 		}
 		case 9: {
-			const float h = 0.01F;
 			const unsigned int windowSize = 3;
 			const int varPlot = 0;
 			double window[windowSize];

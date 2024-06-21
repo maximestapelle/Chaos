@@ -29,6 +29,7 @@
  **						  explicit loop unrolling and safer optimization level -O2						  *
  **						  Actually, full hardcoding of all dimensions to improve performance.			  *
  **			  21 Jun 2024 Implement use of NMin from the database for minimum iterations				  *
+ **						  Implement use of h, T from database for RK4									  *
  **						  Aesthetic changes																  *
  **						  Fix small bug in bifurcation (check on maxPoints)								  *
  **********************************************************************************************************/
