@@ -1,12 +1,12 @@
 #include "Chaos.h"
 
 /*
- * The consolidateUserRequest function will aggregate the data entered by the user, in order to :
- * - display it on the console, as a summary for the user;
- * - create a string for data and image filenames;
- * - create a legend for the plots.
- *
- * The function is called from ChaosMain. 
+	The consolidateUserRequest function will aggregate the data entered by the user, in order to :
+	- display it on the console, as a summary for the user;
+	- create a string for data and image filenames;
+	- create a legend for the plots.
+
+	The function is called from ChaosMain.
  */
 
 void consolidateUserRequest() {
@@ -21,7 +21,7 @@ void consolidateUserRequest() {
 	sprintf(summaryStdout, "%sInitial Condition(s): ", summaryStdout);
 	sprintf(summaryPlotLegend, "%sInitial Condition(s): ", summaryPlotLegend);
 	sprintf(summaryFileName, "%sIC(", summaryFileName);
-	
+
 	for (size_t d = 0; d < dimension; d++) {
 		sprintf(summaryStdout, "%s%s = %.3f", summaryStdout, variablesNames[d], userMapValues.IC[d]);
 		sprintf(summaryPlotLegend, "%s$%s$ = %.3f", summaryPlotLegend, variablesNames[d], userMapValues.IC[d]);
@@ -37,16 +37,18 @@ void consolidateUserRequest() {
 			sprintf(summaryFileName, "%s) ", summaryFileName);
 		}
 	}
-	
+
 	/* Special characters for the Legend in Python */
 	sprintf(summaryPlotLegend, "%s\'+\'\\n\'+r\'", summaryPlotLegend);
-	
+
 	/* Parameters */
 	/* First one has special treatment */
 	if (userAction != 3) {
-		sprintf(summaryStdout, "%sVarying parameter %s: from %.3f to %.3f. ", summaryStdout, parametersNames[0], userMapValues.parameterRange[0], userMapValues.parameterRange[1]);
+		sprintf(summaryStdout, "%sVarying parameter %s: from %.3f to %.3f. ", summaryStdout,
+				parametersNames[0], userMapValues.parameterRange[0], userMapValues.parameterRange[1]);
 		sprintf(summaryStdout, "%sNumber of divisions of the range: %ld.\n", summaryStdout, S);
-		sprintf(summaryFileName, "%sParameter range(%.3f,%.3f) ", summaryFileName, userMapValues.parameterRange[0], userMapValues.parameterRange[1]);
+		sprintf(summaryFileName, "%sParameter range(%.3f,%.3f) ", summaryFileName,
+				userMapValues.parameterRange[0], userMapValues.parameterRange[1]);
 		sprintf(summaryFileName, "%sDivisions %ld ", summaryFileName, S);
 		if (numberParameters > 1) {
 			sprintf(summaryStdout, "%sFixed parameter(s): ", summaryStdout);
@@ -55,8 +57,10 @@ void consolidateUserRequest() {
 		}
 	}
 	else {
-		sprintf(summaryStdout, "%sParameter(s): %s = %.3f", summaryStdout, parametersNames[0], userMapValues.parameters[0]);
-		sprintf(summaryPlotLegend, "%sParameter(s): $%s$ = %.3f", summaryPlotLegend, parametersNames[0], userMapValues.parameters[0]);
+		sprintf(summaryStdout, "%sParameter(s): %s = %.3f", summaryStdout,
+				parametersNames[0], userMapValues.parameters[0]);
+		sprintf(summaryPlotLegend, "%sParameter(s): $%s$ = %.3f", summaryPlotLegend,
+				parametersNames[0], userMapValues.parameters[0]);
 		sprintf(summaryFileName, "%sParameter(s)(%.3f", summaryFileName, userMapValues.parameters[0]);
 		if (numberParameters > 1) {
 			sprintf(summaryStdout, "%s, ", summaryStdout);

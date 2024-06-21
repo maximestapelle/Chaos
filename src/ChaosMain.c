@@ -28,6 +28,8 @@
  **						  of Chaos uses a lot of hardcoding that improves performance. Also added		  *
  **						  explicit loop unrolling and safer optimization level -O2						  *
  **						  Actually, full hardcoding of all dimensions to improve performance.			  *
+ **			  21 Jun 2024 Implement use of NMin from the database for minimum iterations				  *
+ **						  Aesthetic changes																  *
  **********************************************************************************************************/
 
 // TODO :
@@ -44,46 +46,47 @@
 
 int main() {
 
-	int NMin; long int NMax; 		/* Interval of allowed values for N */
-	int SMin; long int SMax; 		/* Interval of allowed values for S */
-	bool choseDefaults;				/* Does the user choose the default values for his request ? */
+	unsigned int NMin; long unsigned int NMax; 		/*	Interval of allowed values for N */
+	unsigned int SMin; long unsigned int SMax; 		/*	Interval of allowed values for S */
+	bool choseDefaults;								/*	Does the user choose the default values for his request ? */
 
 
-	if (dbConnect()) exit(1); 							/* Connect to the database */
+	if (dbConnect()) exit(1); 						/*	Connect to the database */
 
-	if (inputMaps()) exit(1);							/* Display maps, fetch user input and store information for the chosen map */
-
-	if (inputActions(&NMin, &NMax, &SMin, &SMax)) {		/* Display actions, fetch user input and store information for the chosen action. */
-		exit(1);
+	if (inputMaps()) exit(1);						/*	Display maps, fetch user input and store information
+														for the chosen map */
+	if (inputActions(&NMin, &NMax, &SMin, &SMax)) {	/*	Display actions, fetch user input and store information */
+		exit(1);									/*	for the chosen action. */
 	}
 
-	if (inputDefaults()) exit(1); 						/* Store all default values */
-
-	choseDefaults = inputChooseDefaults(); 				/* Ask if the user wants the default values */
+	if (inputDefaults()) exit(1); 					/*	Store all default values */
+	choseDefaults = inputChooseDefaults(); 			/*	Ask if the user wants the default values */
 	if (choseDefaults) goto INPUT_DONE;
 	else {
-		printf(ANSI_COLOR_BLUE "\nFor each of the values asked below, we will consider the default values if you just press Enter.\n" ANSI_COLOR_RESET);
+		printf(ANSI_COLOR_BLUE	"\nFor each of the values asked below, we will consider "
+								"the default values if you just press Enter.\n" ANSI_COLOR_RESET);
 	}
 
-	inputIterations(NMin, NMax); 						/* Fetch the user's desired number of iterations */
+	inputIterations(NMin, NMax); 			/*	Fetch the user's desired number of iterations */
 
-	inputIC(); 											/* Fetch the user's initial conditions */
+	inputIC(); 								/*	Fetch the user's initial conditions */
 
-	if (userAction != 3) {								/* Only if the user wants a bifurcation figure or the Lyapunov exponents */
-		inputParameterRange(); 							/* Fetch the user's desired range for the principal parameter */
-		inputSweep(SMin, SMax); 						/* Fetch the user's desired division of the parameter for bifurcation/Lyapunov */
+	if (userAction != 3) {					/*	Only if the user wants a bifurcation figure or the Lyapunov exponents */
+		inputParameterRange(); 					/*	Fetch the user's desired range for the principal parameter */
+		inputSweep(SMin, SMax); 				/*	Fetch the user's desired division of the parameter */
 	}
 
-	inputParameters(); 									/* Fetch the user's input parameters : all of them if attractor, and the remaining ones -
-														   if any - for other actions. */
+	inputParameters(); 						/*	Fetch the user's input parameters : all of them if attractor,
+												and the remaining ones - if any - for other actions. */
 
 /*** We're done with user input ! ***/
 INPUT_DONE:
-	consolidateUserRequest(); 							/* Create the summaries of the request */
-	if (createFileName()) exit(1);						/* Check directories and create the name of the files */
+	consolidateUserRequest(); 						/*	Create the summaries of the request */
+	if (createFileName()) exit(1);					/*	Check directories and create the name of the files */
 
-	if (!choseDefaults)	{								/* Print Summary of the user's request on the console */
-		printf(ANSI_COLOR_CYAN "Here below a summary of your choices:\n\n%s\n\n" ANSI_COLOR_RESET, summaryStdout);
+	if (!choseDefaults)	{							/*	Print Summary of the user's request on the console */
+		printf(	ANSI_COLOR_CYAN "Here below a summary of your choices:\n\n%s\n\n"
+				ANSI_COLOR_RESET, summaryStdout);
 	}
 
 /* Check if the requested action already exists; if not, we're in business ! DEACTIVATED on database level */
@@ -93,11 +96,14 @@ INPUT_DONE:
 	bool  imgExists = checkImageFile();
 
 	if (dataExists || imgExists) {
-		printf(ANSI_COLOR_CYAN"The request you made has already been done in the past.\n"ANSI_COLOR_RESET);
+		printf(	ANSI_COLOR_CYAN "The request you made has already been done in the past.\n"
+				ANSI_COLOR_RESET);
+
 		if (dataExists)	{
 			printf("Data file found: %s\n", dataFile);
 		}
 		else printf("Data file not found. Recreating from scratch.\n");
+
 		if (imgExists)	{
 			printf("Image file found: %s\n", imageFile);
 		}
@@ -107,11 +113,9 @@ INPUT_DONE:
 	if (!dataExists || !imgExists) {
 // 		dbCreateUseEntry();					/* No entry exists -> create one // DEACTIVATED */
 
-		minIterations = N - maxPoints;		/* The size of the transient will depend on the user's choice of N. maxPoints is hardcoded. */
-
 		switch (userAction) {				/* Now we decide what to call based on the requested action */
 			case 1:
-				if (!dataExists) bifurcation();
+				if (!dataExists) bifurcation(NMin);
 	    		if (!imgExists ) plotBifurcation();
 				break;
 	    	case 2:
@@ -123,7 +127,7 @@ INPUT_DONE:
 				if (!imgExists ) plotAttractor();
 				break;
 // 	    	case 4:
-// 	    		bifurcation2D();
+// 	    		bifurcation2D(NMin);
 // 	    		plotBifurcation2D();
 // 	    		break;
 // 	    	case 5:

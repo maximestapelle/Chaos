@@ -1,9 +1,9 @@
 #include "Chaos.h"
 
 /*
- * The plotLyapunov function will hardcode a python file to be executed, which will produce a png file.
- *
- * The function is called from ChaosMain. 
+	The plotLyapunov function will hardcode a python file to be executed, which will produce a png file.
+
+	The function is called from ChaosMain.
  */
 
 /*** !!! Only works for discrete maps, for flows there are a shit ton of exponents, syntax and plot ***/
@@ -12,22 +12,21 @@ void plotLyapunov() {
 	int isDiscrete = 1;
 	if (strcmp(type, "flow") == 0) isDiscrete = 0;
 
-	char *pythonFile;
+	char *pythonFile = "img/PlotLyapunov.py";
+	FILE *fp = fopen(pythonFile, "w");
+	char command[35] = "python3 ";
+	strcat(command, pythonFile);
+
 	char pythonFileContents[2500] = "import matplotlib.pyplot as plt\n";
 	char buffer[200];
-
-	char command[35] = "python3 ";
-	FILE *fp;
-	int status;
 
 	char title[150] = "Lyapunov exponents for the ";
 	strcat(title, mapName);
 	strcat(title, " ");
 	strcat(title, LaTeXformula);
-	
-	pythonFile = "img/PlotLyapunov.py";
-	fp = fopen(pythonFile, "w");
-	
+
+
+
 	strcat(pythonFileContents, "plt.style.use(\'dark_background\')\n");
 	strcat(pythonFileContents, "plt.rcParams[\'text.usetex\'] = True\n");
 	strcat(pythonFileContents, "plt.rcParams[\'axes.titlesize\'] = 22\n");
@@ -52,8 +51,8 @@ void plotLyapunov() {
 	}
 	strcat(pythonFileContents, "ax = plt.figure(figsize = (16, 9), constrained_layout=True).add_subplot()\n");
 
-	/* For discrete (maps) we plot exponents in different colors, wether they are positive or negative. */
-	/* For flows, we just plot the exponents, and their sum. */
+	/*	For discrete (maps) we plot exponents in different colors, wether they are positive or negative. */
+	/*	For flows, we just plot the exponents, and their sum. */
 	switch (isDiscrete) {
 		case 1:
 			strcat(pythonFileContents, "import numpy as np\n");
@@ -62,7 +61,7 @@ void plotLyapunov() {
 				snprintf(buffer, sizeof (buffer), "lya[%zu] = lya%zu\n", d, d + 1);
 				strcat(pythonFileContents, buffer);
 			}
-			/* If only 1D, we don't print the variable name as there is only one exponent -> no ambiguity */
+			/*	If only 1D, we don't print the variable name as there is only one exponent -> no ambiguity */
 			if (dimension == 1) {
 				strcat(pythonFileContents,  "ax.plot(param[lya[0] < 0], lya[0][lya[0] < 0], \',\', "
 											"color = (0, 0, 1), label = r\'Exponent when $<0$\')\n"
@@ -71,15 +70,17 @@ void plotLyapunov() {
 			}
 			else {
 				for (size_t d = 0; d < dimension; d++) {
-					snprintf(buffer, sizeof (buffer),   "ax.plot(param[lya[%zu] < 0], lya[%zu][lya[%zu] < 0], \',\', "
-														"color = (0, 0, (255 - 127 * %zu)/255), label = r\'Exponent along $",
-														d, d, d, d);
+					snprintf(buffer, sizeof (buffer),
+								"ax.plot(param[lya[%zu] < 0], lya[%zu][lya[%zu] < 0], \',\', "
+								"color = (0, 0, (255 - 127 * %zu)/255), label = r\'Exponent along $",
+								d, d, d, d);
 					strcat(pythonFileContents, buffer);
 					strcat(pythonFileContents, variablesNames[d]);
 					strcat(pythonFileContents, "$, when $<0$\')\n");
-					snprintf(buffer, sizeof (buffer),   "ax.plot(param[lya[%zu] > 0], lya[%zu][lya[%zu] > 0], \',\', "
-														"color = ((255 - 127 * %zu)/255, 0, 0), label = r\'Exponent along $",
-														d, d, d, d);
+					snprintf(buffer, sizeof (buffer),
+								"ax.plot(param[lya[%zu] > 0], lya[%zu][lya[%zu] > 0], \',\', "
+								"color = ((255 - 127 * %zu)/255, 0, 0), label = r\'Exponent along $",
+								d, d, d, d);
 					strcat(pythonFileContents, buffer);
 					strcat(pythonFileContents, variablesNames[d]);
 					strcat(pythonFileContents, "$, when $>0$\')\n");
@@ -151,12 +152,12 @@ void plotLyapunov() {
 	strcat(pythonFileContents, "plt.savefig(\'");
 	strcat(pythonFileContents, imageFile);
 	strcat(pythonFileContents, "\', format = \'png\')\n");
-	
-	
+
+
 	fprintf(fp, "%s", pythonFileContents);
 	fclose(fp);
 
-	strcat(command, pythonFile);
+	int status;
 	if ((status = system(command)) != 0) {
 		printf("Issue when executing python command to plot the Lyapunov exponents!\n");
 		exit(1);

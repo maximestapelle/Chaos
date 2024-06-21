@@ -2,23 +2,24 @@
 #include "Dynamics.h"
 
 /*
- * The lyapunov function computes a trajectory and constructs lyapunov exponents.
- *
- * The function is called from ChaosMain.
+	The lyapunov function computes a trajectory and constructs lyapunov exponents.
+
+	The function is called from ChaosMain.
  */
 
 void lyapunov() {
 
-	FILE * fp = fopen(dataFile, "w");
+	FILE *fp = fopen(dataFile, "w");
 	double parameterIncrement = (userMapValues.parameterRange[1] - userMapValues.parameterRange[0]) / S;
-	double trajectory[dimension]; /* The current point of the trajectory */
+	double trajectory[dimension];	/*	The current point of the trajectory */
 	double lyapunovExponents[dimension];
 
 
-	/* Set the parameter to its minimum value. We subtract parameterIncrement because in the loop, we will add as from s = 0. */
+	/*	Set the parameter to its minimum value.
+		We subtract parameterIncrement because in the loop, we will add as from s = 0. */
 	userMapValues.parameters[0] = userMapValues.parameterRange[0] - parameterIncrement;
 
-
+	/*	Main process */
 	switch (userMap) {
 		case 1:
 			for (size_t s = 0; s <= S; s++) {
@@ -59,7 +60,7 @@ void lyapunov() {
 		case 4:
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				/* particularly easy for the Tent map ! */
+				/*	Particularly easy for the Tent map ! */
 				lyapunovExponents[0] = log(userMapValues.parameters[0]);
 				fprintf(fp, "%f %.4f\n", userMapValues.parameters[0], lyapunovExponents[0]);
 			}
@@ -77,10 +78,10 @@ void lyapunov() {
 			}
 			break;
 		case 6: {
-			double nJacobianProduct[dimension][dimension];
-			double nthJacobian[dimension][dimension];
-			double transposednJacobianProduct[dimension][dimension];
-			double H[dimension][dimension];
+			double nJacobianProduct[2][2];
+			double nthJacobian[2][2];
+			double transposednJacobianProduct[2][2];
+			double H[2][2];
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				trajectory[0] = userMapValues.IC[0];
@@ -106,10 +107,10 @@ and their Relation to Entropy **/
 			break;
 		}
 		case 7: {
-			double nJacobianProduct[dimension][dimension];
-			double nthJacobian[dimension][dimension];
-			double transposednJacobianProduct[dimension][dimension];
-			double H[dimension][dimension];
+			double nJacobianProduct[2][2];
+			double nthJacobian[2][2];
+			double transposednJacobianProduct[2][2];
+			double H[2][2];
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				trajectory[0] = userMapValues.IC[0];
@@ -214,9 +215,11 @@ and their Relation to Entropy **/
 					for (size_t i = 3; i < 12; i++) {
 						state[i] = u[i - 3];
 					}
-					/* Check convergence */
-					if (normOfDifference(lyapunovExponentsOld, lyapunovExponents) < E_r * norm(lyapunovExponents) + E_a) {
-						fprintf(fp, "%f %f %f %f\n", userMapValues.parameters[0], lyapunovExponents[0], lyapunovExponents[1], lyapunovExponents[2]);
+					/*	Check convergence */
+					if (normOfDifference(lyapunovExponentsOld, lyapunovExponents) < E_r * norm(lyapunovExponents) + E_a)
+					{
+						fprintf(fp, "%f %f %f %f\n", userMapValues.parameters[0],
+									lyapunovExponents[0], lyapunovExponents[1], lyapunovExponents[2]);
 						break;
 					} /* If no convergence, we do nothing -> skip this value of rho. */
 				}
@@ -295,9 +298,10 @@ and their Relation to Entropy **/
 					for (size_t i = 3; i < 12; i++) {
 						state[i] = u[i - 3];
 					}
-					/* Check convergence */
+					/*	Check convergence */
 					if (normOfDifference(lyapunovExponentsOld, lyapunovExponents) < E_r * norm(lyapunovExponents) + E_a) {
-						fprintf(fp, "%f %f %f %f\n", userMapValues.parameters[0], lyapunovExponents[0], lyapunovExponents[1], lyapunovExponents[2]);
+						fprintf(fp, "%f %f %f %f\n", userMapValues.parameters[0],
+									lyapunovExponents[0], lyapunovExponents[1], lyapunovExponents[2]);
 						break;
 					} /* If no convergence, we do nothing -> skip this value of rho. */
 				}

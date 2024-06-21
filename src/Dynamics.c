@@ -1,19 +1,20 @@
-#include "Chaos.h"
 #include "Utilities.h"
 #include "Dynamics.h"
 
-/* Contains the dynamics of each dynamical system.
- *
- * All functions work on the same array trajectory, of size DIMENSION_MAX:
- *	- the 2nd and 3rd components are ignored for 1D dynamical systems;
- *	- the 3rd component is ignored for 2D dynamical systems.
- * It works the same with the parameters : array of size NUMBER_PARAMETERS_MAX.
- *
- * For flows, we also have here the derivatives (Jacobian) and implementation of the
- * Euler and Runge-Kutta 4th order methods.
- *
- * Dynamics are used by the functions attractor(), bifurcation() and bifurcation2D() */
+/*	Contains the dynamics of each dynamical system.
 
+	All parameters are on the global variable userMapValues.
+
+	For flows, we also have here the derivatives (Jacobian) and implementation of the
+	Euler and Runge-Kutta 4th order methods. This version is not very elegant and has
+	a LOT of hardcoding (Euler and RK4 and specific to the chosen dynamical system) to allow
+	for better performance.
+
+	Dynamics are used by all actions
+ */
+
+
+/*	1 - The logistic map */
 void logistic(double trajectory[]) {
 	trajectory[0] =  userMapValues.parameters[0] * trajectory[0] * (1 - trajectory[0]);
 }
@@ -24,6 +25,7 @@ double logisticLyapunov(double trajectory[]) {
 	return log(fabs(userMapValues.parameters[0])) + log(fabs(1 - 2 * trajectory[0]));
 }
 
+/*	2 - The exponential logistic map */
 void logisticExp(double trajectory[]) {
 	trajectory[0] = userMapValues.parameters[0] * trajectory[0] * exp(-trajectory[0]);
 }
@@ -34,16 +36,20 @@ double logisticExpLyapunov(double trajectory[]) {
 	return log(fabs(userMapValues.parameters[0])) + log(fabs(1 - trajectory[0])) - trajectory[0];
 }
 
+/*	3 - The gauss map */
 void gauss(double trajectory[]) {
-	 trajectory[0] = exp(- userMapValues.parameters[1] * pow(trajectory[0], 2)) + userMapValues.parameters[0];
+	 trajectory[0] = exp(-userMapValues.parameters[1] * pow(trajectory[0], 2)) + userMapValues.parameters[0];
 }
 double gaussDerivative(double trajectory[]) {
-	return -2 * userMapValues.parameters[1] * trajectory[0] * exp(- userMapValues.parameters[1] * pow(trajectory[0], 2));
+	return 	-2 * userMapValues.parameters[1] * trajectory[0] *
+			exp(- userMapValues.parameters[1] * pow(trajectory[0], 2));
 }
 double gaussLyapunov(double trajectory[]) {
-	return - userMapValues.parameters[1] * pow(trajectory[0], 2) + log(fabs(2 * userMapValues.parameters[1] * trajectory[0]));
+	return  -userMapValues.parameters[1] * pow(trajectory[0], 2) +
+			log(fabs(2 * userMapValues.parameters[1] * trajectory[0]));
 }
 
+/*	4 - The tent map */
 void tent(double trajectory[]) {
 	if (trajectory[0] < 0.5) {
 		trajectory[0] =  userMapValues.parameters[0] * trajectory[0];
@@ -53,10 +59,12 @@ void tent(double trajectory[]) {
 	}
 }
 
+/*	5 - The Circle map */
 void circle(double trajectory[]) {
 	double result;
 
-	result = trajectory[0] + userMapValues.parameters[0] / (2 * M_PI) * ((double) sin(2 * M_PI * trajectory[0])) + userMapValues.parameters[1];
+	result = trajectory[0] + userMapValues.parameters[0] / (2 * M_PI) *
+			 ((double) sin(2 * M_PI * trajectory[0])) + userMapValues.parameters[1];
 	// Result is modulo 1
 	result -= floor(result);
 
@@ -69,12 +77,13 @@ double circleLyapunov(double trajectory[]) {
 	return log(fabs(circleDerivative(trajectory)));
 }
 
-
-
+/*	6 - The tinkerbell map */
 void tinkerbell(double trajectory[]) {
 	double x, y;
-	x = pow(trajectory[0], 2) - pow(trajectory[1], 2) + userMapValues.parameters[1] * trajectory[0] + userMapValues.parameters[0] * trajectory[1];
-	y = 2 * trajectory[0] * trajectory[1] + userMapValues.parameters[2] * trajectory[0] + userMapValues.parameters[3] * trajectory[1];
+	x = pow(trajectory[0], 2) - pow(trajectory[1], 2) + userMapValues.parameters[1] * trajectory[0] +
+		userMapValues.parameters[0] * trajectory[1];
+	y = 2 * trajectory[0] * trajectory[1] + userMapValues.parameters[2] * trajectory[0] +
+		userMapValues.parameters[3] * trajectory[1];
 
 	trajectory[0] = x;
 	trajectory[1] = y;
@@ -87,6 +96,7 @@ void tinkerbellJacobian(double trajectory[], double jacobian[][2]) {
 
 }
 
+/*	7 - The Hénon map */
 void henon(double trajectory[]) {
 	double x, y;
 	x = 1 - userMapValues.parameters[0] * pow(trajectory[0], 2) + trajectory[1];
@@ -103,14 +113,15 @@ void henonJacobian(double trajectory[], double jacobian[][2]) {
 
 }
 
-void lorenzEvolution(double input[], double fgh[]) {
+/*	8 - The Lorenz system */
+static void lorenzEvolution(double input[], double fgh[]) {
 	fgh[0] = userMapValues.parameters[1] * (input[1] - input[0]);
 	fgh[1] = input[0] * (userMapValues.parameters[0] - input[2]) - input[1];
 	fgh[2] = input[0] * input[1] - userMapValues.parameters[2] * input[2];
 
 }
-void lorenzEvolutionFull(const double *state,
-						  	   double stateEvolution[])
+static void lorenzEvolutionFull(const double *state,
+									  double stateEvolution[])
 {
 	/* Vector of size DIMENSION + DIMENSION^2 for the evolution of extended state */
 	/* This is a f, g and h functions of xdot, ydot, zdot in indices 0, 1 and 2 */
@@ -131,8 +142,7 @@ void lorenzEvolutionFull(const double *state,
 	stateEvolution[10] = state[1] * state[4] + state[0] * state[7] - userMapValues.parameters[2] * state[10];
 	stateEvolution[11] = state[1] * state[5] + state[0] * state[8] - userMapValues.parameters[2] * state[11];
 }
-
-/* This is Newton/Euler method for Lorenz (so the easiest one, based on 1st order Taylor series) */
+/*	This is Newton/Euler method for Lorenz (so the easiest one, based on 1st order Taylor series) */
 void lorenzEuler(double trajectory[], const float dt) {
 	double x, y, z;
 	double fgh[3];
@@ -147,7 +157,7 @@ void lorenzEuler(double trajectory[], const float dt) {
 	trajectory[1] = y;
 	trajectory[2] = z;
 }
-/* This is Runge-Kutta 4th order */
+/*	This is Runge-Kutta 4th order */
 void lorenzRK4(double trajectory[], const float h) {
 	double array[3];
 	double k1[3], k2[3], k3[3], k4[3];
@@ -176,6 +186,7 @@ void lorenzRK4(double trajectory[], const float h) {
 	trajectory[1] = trajectory[1] + h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
 	trajectory[2] = trajectory[2] + h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]);
 }
+/*	This is Runge-Kutta 4th order for the full state, when variation equations are needed (Lyapunov) */
 void lorenzRK4Full(double *state, const float h)
 {
 	double array[12];
@@ -206,14 +217,15 @@ void lorenzRK4Full(double *state, const float h)
 	}
 }
 
-void rosslerEvolution(double input[], double fgh[]) {
+/*	9 - The Rössler system */
+static void rosslerEvolution(double input[], double fgh[]) {
 	fgh[0] = -input[1] - input[2];
 	fgh[1] = input[0] + userMapValues.parameters[2] * input[1];
 	fgh[2] = userMapValues.parameters[0] + input[2] * (input[0] - userMapValues.parameters[1]);
 
 }
-void rosslerEvolutionFull(const double *state,
-						  		double stateEvolution[])
+static void rosslerEvolutionFull(const  double *state,
+										double stateEvolution[])
 {
 	/* Vector of size DIMENSION + DIMENSION^2 for the evolution of extended state */
 	/* This is a f, g and h functions of xdot, ydot, zdot in indices 0, 1 and 2 */
@@ -234,7 +246,6 @@ void rosslerEvolutionFull(const double *state,
 	stateEvolution[10] = state[2] * state[4] + (state[0] - userMapValues.parameters[1]) * state[10];
 	stateEvolution[11] = state[2] * state[5] + (state[0] - userMapValues.parameters[1]) * state[11];
 }
-
 /* This is Newton/Euler method for Rossler (so the easiest one, based on 1st order Taylor series) */
 void rosslerEuler(double trajectory[], const float dt) {
 	double x, y, z;
@@ -279,6 +290,7 @@ void rosslerRK4(double trajectory[], const float h) {
 	trajectory[1] = trajectory[1] + h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
 	trajectory[2] = trajectory[2] + h / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]);
 }
+/*	This is Runge-Kutta 4th order for the full state, when variation equations are needed (Lyapunov) */
 void rosslerRK4Full(double *state, const float h)
 {
 	double array[12];

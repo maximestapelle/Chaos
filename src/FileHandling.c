@@ -4,17 +4,40 @@
 #include <sys/types.h>
 
 /*
- * The createFileName function creates the full filenames for data and image.
- * It also checks if the data/ and img/ directories exist, and creates them otherwise.
- * It is called from ChaosMain.
- *
- * Changes : 5 May 2024 : check existence of directories data/ and img/ create them if necessary.
+	Functions to check if the files for the request alreay exist, and (if not) to create their names.
+		Specifically, the createFileName function creates the full filenames for data and image.
+		It also checks if the data/ and img/ directories exist, and creates them otherwise.
+
+	The functions are called from ChaosMain.
  */
 
+bool checkDataFile() {
+
+	FILE * fp;
+
+	if((fp = fopen(dataFile,"r")) != NULL) {
+		fclose(fp);
+		return true;
+	}
+	else return false;
+
+}
+bool checkImageFile() {
+
+	FILE * fp;
+
+	if((fp = fopen(imageFile,"r")) != NULL) {
+		fclose(fp);
+		return true;
+	}
+	else return false;
+
+}
+
 int createFileName() {
-	
+
 	int rc;
-	
+
 	/* Check if the directories exist */
 	if (opendir(dataFile) == NULL) {
 		if ((rc = mkdir(dataFile, 0777)) != 0) {

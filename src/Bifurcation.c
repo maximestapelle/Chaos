@@ -2,31 +2,30 @@
 #include "Dynamics.h"
 
 /*
- * The bifurcation function computes a trajectory and waits for a transient period. After that :
- * - for maps, it records all different points of the trajectory (considered as attractors);
- * - for flows, it records n points of the n-cycles encountered.
- * For now, it uses Runge-Kutta 4th order for flows. Also, it records only the first component
- * of the trajectory.
- *
- * The function is called from ChaosMain.
+	The bifurcation function computes a trajectory and waits for a transient period. After that :
+	- for maps, it records all different points of the trajectory (considered as attractors);
+	- for flows, it records n points of the n-cycles encountered.
+	For now, it uses Runge-Kutta 4th order for flows. Also, it records only the first component
+	of the trajectory.
+
+	The function is called from ChaosMain.
  */
 
-void bifurcation() {
+void bifurcation(unsigned int NMin) {
 
-	FILE * fp;
+	FILE *fp = fopen(dataFile, "w");
 	double parameterIncrement = (userMapValues.parameterRange[1] - userMapValues.parameterRange[0]) / S;
 	double x;
-	double trajectory[dimension]; /* The current point of the trajectory */
-	double attractors[maxPoints]; /* We need to store, for each value of s, all encountered attractors. */
+	double trajectory[dimension];	/* 	The current point of the trajectory  */
+	double attractors[maxPoints];	/* 	We need to store, for each value of s, all encountered attractors.  */
 	unsigned int i;
 	bool divergence;
 
-	fp = fopen(dataFile, "w");
-
-	/* Set the parameter to its minimum value. We subtract parameterIncrement because in the loop, we will add as from s = 0. */
+	/* 	Set the parameter to its minimum value.
+		We subtract parameterIncrement because in the loop, we will add as from s = 0.  */
 	userMapValues.parameters[0] = userMapValues.parameterRange[0] - parameterIncrement;
 
-
+	/*	Main process  */
 	switch (userMap) {
 		case 1:
 			for (size_t s = 0; s <= S; s++) {
@@ -35,7 +34,7 @@ void bifurcation() {
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
-				for (size_t n = 1; n <= minIterations; n++) {
+				for (size_t n = 1; n <= NMin; n++) {
 					logistic(trajectory);
 				}
 				/* We store x to see if we return to it after */
@@ -45,7 +44,7 @@ void bifurcation() {
 					i++;
 				}
 				else continue;
-				for (size_t n = minIterations + 1; n <= N; n++) {
+				for (size_t n = NMin + 1; n <= N; n++) {
 					logistic(trajectory);
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
@@ -73,7 +72,7 @@ void bifurcation() {
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
-				for (size_t n = 1; n <= minIterations; n++) {
+				for (size_t n = 1; n <= NMin; n++) {
 					logisticExp(trajectory);
 				}
 				/* We store x to see if we return to it after */
@@ -83,7 +82,7 @@ void bifurcation() {
 					i++;
 				}
 				else continue;
-				for (size_t n = minIterations + 1; n <= N; n++) {
+				for (size_t n = NMin + 1; n <= N; n++) {
 					logisticExp(trajectory);
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
@@ -111,7 +110,7 @@ void bifurcation() {
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
-				for (size_t n = 1; n <= minIterations; n++) {
+				for (size_t n = 1; n <= NMin; n++) {
 					gauss(trajectory);
 				}
 				/* We store x to see if we return to it after */
@@ -121,7 +120,7 @@ void bifurcation() {
 					i++;
 				}
 				else continue;
-				for (size_t n = minIterations + 1; n <= N; n++) {
+				for (size_t n = NMin + 1; n <= N; n++) {
 					gauss(trajectory);
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
@@ -149,7 +148,7 @@ void bifurcation() {
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
-				for (size_t n = 1; n <= minIterations; n++) {
+				for (size_t n = 1; n <= NMin; n++) {
 					tent(trajectory);
 				}
 				/* We store x to see if we return to it after */
@@ -159,7 +158,7 @@ void bifurcation() {
 					i++;
 				}
 				else continue;
-				for (size_t n = minIterations + 1; n <= N; n++) {
+				for (size_t n = NMin + 1; n <= N; n++) {
 					tent(trajectory);
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
@@ -187,7 +186,7 @@ void bifurcation() {
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
-				for (size_t n = 1; n <= minIterations; n++) {
+				for (size_t n = 1; n <= NMin; n++) {
 					circle(trajectory);
 				}
 				/* We store x to see if we return to it after */
@@ -197,7 +196,7 @@ void bifurcation() {
 					i++;
 				}
 				else continue;
-				for (size_t n = minIterations + 1; n <= N; n++) {
+				for (size_t n = NMin + 1; n <= N; n++) {
 					circle(trajectory);
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
@@ -226,7 +225,7 @@ void bifurcation() {
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
-				for (size_t n = 1; n <= minIterations; n++) {
+				for (size_t n = 1; n <= NMin; n++) {
 					tinkerbell(trajectory);
 				}
 				/* We store x to see if we return to it after */
@@ -236,7 +235,7 @@ void bifurcation() {
 					i++;
 				}
 				else continue;
-				for (size_t n = minIterations + 1; n <= N; n++) {
+				for (size_t n = NMin + 1; n <= N; n++) {
 					tinkerbell(trajectory);
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
@@ -265,7 +264,7 @@ void bifurcation() {
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
-				for (size_t n = 1; n <= minIterations; n++) {
+				for (size_t n = 1; n <= NMin; n++) {
 					henon(trajectory);
 				}
 				/* We store x to see if we return to it after */
@@ -275,7 +274,7 @@ void bifurcation() {
 					i++;
 				}
 				else continue;
-				for (size_t n = minIterations + 1; n <= N; n++) {
+				for (size_t n = NMin + 1; n <= N; n++) {
 					henon(trajectory);
 					/* We check the last point of the trajectory */
 					if (!isnan(trajectory[0]) && !isinf(trajectory[0])) {
@@ -296,14 +295,18 @@ void bifurcation() {
 				}
 			}
 			break;
-/* The situation is completely different if there exist cycles. A stable period-3 orbit is not chaotic, for example. To make the difference between chaos (infinity of different cycles) and not chaos (eg 3 orbits in the rossler map when b = 0.040) we will create a array of size three (nothing to do with my example of 3 cycle orbit, but we need three numbers to see if we have a local maximum) which will be a "window" to check when we get to a local maximum, and register the maximum. For eg a 3 orbit, there will be three different maxima. */
+/*	Flows  */
+/* 	The situation is completely different if there exist cycles. A stable period-3 orbit is not chaotic, for example.
+	To make the difference between chaos (infinity of different cycles) and not chaos (eg 3 orbits in the rossler map
+	when b = 0.040) we will create a array of size three (nothing to do with my example of 3 cycle orbit, but we need
+	three numbers to see if we have a local maximum) which will be a "window" to check when we get to a local maximum,
+	and register the maximum. For eg a 3 orbit, there will be three different maxima.  */
 		case 8: {
 			const float h = 0.001F;
 			const unsigned int windowSize = 3;
 			const unsigned int varPlot = 0;
 			double window[windowSize];
 			size_t j;
-			minIterations = 100000;
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				for (size_t d = 0; d < 3; d++) {
@@ -312,29 +315,28 @@ void bifurcation() {
 				i = 0;
 				j = 0;
 				/* First we do the minimum number of iterations */
-				for (size_t n = 1; n <= minIterations; n++) {
+				for (size_t n = 1; n <= NMin; n++) {
 					lorenzRK4(trajectory, h);
-					/* Start to populate the window at the last five */
-					if (n > minIterations - windowSize) {
+					/* Start to populate the window at the last windowSize iterations */
+					if (n > NMin - windowSize) {
 						window[j % windowSize] = trajectory[varPlot];
 						j++;
 					}
 				}
 				/* First, check if we have a fixed point */
-				lorenzRK4(trajectory, h);
-				window[j % windowSize] = trajectory[varPlot];
-				j++;
-				if (fabs(trajectory[varPlot] - window[(j - 2) % windowSize]) < 1E-4) {
+				if (fabs(window[j % windowSize] - window[(j - 1) % windowSize]) < 1E-4) {
 					attractors[i] = trajectory[varPlot];
 					i++;
 				}
 				else {
 					/* No fixed point -> check cycles : are we just after a local maximum */
-					for (size_t n = minIterations + 1; n <= N; n++) {
+					for (size_t n = NMin + 1; n <= N; n++) {
 						lorenzRK4(trajectory, h);
 						window[j % windowSize] = trajectory[varPlot];
-						if ((window[j % windowSize] < window[(j - 1) % windowSize]) && (window[(j - 1) % windowSize] >= window[(j - 2) % windowSize])) {
-							/* window[(j - 1) % 3] is a local MAXIMUM. We check if the value already exists, and if not, we store it */
+						if ((window[j % windowSize] < window[(j - 1) % windowSize])
+						 && (window[(j - 1) % windowSize] >= window[(j - 2) % windowSize])) {
+							/* window[(j - 1) % 3] is a local MAXIMUM.  We check if the value already exists,
+																		and if not, we store it */
 							if (fabs(window[(j - 1) % windowSize] - attractors[0]) < 1E-5) break;
 							else {
 								attractors[i] = window[(j - 1) % windowSize];
@@ -357,7 +359,6 @@ void bifurcation() {
 			const int varPlot = 0;
 			double window[windowSize];
 			size_t j;
-			minIterations = 50000;
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
 				for (size_t d = 0; d < 3; d++) {
@@ -366,29 +367,28 @@ void bifurcation() {
 				i = 0;
 				j = 0;
 				/* First we do the minimum number of iterations */
-				for (size_t n = 1; n <= minIterations; n++) {
+				for (size_t n = 1; n <= NMin; n++) {
 					rosslerRK4(trajectory, h);
-					/* Start to populate the window at the last five */
-					if (n > minIterations - windowSize) {
+					/* Start to populate the window at the last windowSize iterations */
+					if (n > NMin - windowSize) {
 						window[j % windowSize] = trajectory[varPlot];
 						j++;
 					}
 				}
 				/* First, check if we have a fixed point */
-				rosslerRK4(trajectory, h);
-				window[j % windowSize] = trajectory[varPlot];
-				j++;
-				if (fabs(trajectory[varPlot] - window[(j - 2) % windowSize]) < 1E-5) {
+				if (fabs(window[j % windowSize] - window[(j - 1) % windowSize]) < 1E-5) {
 					attractors[i] = trajectory[varPlot];
 					i++;
 				}
 				else {
 					/* No fixed point -> check cycles */
-					for (size_t n = minIterations + 1; n <= N; n++) {
+					for (size_t n = NMin + 1; n <= N; n++) {
 						rosslerRK4(trajectory, h);
 						window[j % windowSize] = trajectory[varPlot];
-						if (window[j % windowSize] < window[(j - 1) % windowSize] && window[(j - 1) % windowSize] >= window[(j - 2) % windowSize]) {
-							/* window[(j - 1) % 3] is a local EXTREMUM. We check if the value already exists, and if not, we store it */
+						if (window[j % windowSize] < window[(j - 1) % windowSize]
+						 && window[(j - 1) % windowSize] >= window[(j - 2) % windowSize]) {
+							/* window[(j - 1) % 3] is a local EXTREMUM. We check if the value already exists,
+																		and if not, we store it */
 							if (fabs(window[(j - 1) % windowSize] - attractors[0]) < 1E-4) break;
 							else {
 								attractors[i] = window[(j - 1) % 3];

@@ -1,28 +1,26 @@
 #include "Chaos.h"
 
 /*
- * The plotBifurcation function will hardcode a python file to be executed, which will produce a png file.
- *
- * The function is called from ChaosMain. 
+	The plotBifurcation function will hardcode a python file to be executed, which will produce a png file.
+
+	The function is called from ChaosMain.
  */
 
 void plotBifurcation() {
 
-	char *pythonFile;
-	char pythonFileContents[2000] = "import matplotlib.pyplot as plt\n";
-
+	char *pythonFile = "img/PlotBifurcation.py";
+	FILE *fp = fopen(pythonFile, "w");
 	char command[35] = "python3 ";
-	FILE *fp;
-	int status;
+	strcat(command, pythonFile);
+
+	char pythonFileContents[2000] = "import matplotlib.pyplot as plt\n";
 
 	char title[150] = "Bifurcation for the ";
 	strcat(title, mapName);
 	strcat(title, " ");
 	strcat(title, LaTeXformula);
-	
-	pythonFile = "img/PlotBifurcation.py";
-	fp = fopen(pythonFile, "w");
-	
+
+
 	strcat(pythonFileContents, "plt.style.use(\'dark_background\')\n");
 	strcat(pythonFileContents, "plt.rcParams[\'text.usetex\'] = True\n");
 	strcat(pythonFileContents, "plt.rcParams[\'axes.titlesize\'] = 22\n");
@@ -62,12 +60,12 @@ void plotBifurcation() {
 	strcat(pythonFileContents, "plt.savefig(\'");
 	strcat(pythonFileContents, imageFile);
 	strcat(pythonFileContents, "\', format = \'png\')\n");
-	
-	
+
+
 	fprintf(fp, "%s", pythonFileContents);
 	fclose(fp);
 
-	strcat(command, pythonFile);
+	int status;
 	if ((status = system(command)) != 0) {
 		printf("Issue when executing python command to plot the Bifurcation graph!\n");
 		exit(1);

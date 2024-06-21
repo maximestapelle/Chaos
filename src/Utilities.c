@@ -1,15 +1,15 @@
 #include "Utilities.h"
 
 /*
- * The Utilities c file contains function that I considered to be "utilities" :
- * array and matrices, linear algebra, check if a value exists in an array...
- *
- * Its functions are called from physics fuctions : Attracto, Bifurcation, Lyapunov
+	The Utilities c file contains function that I considered to be "utilities" :
+	array and matrices, linear algebra, check if a value exists in an array...
+
+	Its functions are called from action fuctions : Attracto, Bifurcation, Lyapunov
  */
 
-/* Array utilities */
-double **init_2DMatrix(const unsigned int nRows, const unsigned int nColumns)
-{
+/*	Array utilities */
+double **init_2DMatrix(const unsigned int nRows, const unsigned int nColumns) {
+
 	double **matrix = calloc(nRows, sizeof *matrix);
 	for (size_t i = 0; i < nRows; i++) {
 		matrix[i] = calloc(nColumns, sizeof **matrix);
@@ -17,8 +17,8 @@ double **init_2DMatrix(const unsigned int nRows, const unsigned int nColumns)
 
 	return matrix;
 }
-void free_2DMatrix(double **matrix, const unsigned int nRows)
-{
+void free_2DMatrix(double **matrix, const unsigned int nRows) {
+
 	for (size_t i = 0; i < nRows; i++) {
 	free(matrix[i]);
 	}
@@ -27,9 +27,9 @@ void free_2DMatrix(double **matrix, const unsigned int nRows)
 
 }
 
-/* Check if a value exists */
-bool is_in_row(double value, double *array, const unsigned int size)
-{
+/*	Check if a value exists */
+bool is_in_row(double value, double *array, const unsigned int size) {
+
 	for (size_t i = 0; i < size; i++)
 	{
 		if (array[i] == value)
@@ -37,9 +37,9 @@ bool is_in_row(double value, double *array, const unsigned int size)
 	}
 	return false;
 }
-/* Check if a value exists, for 2D actions */
-bool is_in_matrix(double *value, double **matrix, const unsigned int size)
-{
+/*	Check if a value exists, for 2D actions */
+bool is_in_matrix(double *value, double **matrix, const unsigned int size) {
+
 	for (size_t i = 0; i < size; i++)
 	{
 		if (matrix[i][0] == value[0] && matrix[i][1] == value[1])
@@ -48,8 +48,9 @@ bool is_in_matrix(double *value, double **matrix, const unsigned int size)
 	return false;
 }
 
-/* Matrix product, coded so that the result mp can be set as one of the input matrices */
+/*	Matrix product, coded so that the result mp can be set as one of the input matrices */
 void dot_product(double m1[][dimension], double m2[][dimension], double mp[][dimension]) {
+
 	double temp[dimension][dimension];
 	memset(temp, 0, sizeof temp);
 
@@ -63,8 +64,9 @@ void dot_product(double m1[][dimension], double m2[][dimension], double mp[][dim
 	/* Copy temp to m2. */
 	memcpy(mp, temp, sizeof(temp));
 }
-/* Square Matrix transpose */
+/*	Square Matrix transpose */
 void matrix_transpose(double m[][dimension], double mt[][dimension]) {
+
 	for (size_t i = 0; i < dimension; i++) {
 		for (size_t j = 0; j < dimension; j++) {
 			mt[j][i] = m[i][j];
@@ -72,8 +74,9 @@ void matrix_transpose(double m[][dimension], double mt[][dimension]) {
 	}
 }
 
-/* Specific to dimension = 2 !! */
+/*	Specific to dimension = 2 !! */
 void eigen_values(double matrix[][dimension], double eigenvalues[]) {
+
 	double temp1 = matrix[0][0] + matrix[1][1];
 	double temp2 = pow(temp1, 2) - 4 * (matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1]);
 
@@ -87,8 +90,9 @@ void eigen_values(double matrix[][dimension], double eigenvalues[]) {
 	}
 
 }
-double norm(const double vector[])
-{
+
+double norm(const double vector[]) {
+
 	double square = 0.0;
 
 	for (size_t i = 0; i < dimension; i++) {
@@ -97,10 +101,9 @@ double norm(const double vector[])
 
 	return sqrt(square);
 }
-
 double normColumn(const double vector[],
-				  const int column)
-{
+				  const int column) {
+
 	/* Input is a dimension*dimension vector representing a matrix */
 	double square = 0.0;
 
@@ -111,8 +114,8 @@ double normColumn(const double vector[],
 	return sqrt(square);
 }
 double normOfDifference(const double vector1[],
-						const double vector2[])
-{
+						const double vector2[]) {
+
 	double square = 0.0;
 
 	for (size_t i = 0; i < dimension; i++) {
