@@ -14,6 +14,7 @@ unsigned int dimension; 		/*  The actual dimension of domain of map */
 unsigned int numberParameters; 	/*  Actual number of parameters for the map  */
 char space[2]; 					/*  R (real) or C (complex)  */
 char type[10]; 					/*  discrete or flow */
+int isDiscrete = 1;             /*  bool version of the latter  */
 char LaTeXformula[100];                     /*  The LaTeX formula for the chosen map */
 char variablesNames[DIMENSION_MAX][15];     /*  Whatever the dimension, we will store the variable LaTeX names as a
                                                 R^3 vector. Subsequent programs will ignore non-existing dimensions.  */

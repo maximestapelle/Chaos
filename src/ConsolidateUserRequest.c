@@ -1,4 +1,4 @@
-#include "Chaos.h"
+#include "Dynamics.h"
 
 /*
 	The consolidateUserRequest function will aggregate the data entered by the user, in order to :
@@ -97,5 +97,45 @@ void consolidateUserRequest() {
 	sprintf(summaryStdout, "%sNumber of iterations: %ld.", summaryStdout, N);
 	sprintf(summaryPlotLegend, "%sNumber of iterations: %ld.", summaryPlotLegend, N);
 	sprintf(summaryFileName, "%sIterations %ld", summaryFileName, N);
+
+}
+
+void createDynamics() {
+
+	evolve_t allDynamics[NUMBER_OF_SYSTEMS][2];
+
+	allDynamics[0][0] = logistic;
+	allDynamics[0][1] = logisticFull;
+
+	allDynamics[1][0] = logisticExp;
+	allDynamics[1][1] = logisticExpFull;
+
+	allDynamics[2][0] = gauss;
+	allDynamics[2][1] = gaussFull;
+
+	allDynamics[3][0] = tent;
+	allDynamics[3][1] = tent;
+
+	allDynamics[4][0] = circle;
+	allDynamics[4][1] = circleFull;
+
+	allDynamics[5][0] = tinkerbell;
+	allDynamics[5][1] = tinkerbellFull;
+
+	allDynamics[6][0] = henon;
+	allDynamics[6][1] = henonFull;
+
+	allDynamics[7][0] = lorenzRK4;
+	allDynamics[7][1] = lorenzRK4Full;
+
+	allDynamics[8][0] = rosslerRK4;
+	allDynamics[8][1] = rosslerRK4Full;
+
+	if (userAction == 2)
+		dynamics = allDynamics[userMap - 1][1];
+	else
+		dynamics = allDynamics[userMap - 1][0];
+
+
 
 }

@@ -9,9 +9,6 @@
 /*** !!! Only works for discrete maps, for flows there are a shit ton of exponents, syntax and plot ***/
 void plotLyapunov() {
 
-	int isDiscrete = 1;
-	if (strcmp(type, "flow") == 0) isDiscrete = 0;
-
 	char *pythonFile = "img/PlotLyapunov.py";
 	FILE *fp = fopen(pythonFile, "w");
 	char command[35] = "python3 ";

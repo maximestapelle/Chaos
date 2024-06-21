@@ -71,6 +71,8 @@ CHOOSE_MAP:
 			dimension = sqlite3_column_int(res, 0);
 			strcpy(space, (char *) sqlite3_column_text(res, 1));
 			strcpy(type, (char *) sqlite3_column_text(res, 2));
+            if (strcmp(type, "flow") == 0)
+                isDiscrete = 0;
 			strcpy(LaTeXformula, (char *) sqlite3_column_text(res, 3));
 			strcpy(mapName, (char *) sqlite3_column_text(res, 4));
 			sqlite3_finalize(res);

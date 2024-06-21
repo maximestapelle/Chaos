@@ -32,6 +32,7 @@
 
 #define DIMENSION_MAX 3
 #define NUMBER_PARAMETERS_MAX 5
+#define NUMBER_OF_SYSTEMS 9
 
 /****************/
 /*  Structures  */
@@ -54,6 +55,7 @@ extern unsigned int dimension; 			/*  The actual dimension of domain of map */
 extern unsigned int numberParameters; 	/*  Actual number of parameters for the map  */
 extern char space[2]; 					/*  R (real) or C (complex)  */
 extern char type[10]; 					/*  discrete or flow */
+extern int isDiscrete;                  /*  bool version of the latter  */
 extern char LaTeXformula[100]; 			/*  The LaTeX formula for the chosen map  */
 extern char variablesNames[][15]; 		/*  Whatever the dimension, we will store the variable LaTeX names as a
                                             R^3 vector. Subsequent programs will ignore non-existing dimensions.    */
@@ -107,6 +109,7 @@ void inputSweep(
         const long unsigned int SMax);
 void inputParameters();
 void consolidateUserRequest();
+void createDynamics();
 /* Action functions */
 void attractor();
 void bifurcation(unsigned int NMin);

@@ -15,51 +15,50 @@
 void bifurcation2D(unsigned int NMin) {
 
 	FILE *fp = fopen(dataFile, "w");
-	double parameterIncrement = (userMapValues.parameterRange[1] - userMapValues.parameterRange[0]) / S;
 
-	/* Redefine maxPoints : we should have a big number of values of each attractor ! */
-	maxPoints = 1000;
+	const float parameterIncrement = (userMapValues.parameterRange[1] - userMapValues.parameterRange[0]) / S;
+
+	maxPoints = 1000;				/* Redefine maxPoints : we should have a big number
+									   of values of each attractor ! */
 	double xy[dimension];
-
-	double powerof10;				/* for rounding of the trajectory */
+	double powerof10; 											/* For rounding of the state */
 	int significantDigits = 4;
 
-	double trajectory[dimension];	/* The current point of the trajectory */
-	/* 	We need to store, for each value of s, the points to see if the current one is already recorded.  */
-	double **attractors = init_2DMatrix(maxPoints, dimension);
-
-	unsigned int i;
+	double state[dimension]; 									/* The current point of the state */
+	double **attractors = init_2DMatrix(maxPoints, dimension);  /* We need to store, for each value of s,
+																   all encountered attractors. */
+	size_t i;													/* Attractors counter */
 	bool divergence;
 
-	/* 	Set the parameter to its minimum value.
+	/*  Set the parameter to its minimum value.
 		We subtract parameterIncrement because in the loop, we will add as from s = 0.  */
 	userMapValues.parameters[0] = userMapValues.parameterRange[0] - parameterIncrement;
 
-	/*	Main process  */
-	switch (userMap) {
-		case 6:
+	switch (isDiscrete) {
+		case 1:
+			/*
+				Procedure for maps
+									 */
 			for (size_t s = 0; s <= S; s++) {
 				userMapValues.parameters[0] += parameterIncrement;
-				trajectory[0] = userMapValues.IC[0];
-				trajectory[1] = userMapValues.IC[1];
+				for (size_t d = 0; d < dimension; d++) {
+					state[d] = (double) userMapValues.IC[d];
+				}
 				i = 0;
 				divergence = false;
 				/* First we do the minimum number of iterations */
 				for (size_t n = 1; n <= NMin; n++) {
-					tinkerbell(trajectory);
+					dynamics(state);
 				}
 				for (size_t n = NMin + 1; n <= N; n++) {
-					/* We check the last point of the trajectory */
-					if (!isnan(trajectory[0])
-					 && !isinf(trajectory[0])
-					 && !isnan(trajectory[1])
-					 && !isinf(trajectory[1])) {
+					/* We check the last point of the state */
+					if (!isnan(state[0]) && !isinf(state[0]) && !isnan(state[1]) && !isinf(state[1])) {
 						// Round x to significantDigits significant digits
-						powerof10 = pow(10, significantDigits - ceil(log10f(fabs(trajectory[0]))));
-						xy[0] = round(trajectory[0] * powerof10) / powerof10;
+						powerof10 = pow(10, significantDigits - ceil(log10f(fabs(state[0]))));
+						xy[0] = round(state[0] * powerof10) / powerof10;
 						// Round y to significantDigits significant digits
-						powerof10 = pow(10, significantDigits - ceil(log10f(fabs(trajectory[1]))));
-						xy[1] = round(trajectory[1] * powerof10) / powerof10;
+						powerof10 = pow(10, significantDigits - ceil(log10f(fabs(state[1]))));
+						xy[1] = round(state[1] * powerof10) / powerof10;
 						/* check if it already exists */
 						if (is_in_matrix(xy, attractors, maxPoints)) break;
 						attractors[i][0] = xy[0];
@@ -70,56 +69,20 @@ void bifurcation2D(unsigned int NMin) {
 						divergence = true;
 						break;
 					}
-					tinkerbell(trajectory);
+					dynamics(state);
 				}
 				if (!divergence) {
 					for (size_t j = 0; j < i; j++) {
-						fprintf(fp, "%f %f %f\n", attractors[j][1], attractors[j][0], userMapValues.parameters[0]);
+						fprintf(fp, "%lf %lf %f\n", attractors[j][1], attractors[j][0], userMapValues.parameters[0]);
 					}
 				}
 			}
 			break;
-		case 7:
-			for (size_t s = 0; s <= S; s++) {
-				userMapValues.parameters[0] += parameterIncrement;
-				trajectory[0] = userMapValues.IC[0];
-				trajectory[1] = userMapValues.IC[1];
-				i = 0;
-				divergence = false;
-				/* First we do the minimum number of iterations */
-				for (size_t n = 1; n <= NMin; n++) {
-					henon(trajectory);
-				}
-				for (size_t n = NMin + 1; n <= N; n++) {
-					/* We check the last point of the trajectory */
-					if (!isnan(trajectory[0])
-					 && !isinf(trajectory[0])
-					 && !isnan(trajectory[1])
-					 && !isinf(trajectory[1])) {
-						// Round x to significantDigits significant digits
-						powerof10 = pow(10, significantDigits - ceil(log10f(fabs(trajectory[0]))));
-						xy[0] = round(trajectory[0] * powerof10) / powerof10;
-						// Round y to significantDigits significant digits
-						powerof10 = pow(10, significantDigits - ceil(log10f(fabs(trajectory[1]))));
-						xy[1] = round(trajectory[1] * powerof10) / powerof10;
-						/* check if it already exists */
-						if (is_in_matrix(xy, attractors, maxPoints)) break;
-						attractors[i][0] = xy[0];
-						attractors[i][1] = xy[1];
-						i++;
-					}
-					else { /* If we record a divergence we just skip this value of s */
-						divergence = true;
-						break;
-					}
-					henon(trajectory);
-				}
-				if (!divergence) {
-					for (size_t j = 0; j < i; j++) {
-						fprintf(fp, "%f %f %f\n", attractors[j][1], attractors[j][0], userMapValues.parameters[0]);
-					}
-				}
-			}
+		default:
+			/*
+				Procedure for flows : to be implemented.
+									 */
+
 			break;
 	}
 

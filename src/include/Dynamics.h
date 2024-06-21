@@ -7,41 +7,39 @@
 
 #include "Chaos.h"
 
+typedef void (*evolve_t)(double *);
+extern evolve_t dynamics;				/*	Function pointer for the dynamics to be called by actions	*/
 
 /*	Maps  */
-void 	logistic(double trajectory[]);
-double 	logisticDerivative(double trajectory[]);
-double 	logisticLyapunov(double trajectory[]);
+void 	logistic(double *state);
+void 	logisticFull(double *state);
 
-void 	logisticExp(double trajectory[]);
-double 	logisticExpDerivative(double trajectory[]);
-double 	logisticExpLyapunov(double trajectory[]);
+void 	logisticExp(double *state);
+void 	logisticExpFull(double *state);
 
-void 	gauss(double trajectory[]);
-double 	gaussDerivative(double trajectory[]);
-double 	gaussLyapunov(double trajectory[]);
+void 	gauss(double *state);
+void 	gaussFull(double *state);
 
-void 	tent(double trajectory[]);
+void 	tent(double *state);
 
-void 	circle(double trajectory[]);
-double 	circleDerivative(double trajectory[]);
-double 	circleLyapunov(double trajectory[]);
+void 	circle(double *state);
+void 	circleFull(double *state);
 
-void 	tinkerbell(double trajectory[]);
-void 	tinkerbellJacobian(const double trajectory[], double jacobian[][2]);
+void 	tinkerbell(double *state);
+void 	tinkerbellFull(double *state);
 
-void 	henon(double trajectory[]);
-void 	henonJacobian(const double trajectory[], double jacobian[][2]);
+void 	henon(double *state);
+void 	henonFull(double *state);
 
 
 /*	Flows  */
-void 	lorenzEuler(double trajectory[], const float dt);
-void 	lorenzRK4(double trajectory[], const float h);
-void 	lorenzRK4Full(double *state, const float h);
+void 	lorenzEuler(double *state);
+void 	lorenzRK4(double *state);
+void 	lorenzRK4Full(double *state);
 
-void 	rosslerEuler(double trajectory[], const float dt);
-void 	rosslerRK4(double trajectory[], const float h);
-void 	rosslerRK4Full(double *state, const float h);
+void 	rosslerEuler(double *statet);
+void 	rosslerRK4(double *state);
+void 	rosslerRK4Full(double *state);
 
 
 #endif /* DYNAMICS_H */

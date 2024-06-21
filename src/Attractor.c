@@ -1,7 +1,7 @@
 #include "Dynamics.h"
 
 /*
-	The attractor function will compute the trajectory of the selected dynamical system,
+	The attractor function will compute the state of the selected dynamical system,
 	and store it in a file. For now, it uses Runge-Kutta 4th order for flows.
 
 	The function is called from ChaosMain.
@@ -10,47 +10,42 @@
 void attractor() {
 
 	FILE *fp = fopen(dataFile, "w");
-	double trajectory[dimension];
+	double state[dimension];
 
-	/*	Initial condition  */
 	for (size_t d = 0; d < dimension; d++) {
-		trajectory[d] = userMapValues.IC[d];
-		fprintf(fp, "%.4f", trajectory[d]);
+		state[d] = (double) userMapValues.IC[d];
+		fprintf(fp, "%.4lf", state[d]);
 		if (d < dimension - 1) fprintf(fp, " ");
 	}
 	fprintf(fp, "\n");
 
-	/*	Main process  */
-	switch (userMap) {
-		case 6:
+
+	/*	EXACTLY THE SAME for flows and maps, but waiting for the whole pointers stuff to be implemented.	*/
+	switch (isDiscrete) {
+		case 1:
+		/*
+		    Procedure for maps
+							    */
 			for (size_t n = 1; n <= N; n++) {
-				tinkerbell(trajectory);
-				fprintf(fp, "%.4f ",  trajectory[0]);
-				fprintf(fp, "%.4f\n", trajectory[1]);
+				dynamics(state);
+				for (size_t d = 0; d < dimension; d++) {
+					fprintf(fp, "%.4lf", state[d]);
+					if (d < dimension - 1) fprintf(fp, " ");
+				}
+				fprintf(fp, "\n");
 			}
 			break;
-		case 7:
+		case 0: {
+			/*
+			    Procedure for flows
+								    */
 			for (size_t n = 1; n <= N; n++) {
-				henon(trajectory);
-				fprintf(fp, "%.4f ",  trajectory[0]);
-				fprintf(fp, "%.4f\n", trajectory[1]);
-			}
-			break;
-		case 8: {
-			for (size_t n = 1; n <= N; n++) {
-				lorenzRK4(trajectory, h);
-				fprintf(fp, "%.4f ",  trajectory[0]);
-				fprintf(fp, "%.4f ",  trajectory[1]);
-				fprintf(fp, "%.4f\n", trajectory[2]);
-			}
-			break;
-		}
-		case 9: {
-			for (size_t n = 1; n <= N; n++) {
-				rosslerRK4(trajectory, h);
-				fprintf(fp, "%.4f ",  trajectory[0]);
-				fprintf(fp, "%.4f ",  trajectory[1]);
-				fprintf(fp, "%.4f\n", trajectory[2]);
+				dynamics(state);
+				for (size_t d = 0; d < dimension; d++) {
+					fprintf(fp, "%.4lf", state[d]);
+					if (d < dimension - 1) fprintf(fp, " ");
+				}
+				fprintf(fp, "\n");
 			}
 			break;
 		}

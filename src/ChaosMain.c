@@ -32,6 +32,11 @@
  **						  Implement use of h, T from database for RK4									  *
  **						  Aesthetic changes																  *
  **						  Fix small bug in bifurcation (check on maxPoints)								  *
+ **						  --- BIG CHANGE ---															  *
+ **							Import function pointers from development branch but easier - hardcoding 	  *
+ **							of evolution for flows allows for simpler function definition and 			  *
+ **							harmonisation between maps and flows -> Action functions easier to read.	  *
+ **							Therefore, no hardcoding of dimensions in Action functions.					  *
  **********************************************************************************************************/
 
 // TODO :
@@ -84,6 +89,7 @@ int main() {
 /*** We're done with user input ! ***/
 INPUT_DONE:
 	consolidateUserRequest(); 						/*	Create the summaries of the request */
+	createDynamics();								/*  Create the dynamical system	*/
 	if (createFileName()) exit(1);					/*	Check directories and create the name of the files */
 
 	if (!choseDefaults)	{							/*	Print Summary of the user's request on the console */
