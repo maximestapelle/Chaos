@@ -5,7 +5,7 @@
 	The bifurcation function computes a trajectory and waits for a transient period. After that :
 	- for maps, it records all different points of the trajectory (considered as attractors);
 	- for flows, it records n points of the n-cycles encountered.
-	For now, it uses Runge-Kutta 4th order for flows. Also, it records only the first component
+	It records only the first component
 	of the trajectory.
 
 	The function is called from ChaosMain.

@@ -13,7 +13,9 @@
 	Dynamics are used by all actions
  */
 
-evolve_t dynamics;				/*	Function pointer for the dynamics to be called by actions	*/
+evolve_t dynamics;				/*	Function pointer for the dynamics to be called by actions.
+                                    It is set in createDynamics(), located in ConsolidateUserRequest.c.
+                                 */
 
 /*	1 - The logistic map */
 void logistic(double *state) {

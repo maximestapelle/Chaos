@@ -7,6 +7,9 @@
 	- create a legend for the plots.
 
 	The function is called from ChaosMain.
+
+	The file also contains createDynamics(), that sets the ``evolve_t dynamics'' variable defined in Dynamics.h.
+		See the function contents for more comments.
  */
 
 void consolidateUserRequest() {
@@ -102,6 +105,12 @@ void consolidateUserRequest() {
 
 void createDynamics() {
 
+	/*  This will contain pointers to all functions that evolve the state
+		with the dynamics:
+			- The first "column" if the evolution of the state;
+			- The second one is the full evolution or "extended state", ie state+Jacobian.
+		For now, Runge-Kutta 4th order is used for all flows.
+	 */
 	evolve_t allDynamics[NUMBER_OF_SYSTEMS][2];
 
 	allDynamics[0][0] = logistic;
@@ -131,11 +140,10 @@ void createDynamics() {
 	allDynamics[8][0] = rosslerRK4;
 	allDynamics[8][1] = rosslerRK4Full;
 
+	/*	Lyapunov uses the extended state, other actions use the normal one.	*/
 	if (userAction == 2)
 		dynamics = allDynamics[userMap - 1][1];
 	else
 		dynamics = allDynamics[userMap - 1][0];
-
-
 
 }
