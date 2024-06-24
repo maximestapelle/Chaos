@@ -101,6 +101,10 @@ void consolidateUserRequest() {
 	sprintf(summaryPlotLegend, "%sNumber of iterations: %ld.", summaryPlotLegend, N);
 	sprintf(summaryFileName, "%sIterations %ld", summaryFileName, N);
 
+	/*	Attractor : in case an estimation of the capacity dimension was requested  */
+	if (requestCapacityDimension)
+		sprintf(summaryFileName, "%s + CapDim", summaryFileName);
+
 }
 
 void createDynamics() {

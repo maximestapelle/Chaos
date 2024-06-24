@@ -17,7 +17,7 @@ int main() {
 
 	unsigned int NMin; long unsigned int NMax; 		/*	Interval of allowed values for N */
 	unsigned int SMin; long unsigned int SMax; 		/*	Interval of allowed values for S */
-	bool choseDefaults;								/*	Does the user choose the default values for his request ? */
+	bool choseDefaults;								/*	Does the user choose the default values for his request? */
 
 
 	if (dbConnect()) exit(1); 						/*	Connect to the database */
@@ -27,6 +27,8 @@ int main() {
 	if (inputActions(&NMin, &NMax, &SMin, &SMax)) {	/*	Display actions, fetch user input and store information */
 		exit(1);									/*	for the chosen action. */
 	}
+	if (userAction == 3 && (dimension == 2 || dimension == 3))
+		inputChooseFractalDimension();				/*	For Attractor: does the user want the fractal dimension?	*/
 
 	if (inputDefaults()) exit(1); 					/*	Store all default values */
 	choseDefaults = inputChooseDefaults(); 			/*	Ask if the user wants the default values */
@@ -93,7 +95,7 @@ INPUT_DONE:
 	    		if (!imgExists ) plotLyapunov();
 	    		break;
 			case 3:
-				if (!dataExists) attractor();
+				if (!dataExists) attractor(NMin);
 				if (!imgExists ) plotAttractor();
 				break;
 // 	    	case 4:

@@ -13,8 +13,9 @@ void plotAttractor() {
 	char command[30] = "python3 ";
 	strcat(command, pythonFile);
 
-	char pythonFileContents[2000] = "import matplotlib.pyplot as plt\n";
+	char pythonFileContents[2500] = "import matplotlib.pyplot as plt\n";
 
+	char buffer[200];
 	char title[200] = "Attractor for the ";
 	strcat(title, mapName);
 	strcat(title, " ");
@@ -73,13 +74,16 @@ void plotAttractor() {
 	strcat(pythonFileContents, "\')\n");
 	strcat(pythonFileContents, "leg = ax.legend([r\'");
 	strcat(pythonFileContents, summaryPlotLegend);
+	if (requestCapacityDimension) {
+		snprintf(buffer, sizeof (buffer), "\'+\'\\n\\n\'+r\'Estimation of the Capacity dimension: %.2f.", dCap);
+		strcat(pythonFileContents, buffer);
+	}
 	strcat(pythonFileContents,"\'], fontsize = \'x-large\', loc = \'best\', handlelength=0)\n");
 	strcat(pythonFileContents, "for item in leg.legend_handles:\n\titem.set_visible(False)\n");
 
 	strcat(pythonFileContents, "plt.savefig(\'");
 	strcat(pythonFileContents, imageFile);
 	strcat(pythonFileContents, "\', format = \'png\')\n");
-
 
 	fprintf(fp, "%s", pythonFileContents);
 	fclose(fp);

@@ -7,7 +7,8 @@
     The inputActions function will propose the possible actions for the user, and fetch the user's choice.
         It will also display some default values stored in the database, once the user's choice is known.
 
-        Changes : 5 May 2024 "active" flag added to the database, on action and action/map levels.
+    The inputChooseFractalDimension function will, in case action is Attractor, ask wether an estimation of
+        the fractal dimension is wanted or not.
 
     They are the first functions to be called for User Input
  */
@@ -172,4 +173,21 @@ CHOOSE_ACTION:
 	printf("\n");
 
 	return 0;
+}
+
+void inputChooseFractalDimension() {
+
+    char line[30];
+
+    printf(ANSI_COLOR_GREEN "\nDo you want the program to output an estimation of the "
+                            "Capacity Dimension of the attractor? [y/N] ");
+	if (fgets(line, sizeof(line), stdin)) {
+		if(strcmp(line, "Y\n") == 0 || strcmp(line, "y\n") == 0) {
+        	requestCapacityDimension = 1;
+        	printf(ANSI_COLOR_MAGENTA "The Capacity Dimension will be computed.\n\n" ANSI_COLOR_RESET);
+        }
+		else
+			printf(ANSI_COLOR_MAGENTA "The Capacity Dimension will NOT be computed.\n\n" ANSI_COLOR_RESET);
+		}
+
 }
