@@ -1,53 +1,15 @@
-/**********************************************************************************************************
- **     CHAOS application                                                                                 *
- **                                                                                                       *
- ** Generates data and plots with Bifurcation figures, Lyapunov exponents, Attractors of chaotic maps     *
- **                                                                                                       *
- ** AUTHOR   : Maxime Stapelle                                                                            *
- ** CREATED  : 24 March - 10 April 2024                                                                   *
- **                                                                                                       *
- ** Modified : 2 May 2024 Changed matrix definition and allocation in utilities.						  *
- **						  Improved comments.															  *
- ** 					  Added OS identification for image opening										  *
- **																										  *
- **			   5 May 2024 Fixed the crash when data/ or img/ directories don't exist					  *
- **						  Added an "active flag" set to false in (map/action)'s where not ready. This is  *
- **						  more for development purposes where I can have the entry in the database,       *
- **						  not usable in working version but testable when I'm implementing it.			  *
- **						  Added the same flag at action level (Lyapunov2D not ready)					  *
- **			  10 May 2024 Improved bifurcation graphs													  *
- **			  27 May 2024 -> 31 May 2024																  *
- **						  Specific header for dynamics.													  *
- **						  float to double when applicable.												  *
- **						  Implementation of Lyapunov for flows											  *
- **						  Small change in the handling of LaTeX variable names in plots					  *
- **						  Small bug fix : selecting unavailable action was possible						  *
- **						  History: even if the insertion of usage history in the database is deactivated, *
- **								   check if data or img files exist for the request.					  *
- **			  20 Jun 2024 Added hardcoding of stateDimension in RK4Full in Dynamics.c, since this version *
- **						  of Chaos uses a lot of hardcoding that improves performance. Also added		  *
- **						  explicit loop unrolling and safer optimization level -O2						  *
- **						  Actually, full hardcoding of all dimensions to improve performance.			  *
- **			  21 Jun 2024 Implement use of NMin from the database for minimum iterations				  *
- **						  Implement use of h, T from database for RK4									  *
- **						  Aesthetic changes																  *
- **						  Fix small bug in bifurcation (check on maxPoints)								  *
- **						  --- BIG CHANGE ---															  *
- **							Import function pointers from development branch but easier - hardcoding 	  *
- **							of evolution for flows allows for simpler function definition and 			  *
- **							harmonisation between maps and flows -> Action functions easier to read.	  *
- **							Therefore, no hardcoding of dimensions in Action functions.					  *
- **********************************************************************************************************/
+/*
+	CHAOS application
+	-----------------
 
-// TODO :
-// - Improve error handling which is very bad for the moment.
-// - I've deactivated the historical data in the database, as the problematic of uploading data files into
-//	 a database is non trivial. Sort it out. If reactivated, maintenance from the user has to be done once
-//	 in a while as the size of the database can become huge if the user gets carried away.
-// - Plots for Bifurcation2D.
-// - Bifurcations : more parameters to be put in the table (eg dt/h for flows, minimum iterations).
-// - Lyapunov exponents to improve.
-// - The user should choose if he wants to display the image file or not. But it will be better with a UI.
+		Generates data and plots with Bifurcation figures, Lyapunov exponents, Attractors of chaotic maps.
+
+		Author: Maxime Stapelle
+ 		Created: 24 March - 10 April 2024
+
+		This file contains the main function of Chaos.
+
+ */
 
 #include "Chaos.h"
 
