@@ -130,8 +130,6 @@ static float computeCapacityDimension(double **trajectory, size_t NPoints, doubl
 	double toFit[numberEpsilon][2];
 	size_t N = 0;
 
-	FILE *fp = fopen("CapDim.dat", "w");
-
 	for (size_t e = 0; e < numberEpsilon; e++) {	/*	No need to fo to epsilonMax included  */
 		epsilon = epsilonMin + e * (epsilonMax - epsilonMin) / numberEpsilon;
 		toFit[e][0] = pow(10, -epsilon);		/*	The 1/\epsilon of the theory  */
@@ -173,33 +171,32 @@ static float computeCapacityDimension(double **trajectory, size_t NPoints, doubl
 				break;
 			}
 			case 3: {
-				/*
-					In d = 3, the "naive" way to create a matrix of bins and fill it
-					if there is at least one point in there is unreasonable because
-					if requires GBs or RAM. So instead we'll record the populated bins
-					in a linked list in which the total number of elements is kept
-					up to date, which will be our N(epsilon).
-																			*/
-				list3D *binMatrix = allocate3D();
-				size_t i, j, k;
+			/*
+				In d = 3, the "naive" way to create a matrix of bins and fill it
+				if there is at least one point in there is unreasonable because
+				if requires GBs of RAM.
+				Instead, record the bins that are populated in a HASH table
+				with utstash.h. This is crazy fast :-)
+																		*/
+				unsigned int keyLength = sizeof (bin3Key);
+				bin3 *binMatrix = NULL;
+				bin3Key index;
 				/* Fill bin matrix from trajectory */
 				for (size_t n = 0; n < NPoints; n++) {
-					i = floor((trajectory[0][n] - interval[0][0]) * toFit[e][0]);
-					j = floor((trajectory[1][n] - interval[1][0]) * toFit[e][0]);
-					k = floor((trajectory[2][n] - interval[2][0]) * toFit[e][0]);
-					addTo3DList(binMatrix, i, j, k);
+					index.i = floor((trajectory[0][n] - interval[0][0]) * toFit[e][0]);
+					index.j = floor((trajectory[1][n] - interval[1][0]) * toFit[e][0]);
+					index.k = floor((trajectory[2][n] - interval[2][0]) * toFit[e][0]);
+					addToHash3D(&binMatrix, keyLength, &index);
 				}
-				N = binMatrix->count;
-				delete3DList(binMatrix);
+				N = HASH_COUNT(binMatrix);
+				deleteHash3D(&binMatrix);
 				break;
 			}
 		}
-		fprintf(fp, "%lf %lu\n", toFit[e][0], N);
 		toFit[e][0] = log10(toFit[e][0]);		/* Take log(1/epsilon)  */
 		toFit[e][1] = log10(N);
 	}
 
-	fclose(fp);
 	/*	We'll define a Window of 3/5 of the points that will slide through the numberEpsilon points.
 			Up to now, this number of points is completely arbitrary and just seems to yield
 			good results with this method.

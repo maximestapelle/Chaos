@@ -14,7 +14,7 @@ DEPS = $(wildcard $(INCLUDE_DIR)/*.h)
 # Compiler settings
 CC = gcc
 OPT = -O2 -funroll-loops
-CFLAGS = -Wall -Wextra -I $(INCLUDE_DIR) $(OPT)
+CFLAGS = -Wall -Wextra -I $(INCLUDE_DIR) $(OPT) -DHASH_FUNCTION=HASH_FNV
 LDLIBS = -lm -ldl
 SQLITE = -lsqlite3
 

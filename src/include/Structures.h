@@ -5,47 +5,33 @@
     This header defines data structures that are necessary when we need a "dynamic" size Array
     for performance reasons (eg computation of Capacity Dimension).
 
+    All this makes use of the uthash library.
+
  */
 
 #include "Chaos.h"
+#include "uthash.h"
 
 /*
     Structures
                 */
-//  Structures that contain indexes of a 2 or 3 dimensional matrix
-struct bin2D {
-	short int i;
-	short int j;
-	struct bin2D *next;
-};
-struct bin3D {
-	short int i;
-	short int j;
-    short int k;
-	struct bin3D *next;
-};
-//  A python-like dictionary to store the latter
-typedef struct {
-	struct bin2D *head;
-	struct bin2D *tail;
-	size_t count;
-} list2D;
-typedef struct {
-	struct bin3D *head;
-	struct bin3D *tail;
-	size_t count;
-} list3D;
+typedef struct {                /*  3D bin  */
+    short unsigned int i;
+    short unsigned int j;
+    short unsigned int k;
+} bin3Key;
+typedef struct {                /*  A structure containing the 3D bin and its corresponding hash value  */
+    bin3Key key;
+    UT_hash_handle hh;
+} bin3;
 
 /*
     Functions
                 */
-list2D *allocate2D();
-list3D *allocate3D();
-void    delete2DList(list2D *list);
-void    delete3DList(list3D *list);
-void    addTo2DList( list2D *list, short int i, short int j);
-void    addTo3DList( list3D *list, short int i, short int j, short int k);
-
+void addToHash3D(bin3 **all,
+                 unsigned int keyLength,
+                 bin3Key *index);
+void deleteHash3D(bin3 **all);
 
 
 
