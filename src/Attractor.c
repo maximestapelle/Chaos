@@ -1,4 +1,5 @@
 #include "Utilities.h"
+#include "Structures.h"
 #include "Dynamics.h"
 
 /*
@@ -67,7 +68,7 @@ void attractor(unsigned int NMin) {
 				for (size_t d = 0; d < dimension; d++) {
 					/*	Fill trajectory  */
 					trajectory[d][n - (NMin + 1)] = state[d];
-					/*	Update min and max  */
+					/*	Update min and max */
 					if (state[d] < interval[d][0])
 						interval[d][0] = state[d];
 					if (state[d] > interval[d][1])
@@ -103,8 +104,25 @@ static float computeCapacityDimension(double **trajectory, size_t NPoints, doubl
 	/*	Box sizes  */
 	/*	Here, epsilon is actually the log10 of epsilon in the theory. This is to easily have a constant
 		step between the different values, in a log scale.  */
-	const float epsilonMin = -4.0F;
-	const float epsilonMax = 0.6F;
+
+	/*	The biggest value of epsilon will such that the box just covers the whole attractor.
+		So we set it to the maximum size of coordinate interval	*/
+	float epsilonMaxTmp = interval[0][1] - interval[0][0];
+	float epsilonMax = epsilonMaxTmp;
+	for (size_t d = 1; d < dimension; d++) {
+		epsilonMaxTmp = interval[d][1] - interval[d][0];
+		if (epsilonMaxTmp > epsilonMax)
+			epsilonMax = epsilonMaxTmp;
+	}
+	epsilonMax = log10(epsilonMax);
+	/*	We set the minimum value to a factor of 10^-3.5	*/
+	float addToMax;
+	if (dimension == 2)
+		addToMax = -4.0F;
+	else
+		addToMax = -3.0F;
+	const float epsilonMin = epsilonMax + addToMax;
+
 	const unsigned int numberEpsilon = 20;
 	float epsilon;
 	size_t range[dimension];
@@ -112,7 +130,9 @@ static float computeCapacityDimension(double **trajectory, size_t NPoints, doubl
 	double toFit[numberEpsilon][2];
 	size_t N = 0;
 
-	for (size_t e = 0; e < numberEpsilon; e++) {
+	FILE *fp = fopen("CapDim.dat", "w");
+
+	for (size_t e = 0; e < numberEpsilon; e++) {	/*	No need to fo to epsilonMax included  */
 		epsilon = epsilonMin + e * (epsilonMax - epsilonMin) / numberEpsilon;
 		toFit[e][0] = pow(10, -epsilon);		/*	The 1/\epsilon of the theory  */
 		/* Compute ranges
@@ -124,6 +144,10 @@ static float computeCapacityDimension(double **trajectory, size_t NPoints, doubl
 		}
 		switch (dimension) {
 			case 2: {
+				/*
+					In d = 2, the "naive" way to create a matrix of bins and fill it
+					if there is at least one point in there works well.
+																			*/
 				bool **binMatrix = malloc(range[0] * sizeof (*binMatrix));
 				for (size_t i = 0; i < range[0]; i++) {
 					binMatrix[i] = calloc(range[1], sizeof (**binMatrix));
@@ -149,18 +173,39 @@ static float computeCapacityDimension(double **trajectory, size_t NPoints, doubl
 				break;
 			}
 			case 3: {
-			/*	Impossible with that simple procedure.  */
+				/*
+					In d = 3, the "naive" way to create a matrix of bins and fill it
+					if there is at least one point in there is unreasonable because
+					if requires GBs or RAM. So instead we'll record the populated bins
+					in a linked list in which the total number of elements is kept
+					up to date, which will be our N(epsilon).
+																			*/
+				list3D *binMatrix = allocate3D();
+				size_t i, j, k;
+				/* Fill bin matrix from trajectory */
+				for (size_t n = 0; n < NPoints; n++) {
+					i = floor((trajectory[0][n] - interval[0][0]) * toFit[e][0]);
+					j = floor((trajectory[1][n] - interval[1][0]) * toFit[e][0]);
+					k = floor((trajectory[2][n] - interval[2][0]) * toFit[e][0]);
+					addTo3DList(binMatrix, i, j, k);
+				}
+				N = binMatrix->count;
+				delete3DList(binMatrix);
 				break;
 			}
 		}
+		fprintf(fp, "%lf %lu\n", toFit[e][0], N);
 		toFit[e][0] = log10(toFit[e][0]);		/* Take log(1/epsilon)  */
 		toFit[e][1] = log10(N);
 	}
 
-	/*	We'll define a Window of 1/2 of the points that will slide through the numberEpsilon points.
+	fclose(fp);
+	/*	We'll define a Window of 3/5 of the points that will slide through the numberEpsilon points.
+			Up to now, this number of points is completely arbitrary and just seems to yield
+			good results with this method.
 		For each of those windows we do a least squares fit and output the slope and value of
-		the sum of squares.  */
-	unsigned int windowSize = floor(numberEpsilon * 1 / 2);
+			the sum of squares.  */
+	unsigned int windowSize = floor(numberEpsilon * 3 / 5);
 	float dCap_current;
 	double leastSquares_old = fit_least_squares(toFit, 0, windowSize - 1, &dCap_current);
 	double leastSquares_current = leastSquares_old;
