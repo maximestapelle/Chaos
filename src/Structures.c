@@ -28,7 +28,7 @@ void deleteHash3D(bin3 **all) {
     bin3 *current, *tmp;
 
     HASH_ITER(hh, *all, current, tmp) {
-        HASH_DEL(*all, current);         /* delete it (all advances to next) */
-        free(current);                  /* free it */
+        HASH_DEL(*all, current);            /* Delete the current (all advances to next) */
+        free(current);                      /* Free the current */
     }
 }

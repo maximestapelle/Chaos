@@ -4,7 +4,7 @@ There are dependencies (on top of a recent C compiler, of course):
 - Python and matplotlib (at least 3.7);
 - A working LaTeX Installation + full Computer Modern Fonts + dvi to png;
 - The RDBMS SQLITE3 with development tools.
-- `uthash`.
+- `uthash` for lookup tables and hash functions.
 
 If those are already present, Chaos should work fine. A Makefile is provided with `gcc` as the default compiler (Chaos compiles successfully with `clang` as well). After downloading the code and entering the local directory, simply run make:
 ```
@@ -81,7 +81,7 @@ sudo port install texlive texlive-latex-extra
 ```
 sudo port install uthash
 ```
-Since MacPorts will install this in `/opt/local/include/uthash`, it is necessary to tell the C compiler where to read the header file. I find the most convenient way to symlink the file into Chaos' include directory:
+Since MacPorts will install this in `/opt/local/include/uthash`, it is necessary to tell the C compiler where to read the header file. I find it the most convenient to symlink the file into Chaos' include directory (type this command when you're in the main directory of Chaos):
 ```
 ln -s /opt/local/include/uthash/uthash.h src/include/
 ```
