@@ -130,19 +130,18 @@ static float computeCapacityDimension(double **trajectory,
 	}
 	epsilonMax = log10(epsilonMax);
 	/*	The minimum value of epsilon will depend on the dimension.
-			This is a fine-tuning of what I've remarked worked best.	*/
-	float addToMax;
-	if (dimension == 2)
-		addToMax = -4.0F;
-	else
-		addToMax = -3.0F;
-	const float epsilonMin = epsilonMax + addToMax;
+			This is a fine-tuning based on what I've remarked worked best.	*/
+	float epsilonMin = - (log10(NPoints) + 1) / 2;
+	if (dimension == 3)
+		epsilonMin /= 2;
 
 	const unsigned int numberEpsilon = 20;
 	float epsilon;
 
 	size_t N = 0;						/*	N(epsilon)  */
 	double toFit[numberEpsilon][2];		/*  Array with log(N(epsilon)) versus log(1/espilon)  */
+
+	FILE *fp = fopen("CapDim.dat","w");
 
 /*
 	PART I
@@ -214,11 +213,11 @@ static float computeCapacityDimension(double **trajectory,
 				break;
 			}
 		}
-
+		fprintf(fp, "%lf %lu\n", toFit[e][0], N);
 		toFit[e][0] = log10(toFit[e][0]);		/* Take log(1/epsilon)  */
 		toFit[e][1] = log10(N);
 	}
-
+	fclose(fp);
 /*
 	PART II
 			Compute the best dCap with a least Squares fit on successive subsets of ToFit:
