@@ -141,8 +141,6 @@ static float computeCapacityDimension(double **trajectory,
 	size_t N = 0;						/*	N(epsilon)  */
 	double toFit[numberEpsilon][2];		/*  Array with log(N(epsilon)) versus log(1/espilon)  */
 
-	FILE *fp = fopen("CapDim.dat","w");
-
 /*
 	PART I
 			Fill the toFit array
@@ -187,6 +185,10 @@ static float computeCapacityDimension(double **trajectory,
 						N++;
 					}
 				}
+				/*	Free binMatrix  */
+				for (size_t i = 0; i < range[0]; i++) {
+					free(binMatrix[i]);
+				}
 				free(binMatrix);
 				break;
 			}
@@ -213,11 +215,10 @@ static float computeCapacityDimension(double **trajectory,
 				break;
 			}
 		}
-		fprintf(fp, "%lf %lu\n", toFit[e][0], N);
 		toFit[e][0] = log10(toFit[e][0]);		/* Take log(1/epsilon)  */
 		toFit[e][1] = log10(N);
 	}
-	fclose(fp);
+
 /*
 	PART II
 			Compute the best dCap with a least Squares fit on successive subsets of ToFit:
