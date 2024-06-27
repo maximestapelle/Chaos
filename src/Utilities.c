@@ -7,6 +7,35 @@
 	Its functions are called from action fuctions : Attracto, Bifurcation, Lyapunov
  */
 
+ /*	File utilities  */
+ void fillFile(FILE *fp, float *parameter, double *array) {
+ /*
+ 	Attractor and Lyapunov will call a function to print inf the data file.
+ 	It contains a performance upgrade thanks to an explicit switch on the dimension.
+ 																						*/
+ 	if (!parameter) {
+ 		switch (dimension) {
+ 			case 2:
+ 				fprintf(fp, "%.4lf %.4lf\n", array[0], array[1]);
+ 				break;
+ 			case 3:
+ 				fprintf(fp, "%.4lf %.4lf %.4lf\n", array[0], array[1], array[2]);
+ 				break;
+ 		}
+ 	}
+ 	else {
+ 		switch (dimension) {
+ 			case 2:
+ 				fprintf(fp, "%f %.4lf %.4lf\n", *parameter, array[0], array[1]);
+ 				break;
+ 			case 3:
+ 				fprintf(fp, "%f %.4lf %.4lf %.4lf\n", *parameter, array[0], array[1], array[2]);
+ 				break;
+ 		}
+ 	}
+
+ }
+
 /*	Array utilities */
 double **init_2DMatrix(const unsigned int nRows, const unsigned int nColumns) {
 

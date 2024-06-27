@@ -81,13 +81,11 @@ void lyapunov() {
 						and their Relation to Entropy **/
 						matrix_transpose(nJacobianProduct, transposednJacobianProduct, dimension);
 						dot_product(transposednJacobianProduct, nJacobianProduct, H, dimension);
-						/* With this procedure we don't even need to store the lambda's */
-						fprintf(fp, "%f", userMapValues.parameters[0]);
 						for (size_t d = 0; d < dimension; d++) {
 							/* Lambda's are the diagonal of H */
-							fprintf(fp, " %.4lf", log(fabs(H[dimension * d + d])) / (2 * N));
+							lambda[d] = log(fabs(H[dimension * d + d])) / (2 * N);
 						}
-						fprintf(fp, "\n");
+						fillFile(fp, userMapValues.parameters, lambda);
 					}
 					break;
 				}
@@ -163,8 +161,7 @@ void lyapunov() {
 					}
 					/* Check convergence */
 					if (normOfDifference(lambdaOld, lambda) < E_r * norm(lambda) + E_a) {
-						fprintf(fp, "%f %lf %lf %lf\n", userMapValues.parameters[0],
-														lambda[0], lambda[1], lambda[2]);
+						fillFile(fp, userMapValues.parameters, lambda);
 						break;
 					} /* If no convergence, we do nothing -> skip this value of rho. */
 				}

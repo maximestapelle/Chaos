@@ -25,28 +25,22 @@ void attractor(unsigned int NMin) {
 	double state[dimension];
 	for (size_t d = 0; d < dimension; d++) {
 		state[d] = (double) userMapValues.IC[d];
-		fprintf(fp, "%.4lf", state[d]);
-		if (d < dimension - 1) fprintf(fp, " ");
 	}
-	fprintf(fp, "\n");
+	fillFile(fp, NULL, state);
 
 	/*
 		EXACTLY THE SAME for flows and maps.
 
 		Switch for the choice of the user to request Capacity dimension.
-																			*/
+																				*/
 	switch(requestCapacityDimension) {
 		case 0:
 			for (size_t n = 1; n <= N; n++) {
 				dynamics(state);
-				for (size_t d = 0; d < dimension; d++) {
-					fprintf(fp, "%.4lf", state[d]);
-					if (d < dimension - 1) fprintf(fp, " ");
-				}
-				fprintf(fp, "\n");
+				fillFile(fp, NULL, state);
 			}
-			printf("Data file created: '%s'.\n", dataFile);
 			fclose(fp);
+			printf("Data file created: '%s'.\n", dataFile);
 			break;
 		case 1: {
 		/*
@@ -63,11 +57,7 @@ void attractor(unsigned int NMin) {
 			/*	First, the Transient  */
 			for (size_t n = 1; n <= NMin; n++) {
 				dynamics(state);
-				for (size_t d = 0; d < dimension; d++) {
-					fprintf(fp, "%.4lf", state[d]);
-					if (d < dimension - 1) fprintf(fp, " ");
-				}
-				fprintf(fp, "\n");
+				fillFile(fp, NULL, state);
 			}
 			/*	We now consider we're on the attractor  */
 			for (size_t n = NMin + 1; n <= N; n++) {
@@ -80,14 +70,11 @@ void attractor(unsigned int NMin) {
 						interval[d][0] = state[d];
 					if (state[d] > interval[d][1])
 						interval[d][1] = state[d];
-					/*	Write in file  */
-					fprintf(fp, "%.4lf", state[d]);
-					if (d < dimension - 1) fprintf(fp, " ");
 				}
-				fprintf(fp, "\n");
+				fillFile(fp, NULL, state);
 			}
-			printf("Data file created: '%s'.\n", dataFile);
 			fclose(fp);
+			printf("Data file created: '%s'.\n", dataFile);
 
 			/*	Capacity dimension  */
 			dCap = computeCapacityDimension(trajectory, N - NMin, interval);
