@@ -39,7 +39,7 @@ void fillFile(FILE *fp, float *parameter, double *array) {
 /*	Array utilities */
 double **init_2DMatrix(const unsigned int nRows, const unsigned int nColumns) {
 
-	double **matrix = calloc(nRows, sizeof *matrix);
+	double **matrix = malloc(nRows * sizeof *matrix);
 	for (size_t i = 0; i < nRows; i++) {
 		matrix[i] = calloc(nColumns, sizeof **matrix);
 	}
