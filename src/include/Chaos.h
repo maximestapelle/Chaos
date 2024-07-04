@@ -65,6 +65,8 @@ extern char parametersNames[][15];		/*  Whatever the number of parameters, we wi
 //Action
 extern int userAction;                  /*  The user's choice of action */
 extern char actionName[25]; 			/*  The name of the requested action */
+extern int requestCapacityDimension;    /*  For Attractor: user may request an estimation of the capacity dimension  */
+extern float dCap;                      /*  The capacity dmension  */
 //Default and actual values
 extern struct mapValues userMapValues, defaultMapValues;
 
@@ -108,10 +110,11 @@ void inputSweep(
         const unsigned int SMin,
         const long unsigned int SMax);
 void inputParameters();
+void inputChooseFractalDimension();
 void consolidateUserRequest();
 void createDynamics();
 /* Action functions */
-void attractor();
+void attractor(unsigned int NMin);
 void bifurcation(unsigned int NMin);
 void lyapunov();
 void bifurcation2D(unsigned int NMin);

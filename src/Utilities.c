@@ -178,3 +178,57 @@ unsigned int computeStateDimension(const unsigned int dimension) {
 
 	return dimension + pow(dimension, 2);
 }
+
+/*	Least squares fit, coded so that you can do the fit in a subset of the given points:
+		"start" is the starting index
+		"end" is the ending index
+		the function updates the variable "slope"
+		the function returns the value of the sum of squares.
+ */
+double fit_least_squares(const double toFit[][2],
+						 const size_t start,
+						 const size_t end,
+						 float *slope) {
+
+	double squares = 0.0;				/*	\sum_i (y_i -(ax_i+b))^2  */
+	// double correlation = 0.0;		/*  The correlation coefficient  */
+	double b;							/*  b in the above  */
+	size_t points = end - start + 1;	/*  Number of points */
+
+	double xy = 0.0;
+	double x = 0.0;
+	double y = 0.0;
+	double x_squared = 0.0;
+	// double var_x = 0.0;
+	// double var_y = 0.0;
+
+	for (size_t n = start; n <= end; n++) {
+		xy += toFit[n][0] * toFit[n][1];
+		x  += toFit[n][0];
+		y  += toFit[n][1];
+		x_squared += toFit[n][0] * toFit[n][0];
+	}
+	*slope = (points * xy - x * y)    / (points * x_squared - x * x);
+	b 	   = (x_squared * y - x * xy) / (points * x_squared - x * x);
+
+	for (size_t n = start; n <= end; n++) {
+		squares += pow(toFit[n][1] - (*slope * toFit[n][0] + b), 2);
+	}
+
+	/*
+		Correlation coefficient:
+		  	Testing the minimum least squares or the correlation coefficient closest to 1
+			seems to be giving the same result in most uses. Therefore, calculating both
+			is not needed. I leave the commented code just in case.
+																		*/
+	// x /= points;
+	// y /= points;
+	// for (size_t n = start; n <= end; n++) {
+	// 	correlation += (toFit[n][0] - x) * (toFit[n][1] - y);
+	// 	var_x += (toFit[n][0] - x) * (toFit[n][0] - x);
+	// 	var_y += (toFit[n][1] - y) * (toFit[n][1] - y);
+	// }
+	// correlation /= sqrt(var_x) * sqrt(var_y);
+
+	return squares;
+}

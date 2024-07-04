@@ -54,5 +54,11 @@ double normOfDifference(
 
 unsigned int computeStateDimension(const unsigned int dimension);
 
+double fit_least_squares(
+	const double toFit[][2],
+	const size_t start,
+	const size_t end,
+	float *slope);
+
 
 #endif

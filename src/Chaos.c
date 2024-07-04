@@ -22,8 +22,10 @@ char parametersNames[NUMBER_PARAMETERS_MAX][15];/*  Whatever the number of param
                                                     LaTeX names as a NParamMax dimension vector. Subsequent programs
                                                     will ignore non-existing dimensions.  */
 //Action
-int userAction;                 /*  The user's choice of action */
-char actionName[25]; 			/*  The name of the requested action */
+int userAction;                     /*  The user's choice of action */
+char actionName[25]; 			    /*  The name of the requested action */
+int requestCapacityDimension = 0;   /*  For Attractor: user may request an estimation of the capacity dimension;  */
+float dCap;                         /*          default value is No.  */
 //Default and actual values
 struct mapValues userMapValues, defaultMapValues;
 long unsigned int NDefault;     /*  Default number of iterations */

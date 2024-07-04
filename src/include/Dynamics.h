@@ -1,8 +1,8 @@
 #ifndef DYNAMICS_H
 #define DYNAMICS_H
 
-/*	This header defines functions
-   	specific to the handling of Dynamical Systems.
+/*
+    This header defines functions specific to the handling of Dynamical Systems.
  */
 
 #include "Chaos.h"

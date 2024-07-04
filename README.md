@@ -7,6 +7,7 @@ I'm doing this as an exercise in coding and physics.
 The application is mainly written in C, and it uses
 -  Python 3 - matplotlib (at least 3.7) and LaTeX for the plots;
 -  A SQLITE3 database to store parameters about the dynamical systems.
+-  `uthash` for hash tables.
 
 I've provided a makefile for an easy installation on Linux and MacOS (see [`INSTALL.md`](./INSTALL.md) for instructions). I haven't tried to build Chaos on Windows.
 

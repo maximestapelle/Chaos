@@ -1,4 +1,5 @@
 /src/objects
+/src/include/uthash.h
 /img
 /data
 /doc/history.md
