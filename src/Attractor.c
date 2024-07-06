@@ -151,29 +151,21 @@ static float computeCapacityDimension(double **trajectory,
 					the interval. We take the ceil and add 1 in case it is integer and a point is exactly at 1.
 																													*/
 				size_t range = ceil(toFit[e][0]) + 1;
-				bool **binMatrix = malloc(range * sizeof (*binMatrix));
-				for (size_t i = 0; i < range; i++) {
-					/*	Default state of each bin is "not filled" -> false -> calloc  */
-					binMatrix[i] = calloc(range, sizeof (**binMatrix));
-				}
-
+				bool *binMatrix = calloc(range * range, sizeof (*binMatrix));
 				/*	Fill binMatrix  */
 				size_t i, j;
 				N = 0;
 				for (size_t n = 0; n < NPoints; n++) {
 					i = floor(trajectory[0][n] * toFit[e][0]);
 					j = floor(trajectory[1][n] * toFit[e][0]);
-					if (binMatrix[i][j])
+					if (binMatrix[i * range + j])
 						continue;
 					else {
-						binMatrix[i][j] = 1;
+						binMatrix[i * range + j] = 1;
 						N++;
 					}
 				}
 				/*	Free binMatrix  */
-				for (size_t i = 0; i < range; i++) {
-					free(binMatrix[i]);
-				}
 				free(binMatrix);
 				break;
 			}
