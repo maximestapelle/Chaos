@@ -14,7 +14,7 @@ I've provided a makefile for an easy installation on Linux and MacOS (see [`INST
 ### Bifurcation
 
 <figure>
-    <img src="/doc/img/Bifurcation example.png"
+    <img src="doc/img/Bifurcation example.png"
          alt="An example of Bifurcation graph (The Rössler system)">
     <figcaption>An example of Bifurcation graph (The Rössler system)</figcaption>
 </figure>
@@ -22,7 +22,7 @@ I've provided a makefile for an easy installation on Linux and MacOS (see [`INST
 ### Lyapunov exponents
 
 <figure>
-    <img src="/doc/img/Lyapunov example.png"
+    <img src="doc/img/Lyapunov example.png"
          alt="An example of Lyapunov exponents (The Lorenz system)">
     <figcaption>An example of Lyapunov exponents (The Lorenz system)</figcaption>
 </figure>
@@ -30,7 +30,7 @@ I've provided a makefile for an easy installation on Linux and MacOS (see [`INST
 ### Attractors
 
 <figure>
-    <img src="/doc/img/Attractor example.png"
+    <img src="doc/img/Attractor example.png"
          alt="An example of Attractor (The Tinkerbell map)">
     <figcaption>An example of Attractor (The Tinkerbell map)</figcaption>
 </figure>
